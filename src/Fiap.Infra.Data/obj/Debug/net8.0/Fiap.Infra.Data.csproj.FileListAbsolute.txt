@@ -1,0 +1,17 @@
+C:\Projetos\Fiap\src\Fiap.Infra.Data\bin\Debug\net8.0\Fiap.Infra.Data.deps.json
+C:\Projetos\Fiap\src\Fiap.Infra.Data\bin\Debug\net8.0\Fiap.Infra.Data.runtimeconfig.json
+C:\Projetos\Fiap\src\Fiap.Infra.Data\bin\Debug\net8.0\Fiap.Infra.Data.dll
+C:\Projetos\Fiap\src\Fiap.Infra.Data\bin\Debug\net8.0\Fiap.Infra.Data.pdb
+C:\Projetos\Fiap\src\Fiap.Infra.Data\bin\Debug\net8.0\Fiap.Domain.dll
+C:\Projetos\Fiap\src\Fiap.Infra.Data\bin\Debug\net8.0\Fiap.Domain.pdb
+C:\Projetos\Fiap\src\Fiap.Infra.Data\obj\Debug\net8.0\Fiap.Infra.Data.csproj.AssemblyReference.cache
+C:\Projetos\Fiap\src\Fiap.Infra.Data\obj\Debug\net8.0\Fiap.Infra.Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projetos\Fiap\src\Fiap.Infra.Data\obj\Debug\net8.0\Fiap.Infra.Data.AssemblyInfoInputs.cache
+C:\Projetos\Fiap\src\Fiap.Infra.Data\obj\Debug\net8.0\Fiap.Infra.Data.AssemblyInfo.cs
+C:\Projetos\Fiap\src\Fiap.Infra.Data\obj\Debug\net8.0\Fiap.Infra.Data.csproj.CoreCompileInputs.cache
+C:\Projetos\Fiap\src\Fiap.Infra.Data\obj\Debug\net8.0\Fiap.Inf.15DE67BC.Up2Date
+C:\Projetos\Fiap\src\Fiap.Infra.Data\obj\Debug\net8.0\Fiap.Infra.Data.dll
+C:\Projetos\Fiap\src\Fiap.Infra.Data\obj\Debug\net8.0\refint\Fiap.Infra.Data.dll
+C:\Projetos\Fiap\src\Fiap.Infra.Data\obj\Debug\net8.0\Fiap.Infra.Data.pdb
+C:\Projetos\Fiap\src\Fiap.Infra.Data\obj\Debug\net8.0\Fiap.Infra.Data.genruntimeconfig.cache
+C:\Projetos\Fiap\src\Fiap.Infra.Data\obj\Debug\net8.0\ref\Fiap.Infra.Data.dll

@@ -1,0 +1,77 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.Api", "src\Fiap.Api\Fiap.Api.csproj", "{8DFA0049-CEA2-4567-8130-159375A14198}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Api Layer", "1. Api Layer", "{829C7F54-62E3-4F87-8296-20E835D45536}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Application layer", "2. Application layer", "{757FBD29-53D7-4B77-992E-95821183D0A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.Application", "src\Fiap.Application\Fiap.Application.csproj", "{B910A515-948C-4EEE-856A-4AE40878F2D3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Domain Layer", "3. Domain Layer", "{692A19FD-6A36-4868-B924-C06B652F182E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. Infra Layer", "4. Infra Layer", "{AFE60047-B42F-4D27-93BF-F324FA6B63A3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5. Tests Layer", "5. Tests Layer", "{7072A0D2-77A5-4F9D-8465-98DF520CB3A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.Domain", "src\Fiap.Domain\Fiap.Domain.csproj", "{3292174A-AF17-4ACF-AE97-53775F0FBC7A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.Infra.CrossCutting.Http", "src\Fiap.Infra.CrossCutting.Http\Fiap.Infra.CrossCutting.Http.csproj", "{396A9289-6B24-4C83-AF56-7E1FA364741D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.Infra.Data", "src\Fiap.Infra.Data\Fiap.Infra.Data.csproj", "{2F8B419B-E12D-4234-A893-1FABED62BE76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.Infra.CrossCutting.IoC", "src\Fiap.Infra.CrossCutting.IoC\Fiap.Infra.CrossCutting.IoC.csproj", "{C1EDF935-F69D-486E-A2ED-8CA6215686FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.Tests", "src\Fiap.Tests\Fiap.Tests.csproj", "{5ADEA337-C4D6-4AA5-9953-43E4D7709549}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8DFA0049-CEA2-4567-8130-159375A14198}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DFA0049-CEA2-4567-8130-159375A14198}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DFA0049-CEA2-4567-8130-159375A14198}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DFA0049-CEA2-4567-8130-159375A14198}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B910A515-948C-4EEE-856A-4AE40878F2D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B910A515-948C-4EEE-856A-4AE40878F2D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B910A515-948C-4EEE-856A-4AE40878F2D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B910A515-948C-4EEE-856A-4AE40878F2D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3292174A-AF17-4ACF-AE97-53775F0FBC7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3292174A-AF17-4ACF-AE97-53775F0FBC7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3292174A-AF17-4ACF-AE97-53775F0FBC7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3292174A-AF17-4ACF-AE97-53775F0FBC7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{396A9289-6B24-4C83-AF56-7E1FA364741D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{396A9289-6B24-4C83-AF56-7E1FA364741D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{396A9289-6B24-4C83-AF56-7E1FA364741D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{396A9289-6B24-4C83-AF56-7E1FA364741D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F8B419B-E12D-4234-A893-1FABED62BE76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F8B419B-E12D-4234-A893-1FABED62BE76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F8B419B-E12D-4234-A893-1FABED62BE76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F8B419B-E12D-4234-A893-1FABED62BE76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1EDF935-F69D-486E-A2ED-8CA6215686FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1EDF935-F69D-486E-A2ED-8CA6215686FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1EDF935-F69D-486E-A2ED-8CA6215686FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1EDF935-F69D-486E-A2ED-8CA6215686FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5ADEA337-C4D6-4AA5-9953-43E4D7709549}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5ADEA337-C4D6-4AA5-9953-43E4D7709549}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5ADEA337-C4D6-4AA5-9953-43E4D7709549}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5ADEA337-C4D6-4AA5-9953-43E4D7709549}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8DFA0049-CEA2-4567-8130-159375A14198} = {829C7F54-62E3-4F87-8296-20E835D45536}
+		{B910A515-948C-4EEE-856A-4AE40878F2D3} = {757FBD29-53D7-4B77-992E-95821183D0A2}
+		{3292174A-AF17-4ACF-AE97-53775F0FBC7A} = {692A19FD-6A36-4868-B924-C06B652F182E}
+		{396A9289-6B24-4C83-AF56-7E1FA364741D} = {AFE60047-B42F-4D27-93BF-F324FA6B63A3}
+		{2F8B419B-E12D-4234-A893-1FABED62BE76} = {AFE60047-B42F-4D27-93BF-F324FA6B63A3}
+		{C1EDF935-F69D-486E-A2ED-8CA6215686FF} = {AFE60047-B42F-4D27-93BF-F324FA6B63A3}
+		{5ADEA337-C4D6-4AA5-9953-43E4D7709549} = {7072A0D2-77A5-4F9D-8465-98DF520CB3A3}
+	EndGlobalSection
+EndGlobal

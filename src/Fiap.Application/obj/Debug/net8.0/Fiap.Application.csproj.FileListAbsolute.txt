@@ -1,0 +1,15 @@
+C:\Projetos\Fiap\src\Fiap.Application\bin\Debug\net8.0\Fiap.Application.deps.json
+C:\Projetos\Fiap\src\Fiap.Application\bin\Debug\net8.0\Fiap.Application.dll
+C:\Projetos\Fiap\src\Fiap.Application\bin\Debug\net8.0\Fiap.Application.pdb
+C:\Projetos\Fiap\src\Fiap.Application\obj\Debug\net8.0\Fiap.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projetos\Fiap\src\Fiap.Application\obj\Debug\net8.0\Fiap.Application.AssemblyInfoInputs.cache
+C:\Projetos\Fiap\src\Fiap.Application\obj\Debug\net8.0\Fiap.Application.AssemblyInfo.cs
+C:\Projetos\Fiap\src\Fiap.Application\obj\Debug\net8.0\Fiap.Application.csproj.CoreCompileInputs.cache
+C:\Projetos\Fiap\src\Fiap.Application\obj\Debug\net8.0\Fiap.Application.dll
+C:\Projetos\Fiap\src\Fiap.Application\obj\Debug\net8.0\refint\Fiap.Application.dll
+C:\Projetos\Fiap\src\Fiap.Application\obj\Debug\net8.0\Fiap.Application.pdb
+C:\Projetos\Fiap\src\Fiap.Application\obj\Debug\net8.0\ref\Fiap.Application.dll
+C:\Projetos\Fiap\src\Fiap.Application\bin\Debug\net8.0\Fiap.Domain.dll
+C:\Projetos\Fiap\src\Fiap.Application\bin\Debug\net8.0\Fiap.Domain.pdb
+C:\Projetos\Fiap\src\Fiap.Application\obj\Debug\net8.0\Fiap.Application.csproj.AssemblyReference.cache
+C:\Projetos\Fiap\src\Fiap.Application\obj\Debug\net8.0\Fiap.App.CB9292C9.Up2Date

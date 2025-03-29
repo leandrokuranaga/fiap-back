@@ -1,0 +1,12 @@
+C:\Projetos\Fiap\src\Fiap.Infra.CrossCutting.Http\bin\Debug\net8.0\Fiap.Infra.CrossCutting.Http.deps.json
+C:\Projetos\Fiap\src\Fiap.Infra.CrossCutting.Http\bin\Debug\net8.0\Fiap.Infra.CrossCutting.Http.dll
+C:\Projetos\Fiap\src\Fiap.Infra.CrossCutting.Http\bin\Debug\net8.0\Fiap.Infra.CrossCutting.Http.pdb
+C:\Projetos\Fiap\src\Fiap.Infra.CrossCutting.Http\obj\Debug\net8.0\Fiap.Infra.CrossCutting.Http.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projetos\Fiap\src\Fiap.Infra.CrossCutting.Http\obj\Debug\net8.0\Fiap.Infra.CrossCutting.Http.AssemblyInfoInputs.cache
+C:\Projetos\Fiap\src\Fiap.Infra.CrossCutting.Http\obj\Debug\net8.0\Fiap.Infra.CrossCutting.Http.AssemblyInfo.cs
+C:\Projetos\Fiap\src\Fiap.Infra.CrossCutting.Http\obj\Debug\net8.0\Fiap.Infra.CrossCutting.Http.csproj.CoreCompileInputs.cache
+C:\Projetos\Fiap\src\Fiap.Infra.CrossCutting.Http\obj\Debug\net8.0\Fiap.Infra.CrossCutting.Http.dll
+C:\Projetos\Fiap\src\Fiap.Infra.CrossCutting.Http\obj\Debug\net8.0\refint\Fiap.Infra.CrossCutting.Http.dll
+C:\Projetos\Fiap\src\Fiap.Infra.CrossCutting.Http\obj\Debug\net8.0\Fiap.Infra.CrossCutting.Http.pdb
+C:\Projetos\Fiap\src\Fiap.Infra.CrossCutting.Http\obj\Debug\net8.0\ref\Fiap.Infra.CrossCutting.Http.dll
+C:\Projetos\Fiap\src\Fiap.Infra.CrossCutting.Http\obj\Debug\net8.0\Fiap.Infra.CrossCutting.Http.csproj.AssemblyReference.cache
