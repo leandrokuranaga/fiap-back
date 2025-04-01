@@ -9,12 +9,15 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Fiap.Application\Fiap.Application.csproj" />
     <ProjectReference Include="..\Fiap.Domain\Fiap.Domain.csproj" />
+    <ProjectReference Include="..\Fiap.Infra.CrossCutting.Http\Fiap.Infra.CrossCutting.Http.csproj" />
     <ProjectReference Include="..\Fiap.Infra.Data\Fiap.Infra.Data.csproj" />
+    <ProjectReference Include="..\Fiap.Infra.Utils\Fiap.Infra.Utils.csproj" />
   </ItemGroup>
 
 </Project>

@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.Infra.CrossCutting.IoC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.Tests", "src\Fiap.Tests\Fiap.Tests.csproj", "{5ADEA337-C4D6-4AA5-9953-43E4D7709549}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.Infra.Utils", "src\Fiap.Infra.Utils\Fiap.Infra.Utils.csproj", "{4D7F0B52-4E5F-46EF-A172-1E9E4BC752EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{5ADEA337-C4D6-4AA5-9953-43E4D7709549}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5ADEA337-C4D6-4AA5-9953-43E4D7709549}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5ADEA337-C4D6-4AA5-9953-43E4D7709549}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D7F0B52-4E5F-46EF-A172-1E9E4BC752EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D7F0B52-4E5F-46EF-A172-1E9E4BC752EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D7F0B52-4E5F-46EF-A172-1E9E4BC752EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D7F0B52-4E5F-46EF-A172-1E9E4BC752EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,5 +79,6 @@ Global
 		{2F8B419B-E12D-4234-A893-1FABED62BE76} = {AFE60047-B42F-4D27-93BF-F324FA6B63A3}
 		{C1EDF935-F69D-486E-A2ED-8CA6215686FF} = {AFE60047-B42F-4D27-93BF-F324FA6B63A3}
 		{5ADEA337-C4D6-4AA5-9953-43E4D7709549} = {7072A0D2-77A5-4F9D-8465-98DF520CB3A3}
+		{4D7F0B52-4E5F-46EF-A172-1E9E4BC752EB} = {AFE60047-B42F-4D27-93BF-F324FA6B63A3}
 	EndGlobalSection
 EndGlobal

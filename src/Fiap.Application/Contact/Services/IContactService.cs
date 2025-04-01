@@ -6,5 +6,6 @@ namespace Fiap.Application.Contact.Services
     {
         Task Create(CreateContactRequest request);
         Task Update(UpdateContactRequest request);
+
     }
 }

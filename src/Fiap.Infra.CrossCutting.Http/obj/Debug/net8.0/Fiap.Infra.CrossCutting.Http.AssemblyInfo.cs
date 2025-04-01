@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Fiap.Infra.CrossCutting.Http")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+01389cccce967a2db729fba57901ab17b5a0c68b")]
 [assembly: System.Reflection.AssemblyProductAttribute("Fiap.Infra.CrossCutting.Http")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Fiap.Infra.CrossCutting.Http")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
