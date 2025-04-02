@@ -213,3 +213,22 @@ project.lock.json
 #####
 # End of core ignore list, below put you custom 'per project' settings (patterns or path)
 #####
+
+# Ignora arquivos gerados pelo NuGet
+project.assets.json
+project.nuget.cache
+*.csproj.nuget.g.props
+*.csproj.nuget.g.targets
+*.csproj.nuget.dgspec.json
+
+# Ignora arquivos de cache e build gerados
+*.AssemblyInfoInputs.cache
+*.assets.cache
+*.GeneratedMSBuildEditorConfig.editorconfig
+
+# Ignora arquivos de usuário
+*.user
+*.suo
+
+# Visual Studio
+.vs/
