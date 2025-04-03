@@ -13,9 +13,10 @@ namespace Fiap.Domain.ContactAggregate
             Name = name;
         }
 
-        public ContactDomain()
+        public ContactDomain(int id, string? name)
         {
-            
+            Id = id;
+            Name = name;
         }
 
         public virtual ICollection<EmailDomain> Emails { get; set; }    

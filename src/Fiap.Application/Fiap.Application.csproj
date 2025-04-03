@@ -7,8 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Contact\Models\DTOs\" />
-    <Folder Include="Contact\Models\Response\" />
+    <Folder Include="Contact\Models\Response\NovaPasta\" />
     <Folder Include="Validators\" />
   </ItemGroup>
 
