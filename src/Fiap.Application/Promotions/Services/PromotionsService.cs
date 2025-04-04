@@ -10,7 +10,7 @@ namespace Fiap.Application.Promotions.Services
 {
     public class PromotionsService(INotification notification, IPromotionRepository promotionRepository, IGameRepository gameRepository) : BaseService(notification), IPromotionsService
     {
-        public async Task<CreatePromotionResponse> CreateAsync(CreatePromotionRequest request)
+        public Task<CreatePromotionResponse> CreateAsync(CreatePromotionRequest request) => ExecuteAsync(async () =>
         {
             var response = new CreatePromotionResponse();
 
@@ -59,10 +59,10 @@ namespace Fiap.Application.Promotions.Services
                 notification.AddNotification("Not Found", ex.Message, NotificationModel.ENotificationType.NotFound);
                 return response;
             }
-        }
+        });
 
 
-        public async Task<UpdatePromotionResponse> UpdateAsync(UpdatePromotionRequest request)
+        public Task<UpdatePromotionResponse> UpdateAsync(UpdatePromotionRequest request) => ExecuteAsync(async () =>
         {
             var response = new UpdatePromotionResponse();
 
@@ -111,7 +111,7 @@ namespace Fiap.Application.Promotions.Services
                 notification.AddNotification("Update Promotion", ex.Message, NotificationModel.ENotificationType.NotFound);
                 return response;
             }
-        }
+        });
 
     }
 }
