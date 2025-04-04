@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="xunit" Version="2.5.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
   </ItemGroup>
@@ -21,10 +22,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="1. Api Layer Tests\" />
-    <Folder Include="2. Application Layer Tests\" />
-    <Folder Include="3. Domain Layer Tests\" />
     <Folder Include="4. Infra Layer Tests\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Fiap.Api\Fiap.Api.csproj" />
+    <ProjectReference Include="..\Fiap.Domain\Fiap.Domain.csproj" />
   </ItemGroup>
 
 </Project>

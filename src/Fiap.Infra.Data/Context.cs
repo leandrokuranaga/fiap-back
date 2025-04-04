@@ -1,6 +1,7 @@
-﻿using Fiap.Domain.ContactAggregate;
-using Fiap.Domain.EmailAggregate;
-using Fiap.Domain.PhoneNumberAggregate;
+﻿using Fiap.Domain.GameAggregate;
+using Fiap.Domain.LibraryAggregate;
+using Fiap.Domain.PromotionAggregate;
+using Fiap.Domain.UserAggregate;
 using Microsoft.EntityFrameworkCore;
 
 namespace Fiap.Infra.Data
@@ -8,15 +9,19 @@ namespace Fiap.Infra.Data
     public class Context(DbContextOptions<Context> options) : DbContext(options)
     {
 
-        public DbSet<ContactDomain> Contact { get; set; }
-        public DbSet<EmailDomain> Email { get; set; }
-        public DbSet<PhoneNumberDomain> PhoneNumber { get; set; }
+        public DbSet<UserDomain> Users { get; set; }
+        public DbSet<LibraryDomain> Libraries { get; set; }
+        public DbSet<GameDomain> Games { get; set; }
+        public DbSet<PromotionDomain> Promotions { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new MapEntities.ContactMap());
-            modelBuilder.ApplyConfiguration(new MapEntities.EmailMap());
-            modelBuilder.ApplyConfiguration(new MapEntities.PhoneNumberMap());
+            modelBuilder.ApplyConfiguration(new MapEntities.UsersMap());
+            modelBuilder.ApplyConfiguration(new MapEntities.GamesMap());
+            modelBuilder.ApplyConfiguration(new MapEntities.LibrariesMap());
+            modelBuilder.ApplyConfiguration(new MapEntities.LibraryGameMap());
+            modelBuilder.ApplyConfiguration(new MapEntities.PromotionMap());
         }
 
     }

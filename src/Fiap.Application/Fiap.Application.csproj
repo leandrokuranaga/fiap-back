@@ -7,9 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Contact\Models\DTOs\" />
-    <Folder Include="Contact\Models\Response\" />
-    <Folder Include="Validators\" />
+    <Compile Remove="Contact\**" />
+    <EmbeddedResource Remove="Contact\**" />
+    <None Remove="Contact\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Games\Models\DTO\" />
+    <Folder Include="Games\Models\Response\" />
+    <Folder Include="Games\Models\Request\" />
+    <Folder Include="Promotions\Models\DTO\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.11.0" />
   </ItemGroup>
 
   <ItemGroup>
