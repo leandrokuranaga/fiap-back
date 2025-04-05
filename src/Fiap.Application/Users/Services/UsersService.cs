@@ -1,24 +1,86 @@
 ﻿using Fiap.Application.Common;
-using Fiap.Application.Contact.Models.Request;
+using Fiap.Application.Users.Models.Request;
 using Fiap.Application.Users.Models.Response;
 using Fiap.Application.Users.Services;
+using Fiap.Application.Validators.UsersValidators;
 using Fiap.Domain.SeedWork;
+using Fiap.Domain.SeedWork.Enums;
+using Fiap.Domain.UserAggregate;
 using Fiap.Domain.UsersAggregate;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Fiap.Application.User.Services
 {
     public class UsersService(INotification notification, IUserRepository userRepository) : BaseService(notification), IUsersService
     {
-
-        Task<CreateUserResponse> IUsersService.Create(CreateUserRequest request)
+        public Task<CreateUserResponse> Create(CreateUserRequest request) => ExecuteAsync(async () =>
         {
-            throw new NotImplementedException();
-        }
+            var response = new CreateUserResponse();
 
-        Task<UpdateUserResponse> IUsersService.Update(UpdateUserRequest request)
+            try
+            {
+                Validate(request, new CreateUserRequestValidator());
+
+                var user = new UserDomain(
+                    request.Name,
+                    request.Email,
+                    request.Password,
+                    TypeUser.User,
+                    true
+                );
+
+                await userRepository.InsertOrUpdateAsync(user);
+
+                response.UserId = user.Id;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _notification.AddNotification("Create User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
+                return response;
+            }
+        });
+
+        public Task<UpdateUserResponse> Update(UpdateUserRequest request) => ExecuteAsync(async () =>
         {
-            throw new NotImplementedException();
-        }
+            var response = new UpdateUserResponse();
+
+            try
+            {
+                Validate(request, new UpdateUserRequestValidator());
+
+                var user = await userRepository.GetByIdAsync(request.Id, noTracking: false);
+
+                if (user == null)
+                {
+                    _notification.AddNotification("Update User", "User not found", NotificationModel.ENotificationType.NotFound);
+                    return response;
+                }
+
+                if (!string.IsNullOrEmpty(request.Name))
+                    user.Name = request.Name;
+
+                if (!string.IsNullOrEmpty(request.Email))
+                    user.Email = request.Email;
+
+                if (!string.IsNullOrEmpty(request.Password))
+                    user.Password = request.Password;
+
+                if (request.Type.HasValue)
+                    user.TypeUser = request.Type.Value;
+
+                if (request.Active.HasValue)
+                    user.Active = request.Active.Value;
+
+                await userRepository.UpdateAsync(user);
+
+                response.UserId = user.Id;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _notification.AddNotification("Update User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
+                return response;
+            }
+        });
     }
 }

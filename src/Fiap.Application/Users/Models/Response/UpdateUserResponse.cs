@@ -2,5 +2,6 @@
 {
     public class UpdateUserResponse
     {
+        public int UserId { get; set; }
     }
 }

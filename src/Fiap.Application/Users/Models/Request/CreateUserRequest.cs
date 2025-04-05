@@ -1,4 +1,4 @@
-﻿namespace Fiap.Application.Contact.Models.Request
+﻿namespace Fiap.Application.Users.Models.Request
 {
     public class CreateUserRequest
     {

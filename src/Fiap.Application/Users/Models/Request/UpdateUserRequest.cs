@@ -1,6 +1,6 @@
 ﻿using Fiap.Domain.SeedWork.Enums;
 
-namespace Fiap.Application.Contact.Models.Request
+namespace Fiap.Application.Users.Models.Request
 {
     public class UpdateUserRequest
     {

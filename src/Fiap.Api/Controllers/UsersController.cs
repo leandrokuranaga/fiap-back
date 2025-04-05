@@ -1,4 +1,4 @@
-﻿using Fiap.Application.Contact.Models.Request;
+﻿using Fiap.Application.Users.Models.Request;
 using Fiap.Application.Users.Services;
 using Fiap.Domain.SeedWork;
 using Microsoft.AspNetCore.Mvc;
