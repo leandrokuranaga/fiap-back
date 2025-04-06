@@ -10,6 +10,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
             #region Arrange
             var mockGameDomain = new GameDomain()
             {
+                Id = 1,
                 Name = "Test Game",
                 Price = 70.0,
                 Genre = "Action",
@@ -20,6 +21,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
 
             #region Act
             var mockGameDomainAct = new GameDomain(
+                mockGameDomain.Id,
                 mockGameDomain.Name,
                 mockGameDomain.Genre,
                 mockGameDomain.Price,

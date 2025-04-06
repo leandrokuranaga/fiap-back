@@ -1,6 +1,4 @@
-﻿using Fiap.Application.Common;
-
-namespace Fiap.Application
+﻿namespace Fiap.Application.Common
 {
     public class Response : BaseResponse
     { }

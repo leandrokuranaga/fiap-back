@@ -1,5 +1,6 @@
 ﻿using Fiap.Domain.LibraryAggregate;
 using Fiap.Domain.UserAggregate;
+using Fiap.Infra.Data.MapEntities.Seeds;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -37,6 +38,7 @@ namespace Fiap.Infra.Data.MapEntities
                 .WithOne(l => l.User)
                 .HasForeignKey<LibraryDomain>(l => l.UserId);
 
+            builder.HasData(UserSeed.Users());
         }
     }
 }
