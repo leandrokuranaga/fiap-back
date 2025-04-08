@@ -1,4 +1,5 @@
-﻿using Fiap.Application.Common;
+﻿using Abp;
+using Fiap.Application.Common;
 using Fiap.Application.Users.Models.Request;
 using Fiap.Application.Users.Models.Response;
 using Fiap.Application.Users.Services;
@@ -82,5 +83,97 @@ namespace Fiap.Application.User.Services
                 return response;
             }
         });
+
+
+        public Task<DeleteUserResponse> Delete(DeleteUserRequest request) => ExecuteAsync(async () =>
+        {
+            var response = new DeleteUserResponse();
+
+            try
+            {
+                var user = await userRepository.GetByIdAsync(request.UserId, noTracking:false);
+
+                if(user == null)
+                {
+                    _notification.AddNotification("Delete User", "User Not found", NotificationModel.ENotificationType.InternalServerError);
+                    return response;
+                }
+
+                await userRepository.DeleteAsync(user);
+
+                response.UserId = user.Id;
+                response.Success = true;
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+
+                _notification.AddNotification("Delete User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
+                response.Success = false;
+                return response;
+            }
+
+        });
+
+        public Task<GetUserResponse> Get(int userId) => ExecuteAsync(async () =>
+        {
+            var response = new GetUserResponse();
+
+            try
+            {
+                var user = await userRepository.GetByIdAsync(userId, noTracking: false);
+
+                if (user == null)
+                {
+                    _notification.AddNotification("Get User", "User not found", NotificationModel.ENotificationType.NotFound);
+                    return response;
+                }
+
+                response.UserId = user.Id;
+                response.Name = user.Name;
+                response.Email = user.Email;
+                response.Type = user.TypeUser;
+                response.Active = user.Active;
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _notification.AddNotification("Get User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
+                return response;
+            }
+        });
+
+        public Task<List<GetUserResponse>> GetAll() => ExecuteAsync(async () =>
+        {
+            var response = new List<GetUserResponse>();
+
+            try
+            {
+                var users = await userRepository.GetAllAsync();
+
+                var allUsers = users
+                    .Where(u => u.TypeUser == TypeUser.Admin)
+                    .Select(user => new GetUserResponse
+                    {
+                        UserId = user.Id,
+                        Name = user.Name,
+                        Email = user.Email,
+                        Type = user.TypeUser,
+                        Active = user.Active
+                    })
+                    .ToList();
+
+                return allUsers;
+            }
+            catch (Exception ex)
+            {
+                _notification.AddNotification("Get Admin Users", ex.Message, NotificationModel.ENotificationType.InternalServerError);
+                return response;
+            }
+        });
+
+
     }
 }
