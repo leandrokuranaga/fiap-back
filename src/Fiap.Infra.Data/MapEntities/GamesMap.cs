@@ -1,4 +1,5 @@
 ﻿using Fiap.Domain.GameAggregate;
+using Fiap.Infra.Data.MapEntities.Seeds;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -27,6 +28,7 @@ namespace Fiap.Infra.Data.MapEntities
                    .WithMany(p => p.Games)
                    .HasForeignKey(x => x.PromotionId);
 
+            builder.HasData(GameSeed.Game());
         }
     }
 }

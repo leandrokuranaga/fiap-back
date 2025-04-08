@@ -1,4 +1,5 @@
 ﻿using Fiap.Domain.LibraryAggregate;
+using Fiap.Infra.Data.MapEntities.Seeds;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -19,6 +20,8 @@ namespace Fiap.Infra.Data.MapEntities
             builder.HasMany(x => x.Games)
                    .WithOne(g => g.Library)
                    .HasForeignKey(g => g.LibraryId);
+
+            builder.HasData(LibrarySeed.Libraries());
         }
 
     }
