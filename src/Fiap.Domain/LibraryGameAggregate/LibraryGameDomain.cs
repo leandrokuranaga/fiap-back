@@ -12,8 +12,9 @@ namespace Fiap.Domain.LibraryGameAggregate
             
         }
 
-        public LibraryGameDomain(int libraryId, int gameId, DateTime purchaseDate, double pricePaid)
+        public LibraryGameDomain(int id, int libraryId, int gameId, DateTime purchaseDate, double pricePaid)
         {
+            Id = id;
             LibraryId = libraryId;
             GameId = gameId;
             PurchaseDate = purchaseDate;

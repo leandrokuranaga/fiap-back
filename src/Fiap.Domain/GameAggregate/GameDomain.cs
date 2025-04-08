@@ -7,8 +7,9 @@ namespace Fiap.Domain.GameAggregate
 {
     public class GameDomain : Entity
     {
-        public GameDomain(string name, string genre, double price, int? promotionId)
+        public GameDomain(int id, string name, string genre, double price, int? promotionId)
         {
+            Id = id;
             Name = name;
             Genre = genre;
             Price = price;
