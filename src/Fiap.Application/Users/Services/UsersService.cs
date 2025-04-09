@@ -19,14 +19,8 @@ namespace Fiap.Application.User.Services
             try
             {
                 Validate(request, new CreateUserRequestValidator());
-
-                var user = new UserDomain(
-                    request.Name,
-                    request.Email,
-                    request.Password,
-                    TypeUser.User,
-                    true
-                );
+                                
+                var user = CreateUserDomain(request);
 
                 await userRepository.InsertOrUpdateAsync(user);
 
@@ -39,6 +33,19 @@ namespace Fiap.Application.User.Services
                 return response;
             }
         });
+
+        private UserDomain CreateUserDomain(CreateUserRequest request)
+        {
+            var hashedPassword = PasswordHasher.HashPassword(request.Password);
+
+            return new UserDomain(
+                request.Name,
+                request.Email,
+                hashedPassword,
+                request.Type,
+                request.Active
+            );
+        }
 
         public Task<UpdateUserResponse> Update(UpdateUserRequest request) => ExecuteAsync(async () =>
         {
@@ -56,20 +63,7 @@ namespace Fiap.Application.User.Services
                     return response;
                 }
 
-                if (!string.IsNullOrEmpty(request.Name))
-                    user.Name = request.Name;
-
-                if (!string.IsNullOrEmpty(request.Email))
-                    user.Email = request.Email;
-
-                if (!string.IsNullOrEmpty(request.Password))
-                    user.Password = request.Password;
-
-                if (request.Type.HasValue)
-                    user.TypeUser = request.Type.Value;
-
-                if (request.Active.HasValue)
-                    user.Active = request.Active.Value;
+                UpdateUserProperties(user, request);
 
                 await userRepository.UpdateAsync(user);
 
@@ -82,5 +76,16 @@ namespace Fiap.Application.User.Services
                 return response;
             }
         });
+
+        private void UpdateUserProperties(UserDomain user, UpdateUserRequest request)
+        {
+            user.Name = request.Name ?? user.Name;
+            user.Email = request.Email ?? user.Email;
+            user.TypeUser = request.Type ?? user.TypeUser;
+            user.Active = request.Active ?? user.Active;
+
+            if (!string.IsNullOrEmpty(request.Password))
+                user.Password = PasswordHasher.HashPassword(request.Password);
+        }
     }
 }
