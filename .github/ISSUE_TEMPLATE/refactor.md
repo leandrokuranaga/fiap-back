@@ -1,0 +1,49 @@
+---
+name: REFACTOR
+about: Esse template é para issues de refatoração
+title: REFACTOR
+labels: ''
+assignees: ''
+
+---
+
+name: "🧹 Refatoração / Débito Técnico"
+description: Refatorações ou melhorias técnicas no código
+title: "🧹 [Refactor] - <área/componente>"
+labels: ["refactor"]
+
+body:
+  - type: input
+    id: area
+    attributes:
+      label: "Área a ser refatorada"
+      placeholder: Ex: Service de autenticação
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivo
+    attributes:
+      label: "Motivo da refatoração"
+      description: Por que essa parte precisa ser melhorada?
+      placeholder: Código duplicado, baixa legibilidade, responsabilidade mal definida etc.
+    validations:
+      required: true
+
+  - type: textarea
+    id: sugestao
+    attributes:
+      label: "O que será feito"
+      placeholder: Substituir lógica por padrão Strategy, extrair classe, remover código morto etc.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: impacto
+    attributes:
+      label: Essa refatoração impacta:
+      options:
+        - label: Regras de negócio
+        - label: Interface da API
+        - label: Estrutura de banco de dados
+        - label: Testes existentes
