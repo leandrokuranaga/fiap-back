@@ -31,7 +31,7 @@ namespace Fiap.Tests._1._Api_Layer_Tests
             {
                 Discount = 10,
                 ExpirationDate = DateTime.UtcNow.AddDays(30),
-                GameId = [1, 2, 3]
+                GameId = new List<int?> { 1, 2, 3 }
             };
 
             var _mockCreateResponse = new PromotionResponse
