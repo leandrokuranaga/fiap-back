@@ -63,7 +63,7 @@ namespace Fiap.Application.Promotions.Services
             }
         }
 
-        public Task<PromotionResponse> UpdateAsync(UpdatePromotionRequest request) => ExecuteAsync(async () =>
+        public Task<PromotionResponse> UpdateAsync(int id,UpdatePromotionRequest request) => ExecuteAsync(async () =>
         {
             var response = new PromotionResponse();
 
@@ -71,7 +71,7 @@ namespace Fiap.Application.Promotions.Services
             {
                 Validate(request, new UpdatePromotionRequestValidator());
 
-                var promotion = await promotionRepository.GetByIdAsync(request.Id, noTracking: false);
+                var promotion = await promotionRepository.GetByIdAsync(id, noTracking: false);
 
                 promotion.UpdateDiscount(request.Discount, request.ExpirationDate);
 

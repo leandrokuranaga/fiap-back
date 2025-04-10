@@ -21,12 +21,12 @@ namespace Fiap.Api.Controllers
             => Response(await promotionsService.CreateAsync(request));
 
 
-        [HttpPut("{id}")]
+        [HttpPatch("{id:int:min(1)}")]
         [SwaggerOperation("Updates a value for a promotion for N or 0 games")]
         [ProducesResponseType(typeof(PromotionResponse), (int)HttpStatusCode.OK)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> Update([FromBody] UpdatePromotionRequest request)
-            => Response(await promotionsService.UpdateAsync(request));
+        public async Task<IActionResult> Update(int id, [FromBody] UpdatePromotionRequest request)
+            => Response(await promotionsService.UpdateAsync(id, request));
     }
 }

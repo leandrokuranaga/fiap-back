@@ -7,13 +7,6 @@ namespace Fiap.Application.Validators.PromotionsValidators
     {
         public UpdatePromotionRequestValidator() 
         { 
-            RuleFor(x => x.Id)
-                .NotEmpty()
-                .WithMessage("Id is required.")
-                .GreaterThan(0)
-                .WithMessage("Id must be greater than 0.");
-
-
             When(x => x.Discount != null, () =>
             {
                 RuleFor(x => x.Discount.Value)
