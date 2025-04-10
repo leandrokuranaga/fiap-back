@@ -18,6 +18,10 @@ builder.Services.AddLocalServices(builder.Configuration);
 
 builder.Services.AddCustomMvc();
 
+builder.Services.AddHealthChecks()
+    .AddNpgSql(connectionString);
+    
+
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddGlobalCorsPolicy();
@@ -44,5 +48,7 @@ app.UseCors("AllowAllOrigins");
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHealthChecks("/health");
+
 
 app.Run();
