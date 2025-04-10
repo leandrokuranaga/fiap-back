@@ -70,7 +70,7 @@ namespace Fiap.Tests._1._Api_Layer_Tests
                 Id = 1,
                 Discount = 20,
                 ExpirationDate = DateTime.UtcNow.AddDays(60),
-                GameId = [1, 2, 3]
+                GameId = new List<int?> { 1, 2, 3 }
             };
             var _mockUpdateResponse = new PromotionResponse
             {
