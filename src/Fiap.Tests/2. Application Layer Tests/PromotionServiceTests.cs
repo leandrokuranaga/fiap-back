@@ -48,6 +48,10 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #region Assert
             Assert.NotNull(result);
             Assert.Equal(promotion.Id, result.PromotionId);
+            Assert.Equal(request.Discount, result.Discount);
+            Assert.Equal(request.ExpirationDate, result.EndDate);
+            Assert.Equal(promotion.StartDate, result.StartDate);
+
             #endregion
 
         }
@@ -82,19 +86,20 @@ namespace Fiap.Tests._2._Application_Layer_Tests
         {
 
             #region Arrange
+
+            int promotionId = 1;
             var request = new UpdatePromotionRequest
             {
-                Id = 1,
                 Discount = 10,
                 ExpirationDate = DateTime.UtcNow.AddDays(30)
             };
 
             var promotion = new PromotionDomain(request.Discount ?? 0, DateTime.UtcNow, request.ExpirationDate ?? DateTime.UtcNow)
             {
-                Id = request.Id
+                Id = promotionId
             };
 
-            _mockPromotionRepositoryMock.Setup(repo => repo.GetByIdAsync(request.Id, It.IsAny<bool>()))
+            _mockPromotionRepositoryMock.Setup(repo => repo.GetByIdAsync(promotionId, It.IsAny<bool>()))
                 .ReturnsAsync(promotion);
 
             _mockPromotionRepositoryMock.Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<PromotionDomain>()))
@@ -102,12 +107,16 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _promotionService.UpdateAsync(request);
+            var result = await _promotionService.UpdateAsync(promotionId, request);
             #endregion
 
             #region Assert
             Assert.NotNull(result);
-            Assert.Equal(request.Id, result.PromotionId);
+            Assert.Equal(promotionId, result.PromotionId);
+            Assert.Equal(request.Discount, result.Discount);
+            Assert.Equal(request.ExpirationDate, result.EndDate);
+            Assert.Equal(promotion.StartDate, result.StartDate);
+
             #endregion
         }
 
@@ -115,20 +124,21 @@ namespace Fiap.Tests._2._Application_Layer_Tests
         public async Task UpdatePromotion_ShouldAddNotification_WhenExceptionOccurs()
         {
             #region Arrange
+            int promotionId = 1;
+
             var request = new UpdatePromotionRequest
             {
-                Id = 1,
                 Discount = 10,
                 ExpirationDate = DateTime.UtcNow.AddDays(30)
             };
 
-            _mockPromotionRepositoryMock.Setup(repo => repo.GetByIdAsync(request.Id, It.IsAny<bool>()))
+            _mockPromotionRepositoryMock.Setup(repo => repo.GetByIdAsync(promotionId, It.IsAny<bool>()))
                 .ThrowsAsync(new Exception("Test exception"));
 
             #endregion
 
             #region Act
-            var result = await _promotionService.UpdateAsync(request);
+            var result = await _promotionService.UpdateAsync(promotionId, request);
 
             #endregion
 
@@ -143,9 +153,10 @@ namespace Fiap.Tests._2._Application_Layer_Tests
         public async Task UpdatePromotion_ShouldUpdateGames_WhenGameIdsAreProvided()
         {
             #region Arrange
+            int promotionId = 1;
+
             var request = new UpdatePromotionRequest
             {
-                Id = 1,
                 Discount = 15,
                 ExpirationDate = DateTime.UtcNow.AddDays(20),
                 GameId = [101, 102]
@@ -153,13 +164,13 @@ namespace Fiap.Tests._2._Application_Layer_Tests
 
             var promotion = new PromotionDomain(request.Discount.Value, DateTime.UtcNow, request.ExpirationDate.Value)
             {
-                Id = request.Id
+                Id = promotionId
             };
 
             var game1 = new GameDomain() { Id = 101, Name = "Game 1", Genre = "Action", Price = 59.90 };
             var game2 = new GameDomain() { Id = 102, Name = "Game 2", Genre = "Adventure", Price = 49.90 };
 
-            _mockPromotionRepositoryMock.Setup(repo => repo.GetByIdAsync(request.Id, It.IsAny<bool>()))
+            _mockPromotionRepositoryMock.Setup(repo => repo.GetByIdAsync(promotionId, It.IsAny<bool>()))
                 .ReturnsAsync(promotion);
 
             _mockGameRepositoryMock.Setup(repo => repo.GetByIdAsync(101, It.IsAny<bool>()))
@@ -177,16 +188,19 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _promotionService.UpdateAsync(request);
+            var result = await _promotionService.UpdateAsync(promotionId, request);
             #endregion
 
             #region Assert
             Assert.NotNull(result);
-            Assert.Equal(request.Id, result.PromotionId);
+            Assert.Equal(promotionId, result.PromotionId);
+            Assert.Equal(request.Discount, result.Discount);
+            Assert.Equal(request.ExpirationDate, result.EndDate);
+            Assert.Equal(promotion.StartDate, result.StartDate);
 
             _mockGameRepositoryMock.Verify(repo => repo.UpdateRangeAsync(It.Is<IEnumerable<GameDomain>>(games =>
-                games.Any(g => g.Id == 101 && g.PromotionId == request.Id) &&
-                games.Any(g => g.Id == 102 && g.PromotionId == request.Id)
+                games.Any(g => g.Id == 101 && g.PromotionId == promotionId) &&
+                games.Any(g => g.Id == 102 && g.PromotionId == promotionId) 
             )), Times.Once);
             #endregion
         }

@@ -65,24 +65,29 @@ namespace Fiap.Tests._1._Api_Layer_Tests
         public async Task UpdatePromotion_ShouldReturnOk_WhenServiceReturnsSuccess()
         {
             #region Arrange
+            int promotionId = 1;
+
             var _mockUpdateRequest = new UpdatePromotionRequest
             {
-                Id = 1,
                 Discount = 20,
                 ExpirationDate = DateTime.UtcNow.AddDays(60),
                 GameId = new List<int?> { 1, 2, 3 }
             };
             var _mockUpdateResponse = new PromotionResponse
             {
-                PromotionId = 1
+                PromotionId = 1,
+                Discount = _mockUpdateRequest.Discount.Value,
+                StartDate = DateTime.UtcNow,
+                EndDate = _mockUpdateRequest.ExpirationDate.Value
             };
             #endregion
 
             #region Act
             _promotionsServiceMock
-                .Setup(x => x.UpdateAsync(_mockUpdateRequest))
+                .Setup(x => x.UpdateAsync(promotionId, _mockUpdateRequest))
                 .ReturnsAsync(_mockUpdateResponse);
-            var result = await _controller.Update(_mockUpdateRequest);
+
+            var result = await _controller.Update(promotionId, _mockUpdateRequest);
             var okResult = result as OkObjectResult;
             var response = okResult.Value as PromotionResponse;
             #endregion
