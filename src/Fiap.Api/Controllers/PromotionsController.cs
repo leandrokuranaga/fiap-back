@@ -14,7 +14,7 @@ namespace Fiap.Api.Controllers
     {
         [HttpPost]
         [SwaggerOperation("Create a new Promotion for N or 0 games")]
-        [ProducesResponseType(typeof(CreatePromotionResponse), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(PromotionResponse), (int)HttpStatusCode.OK)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> Create([FromBody] CreatePromotionRequest request)
@@ -23,7 +23,7 @@ namespace Fiap.Api.Controllers
 
         [HttpPut("{id}")]
         [SwaggerOperation("Updates a value for a promotion for N or 0 games")]
-        [ProducesResponseType(typeof(UpdatePromotionResponse), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(PromotionResponse), (int)HttpStatusCode.OK)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> Update([FromBody] UpdatePromotionRequest request)
