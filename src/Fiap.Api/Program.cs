@@ -19,6 +19,13 @@ builder.Services.AddLocalServices(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.Configure<RouteOptions>(options =>
+{
+    options.ConstraintMap["lowercase"] = typeof(string);
+    options.LowercaseUrls = true;
+    options.LowercaseQueryStrings = true;
+});
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
