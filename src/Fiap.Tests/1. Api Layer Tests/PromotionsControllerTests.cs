@@ -1,4 +1,5 @@
 ﻿using Fiap.Api.Controllers;
+using Fiap.Application.Common;
 using Fiap.Application.Promotions.Models.Request;
 using Fiap.Application.Promotions.Models.Response;
 using Fiap.Application.Promotions.Services;
@@ -49,11 +50,12 @@ namespace Fiap.Tests._1._Api_Layer_Tests
                 .ReturnsAsync(mockCreateResponse);
 
             var result = await _controller.Create(mockCreateRequest);
-            var okResult = result as OkObjectResult;
-            var response = okResult.Value as PromotionResponse;
             #endregion
 
             #region Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var response = Assert.IsType<BaseResponse<PromotionResponse>>(okResult.Value);
+
             Assert.True(response.Success);
             #endregion
         }
@@ -88,8 +90,8 @@ namespace Fiap.Tests._1._Api_Layer_Tests
                 .ReturnsAsync(mockUpdateResponse);
 
             var result = await _controller.Update(promotionId, mockUpdateRequest);
-            var okResult = result as OkObjectResult;
-            var response = okResult.Value as PromotionResponse;
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var response = Assert.IsType<BaseResponse<PromotionResponse>>(okResult.Value);
             #endregion
 
             #region Assert

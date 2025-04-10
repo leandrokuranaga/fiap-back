@@ -3,7 +3,7 @@ using Fiap.Domain.PromotionAggregate;
 
 namespace Fiap.Application.Promotions.Models.Response
 {
-    public class PromotionResponse : BaseResponse
+    public class PromotionResponse
     {
         public int PromotionId { get; set; }
         public double Discount { get; set; }

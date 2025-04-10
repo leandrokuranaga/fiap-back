@@ -1,7 +1,7 @@
+using Fiap.Api.Extensions;
 using Fiap.Infra.CrossCutting.IoC;
 using Fiap.Infra.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,46 +16,23 @@ builder.Services.AddDbContext<Context>(options =>
 builder.Services.AddLocalHttpClients(builder.Configuration);
 builder.Services.AddLocalServices(builder.Configuration);
 
-builder.Services.AddControllers();
+builder.Services.AddCustomMvc();
+
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.Configure<RouteOptions>(options =>
-{
-    options.ConstraintMap["lowercase"] = typeof(string);
-    options.LowercaseUrls = true;
-    options.LowercaseQueryStrings = true;
-});
+builder.Services.AddGlobalCorsPolicy();
 
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "FIAP API",
-        Version = "v1",
-        Description = "FIAP API to evaluate our knowledge"
-    });
-});
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAllOrigins", builder =>
-    {
-        builder.AllowAnyOrigin();
-        builder.AllowAnyHeader();
-        builder.AllowAnyMethod();
-    });
-});
+builder.Services.AddSwaggerDocumentation();
 
 var app = builder.Build();
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+app.UseCustomStatusCodePages();
+
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "FIAP API v1");
-        c.RoutePrefix = "swagger";
-    });
+    app.UseSwaggerDocumentation();
 }
 
 app.UseRouting();
