@@ -1,5 +1,6 @@
 ﻿using Abp.Domain.Entities;
 using Fiap.Domain.GameAggregate;
+using Fiap.Domain.SeedWork.Exceptions;
 
 namespace Fiap.Domain.PromotionAggregate
 {
@@ -23,7 +24,7 @@ namespace Fiap.Domain.PromotionAggregate
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
 
-        public virtual ICollection<GameDomain> Games { get; set; } = new List<GameDomain>();
+        public virtual ICollection<GameDomain> Games { get; set; } = [];
         public void UpdateDiscount(double? discount, DateTime? endDate)
         {
             if (discount.HasValue)
@@ -38,7 +39,7 @@ namespace Fiap.Domain.PromotionAggregate
         public void ValidatePeriod()
         {
             if (EndDate <= StartDate)
-                throw new InvalidOperationException("Promotion end date cannot be earlier than the start date.");
+                throw new BusinessRulesException("Promotion end date cannot be earlier than the start date.");
         }
 
         public bool IsExpired() => EndDate < DateTime.UtcNow;
@@ -49,8 +50,5 @@ namespace Fiap.Domain.PromotionAggregate
         {
             return originalPrice * (1 - Discount / 100);
         }
-
-
-
     }
 }

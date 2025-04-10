@@ -1,9 +1,8 @@
-﻿using Fiap.Application.Common;
-using Fiap.Domain.PromotionAggregate;
+﻿using Fiap.Domain.PromotionAggregate;
 
 namespace Fiap.Application.Promotions.Models.Response
 {
-    public class PromotionResponse
+    public record PromotionResponse
     {
         public int PromotionId { get; set; }
         public double Discount { get; set; }

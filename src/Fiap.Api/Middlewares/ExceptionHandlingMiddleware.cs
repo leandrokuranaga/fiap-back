@@ -1,5 +1,4 @@
-﻿// Fiap.Api/Middlewares/ExceptionHandlingMiddleware.cs
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
 
 public class ExceptionHandlingMiddleware(RequestDelegate next)

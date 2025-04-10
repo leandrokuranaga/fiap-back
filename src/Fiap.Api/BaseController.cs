@@ -1,5 +1,4 @@
-﻿using Fiap.Application;
-using Fiap.Application.Common;
+﻿using Fiap.Application.Common;
 using Fiap.Domain.SeedWork;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
