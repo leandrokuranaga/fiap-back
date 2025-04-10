@@ -5,7 +5,7 @@ namespace Fiap.Application.Promotions.Services
 {
     public interface IPromotionsService
     {
-        Task<CreatePromotionResponse> CreateAsync(CreatePromotionRequest request);
-        Task<UpdatePromotionResponse> UpdateAsync(UpdatePromotionRequest request);
+        Task<PromotionResponse> CreateAsync(CreatePromotionRequest request);
+        Task<PromotionResponse> UpdateAsync(UpdatePromotionRequest request);
     }
 }

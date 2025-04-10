@@ -31,11 +31,15 @@ namespace Fiap.Tests._1._Api_Layer_Tests
             {
                 Discount = 10,
                 ExpirationDate = DateTime.UtcNow.AddDays(30),
-                GameId = new List<int?> { 1, 2, 3 }
+                GameId = [1, 2, 3]
             };
-            var _mockCreateResponse = new CreatePromotionResponse
+
+            var _mockCreateResponse = new PromotionResponse
             {
-                PromotionId = 1
+                PromotionId = 1,
+                Discount = _mockCreateRequest.Discount,
+                StartDate = DateTime.UtcNow,
+                EndDate = _mockCreateRequest.ExpirationDate
             };
             #endregion
 
@@ -46,7 +50,7 @@ namespace Fiap.Tests._1._Api_Layer_Tests
 
             var result = await _controller.Create(_mockCreateRequest);
             var okResult = result as OkObjectResult;
-            var response = okResult.Value as CreatePromotionResponse;
+            var response = okResult.Value as PromotionResponse;
             #endregion
 
             #region Assert
@@ -66,9 +70,9 @@ namespace Fiap.Tests._1._Api_Layer_Tests
                 Id = 1,
                 Discount = 20,
                 ExpirationDate = DateTime.UtcNow.AddDays(60),
-                GameId = new List<int?> { 1, 2, 3 }
+                GameId = [1, 2, 3]
             };
-            var _mockUpdateResponse = new UpdatePromotionResponse
+            var _mockUpdateResponse = new PromotionResponse
             {
                 PromotionId = 1
             };
@@ -80,7 +84,7 @@ namespace Fiap.Tests._1._Api_Layer_Tests
                 .ReturnsAsync(_mockUpdateResponse);
             var result = await _controller.Update(_mockUpdateRequest);
             var okResult = result as OkObjectResult;
-            var response = okResult.Value as UpdatePromotionResponse;
+            var response = okResult.Value as PromotionResponse;
             #endregion
 
             #region Assert
