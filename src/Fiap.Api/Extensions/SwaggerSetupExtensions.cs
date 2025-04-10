@@ -17,6 +17,31 @@ namespace Fiap.Api.Extensions
                     Description = "FIAP API to evaluate our knowledge"
                 });
 
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: 'Bearer {token}'",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT"
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
+
                 c.ExampleFilters();
                 c.OperationFilter<SetApplicationJsonAsDefaultFilter>();
             });
@@ -24,7 +49,7 @@ namespace Fiap.Api.Extensions
             services.AddSwaggerExamplesFromAssemblyOf<CreatePromotionRequestExample>();
         }
 
-        public static void UseSwaggerDocumentation(this IApplicationBuilder app)
+        public static void UseSwaggerDocumentation(this WebApplication app)
         {
             app.UseSwagger();
             app.UseSwaggerUI(c =>

@@ -1,4 +1,4 @@
-﻿using Fiap.Application.Contact.Models.Request;
+﻿using Fiap.Application.Users.Models.Request;
 using FluentValidation;
 
 namespace Fiap.Application.Validators.UsersValidators
@@ -7,10 +7,6 @@ namespace Fiap.Application.Validators.UsersValidators
     {
         public UpdateUserRequestValidator()
         {
-            RuleFor(x => x.Id)
-                .NotEmpty()
-                .WithMessage("Id is required.");
-
             RuleFor(x => x.Name)
                 .MaximumLength(100)
                 .WithMessage("Name must be less than or equal to 100 characters.")
@@ -40,9 +36,19 @@ namespace Fiap.Application.Validators.UsersValidators
                 .When(x => x.Type.HasValue);
 
             RuleFor(x => x.Active)
-                .Must(v => v is true or false)
+                .NotNull()
                 .WithMessage("Active status is required.")
                 .When(x => x.Active.HasValue);
+
+            RuleFor(x => x)
+                .Must(x =>
+                    !string.IsNullOrWhiteSpace(x.Name) ||
+                    !string.IsNullOrWhiteSpace(x.Email) ||
+                    !string.IsNullOrWhiteSpace(x.Password) ||
+                    x.Type.HasValue ||
+                    x.Active.HasValue
+                )
+                .WithMessage("At least one field must be provided.");
         }
     }
 }
