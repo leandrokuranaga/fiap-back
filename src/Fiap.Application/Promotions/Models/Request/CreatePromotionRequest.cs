@@ -14,7 +14,7 @@ namespace Fiap.Application.Promotions.Models.Request
             {
                 Discount = c.Discount,
                 EndDate = c.ExpirationDate,
-                StartDate = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc),
+                StartDate = DateTime.UtcNow,
             };
         }
     }

@@ -21,7 +21,7 @@ namespace Fiap.Api.Controllers
             => Response(await promotionsService.CreateAsync(request));
 
 
-        [HttpPatch("{id:int}")]
+        [HttpPatch("{id:int:min(1)}")]
         [SwaggerOperation("Updates a value for a promotion for N or 0 games")]
         [ProducesResponseType(typeof(PromotionResponse), (int)HttpStatusCode.OK)]
         [ProducesResponseType(404)]

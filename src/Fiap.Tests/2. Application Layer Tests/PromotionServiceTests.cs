@@ -26,18 +26,25 @@ namespace Fiap.Tests._2._Application_Layer_Tests
         public async Task CreatePromotion_ShouldReturnPromotionId_WhenValidRequest()
         {
             #region Arrange
+            var now = DateTime.UtcNow;
+
             var request = new CreatePromotionRequest
             {
                 Discount = 10,
-                ExpirationDate = DateTime.UtcNow.AddDays(30),
+                ExpirationDate = now.AddDays(30),
                 GameId = [1, 2, 3]
             };
 
-            var promotion = new PromotionDomain(request.Discount, DateTime.UtcNow, request.ExpirationDate);
+            _mockPromotionRepositoryMock
+                .Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<PromotionDomain>()))
+                .ReturnsAsync((PromotionDomain p) => 
+                {
+                    p.Id = 1;
+                    return p;
+                });
 
-            _mockPromotionRepositoryMock.Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<PromotionDomain>()))
-                .ReturnsAsync(promotion);
-            _mockGameRepositoryMock.Setup(repo => repo.GetByIdAsync(It.IsAny<int>(), It.IsAny<bool>()))
+            _mockGameRepositoryMock
+                .Setup(repo => repo.GetByIdAsync(It.IsAny<int>(), It.IsAny<bool>()))
                 .ReturnsAsync(new GameDomain());
             #endregion
 
@@ -47,14 +54,16 @@ namespace Fiap.Tests._2._Application_Layer_Tests
 
             #region Assert
             Assert.NotNull(result);
-            Assert.Equal(promotion.Id, result.PromotionId);
+            Assert.True(result.PromotionId > 0);
             Assert.Equal(request.Discount, result.Discount);
             Assert.Equal(request.ExpirationDate, result.EndDate);
-            Assert.Equal(promotion.StartDate, result.StartDate);
-
+            Assert.True(
+                (DateTime.UtcNow - result.StartDate).TotalSeconds < 5,
+                $"StartDate was too far off from expected time: {result.StartDate}"
+            );
             #endregion
-
         }
+
 
         [Fact]
         public async Task CreatePromotion_ShouldAddNotification_WhenExceptionOccurs()
