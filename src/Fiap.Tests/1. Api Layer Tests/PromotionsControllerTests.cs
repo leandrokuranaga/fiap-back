@@ -27,28 +27,28 @@ namespace Fiap.Tests._1._Api_Layer_Tests
         public async Task CreatePromotion_ShouldReturnOk_WhenServiceReturnsSuccess()
         {
             #region Arrange
-            var _mockCreateRequest = new CreatePromotionRequest
+            var mockCreateRequest = new CreatePromotionRequest
             {
                 Discount = 10,
                 ExpirationDate = DateTime.UtcNow.AddDays(30),
                 GameId = new List<int?> { 1, 2, 3 }
             };
 
-            var _mockCreateResponse = new PromotionResponse
+            var mockCreateResponse = new PromotionResponse
             {
                 PromotionId = 1,
-                Discount = _mockCreateRequest.Discount,
+                Discount = mockCreateRequest.Discount,
                 StartDate = DateTime.UtcNow,
-                EndDate = _mockCreateRequest.ExpirationDate
+                EndDate = mockCreateRequest.ExpirationDate
             };
             #endregion
 
             #region Act
             _promotionsServiceMock
-                .Setup(x => x.CreateAsync(_mockCreateRequest))
-                .ReturnsAsync(_mockCreateResponse);
+                .Setup(x => x.CreateAsync(mockCreateRequest))
+                .ReturnsAsync(mockCreateResponse);
 
-            var result = await _controller.Create(_mockCreateRequest);
+            var result = await _controller.Create(mockCreateRequest);
             var okResult = result as OkObjectResult;
             var response = okResult.Value as PromotionResponse;
             #endregion
@@ -67,27 +67,27 @@ namespace Fiap.Tests._1._Api_Layer_Tests
             #region Arrange
             int promotionId = 1;
 
-            var _mockUpdateRequest = new UpdatePromotionRequest
+            var mockUpdateRequest = new UpdatePromotionRequest
             {
                 Discount = 20,
                 ExpirationDate = DateTime.UtcNow.AddDays(60),
                 GameId = new List<int?> { 1, 2, 3 }
             };
-            var _mockUpdateResponse = new PromotionResponse
+            var mockUpdateResponse = new PromotionResponse
             {
                 PromotionId = 1,
-                Discount = _mockUpdateRequest.Discount.Value,
+                Discount = mockUpdateRequest.Discount.Value,
                 StartDate = DateTime.UtcNow,
-                EndDate = _mockUpdateRequest.ExpirationDate.Value
+                EndDate = mockUpdateRequest.ExpirationDate.Value
             };
             #endregion
 
             #region Act
             _promotionsServiceMock
-                .Setup(x => x.UpdateAsync(promotionId, _mockUpdateRequest))
-                .ReturnsAsync(_mockUpdateResponse);
+                .Setup(x => x.UpdateAsync(promotionId, mockUpdateRequest))
+                .ReturnsAsync(mockUpdateResponse);
 
-            var result = await _controller.Update(promotionId, _mockUpdateRequest);
+            var result = await _controller.Update(promotionId, mockUpdateRequest);
             var okResult = result as OkObjectResult;
             var response = okResult.Value as PromotionResponse;
             #endregion
