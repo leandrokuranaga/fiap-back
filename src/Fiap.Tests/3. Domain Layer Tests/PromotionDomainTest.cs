@@ -1,4 +1,5 @@
 ﻿using Fiap.Domain.PromotionAggregate;
+using Fiap.Domain.SeedWork.Exceptions;
 
 namespace Fiap.Tests._3._Domain_Layer_Tests
 {
@@ -34,7 +35,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
             #endregion
 
             #region Act & Assert
-            var ex = Assert.Throws<InvalidOperationException>(() =>
+            var ex = Assert.Throws<BusinessRulesException>(() =>
                 new PromotionDomain(discount, startDate, endDate));
 
             Assert.Equal("Promotion end date cannot be earlier than the start date.", ex.Message);

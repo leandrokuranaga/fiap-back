@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Fiap.Domain.SeedWork
+﻿namespace Fiap.Domain.SeedWork
 {
     public class NotificationModel
     {
@@ -20,7 +16,6 @@ namespace Fiap.Domain.SeedWork
                 Message = message
             };
 
-            // Heurística: se a chave começa com letra maiúscula, é campo de DTO
             if (!string.IsNullOrWhiteSpace(key) && char.IsUpper(key[0]))
                 FieldMessages.Add(msg);
             else
