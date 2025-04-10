@@ -1,5 +1,4 @@
 ﻿using Abp.Domain.Entities;
-using Fiap.Domain.LibraryAggregate;
 using Fiap.Domain.LibraryGameAggregate;
 using Fiap.Domain.PromotionAggregate;
 
@@ -28,5 +27,12 @@ namespace Fiap.Domain.GameAggregate
 
         public virtual PromotionDomain Promotion { get; set; }
         public virtual ICollection<LibraryGameDomain> Libraries { get; set; }
+
+
+        public void AssignPromotion(int promotionId) 
+        {
+            PromotionId = promotionId;
+        }
+
     }
 }

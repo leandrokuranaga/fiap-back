@@ -1,4 +1,5 @@
-﻿using Fiap.Application.Promotions.Models.Request;
+﻿using Fiap.Application.Common;
+using Fiap.Application.Promotions.Models.Request;
 using Fiap.Application.Promotions.Models.Response;
 using Fiap.Application.Promotions.Services;
 using Fiap.Domain.SeedWork;
@@ -14,19 +15,36 @@ namespace Fiap.Api.Controllers
     {
         [HttpPost]
         [SwaggerOperation("Create a new Promotion for N or 0 games")]
-        [ProducesResponseType(typeof(CreatePromotionResponse), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(500)]
+        [ProducesResponseType(typeof(BaseResponse<PromotionResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(BaseResponse<PromotionResponse>), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(BaseResponse<PromotionResponse>), (int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
+        [ProducesResponseType(StatusCodes.Status406NotAcceptable)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+
         public async Task<IActionResult> Create([FromBody] CreatePromotionRequest request)
-            => Response(await promotionsService.CreateAsync(request));
+        {
+            var result = await promotionsService.CreateAsync(request);
+            return Response(BaseResponse<PromotionResponse>.Ok(result));
+        }
 
 
-        [HttpPut("{id}")]
+        [HttpPatch("{id:int:min(1)}")]
         [SwaggerOperation("Updates a value for a promotion for N or 0 games")]
-        [ProducesResponseType(typeof(UpdatePromotionResponse), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(500)]
-        public async Task<IActionResult> Update([FromBody] UpdatePromotionRequest request)
-            => Response(await promotionsService.UpdateAsync(request));
+        [ProducesResponseType(typeof(BaseResponse<PromotionResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(BaseResponse<PromotionResponse>), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(BaseResponse<PromotionResponse>), (int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
+        [ProducesResponseType(StatusCodes.Status406NotAcceptable)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        public async Task<IActionResult> Update(int id, [FromBody] UpdatePromotionRequest request)
+        {
+            var result = await promotionsService.UpdateAsync(id, request);
+            return Response(BaseResponse<PromotionResponse>.Ok(result));
+        }
+
+
     }
 }

@@ -1,4 +1,6 @@
-﻿using Fiap.Application.Users.Models.Request;
+﻿using Fiap.Application.Common;
+using Fiap.Application.Users.Models.Request;
+using Fiap.Application.Users.Models.Response;
 using Fiap.Application.Users.Services;
 using Fiap.Domain.SeedWork;
 using Microsoft.AspNetCore.Authorization;
@@ -13,36 +15,42 @@ namespace Fiap.Api.Controllers
     {
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateUserRequest request)
-            => Response(await usersService.Create(request));
+        public async Task<IActionResult> Create([FromBody] CreateUserRequest request) 
+        {
+            var result = await usersService.Create(request);
+            return Response(BaseResponse<UserResponse>.Ok(result));
+        }
 
-        
-        [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UpdateUserRequest request)
-            => Response(await usersService.Update(request));
 
-        
-        [HttpDelete("{id}")]
+        [HttpPatch("{id:int:min(1)}")]
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateUserRequest request)
+        {
+            var result = await usersService.Update(id, request);
+            return Response(BaseResponse<UserResponse>.Ok(result));
+        }
+
+
+        [HttpDelete("{id:int:min(1)}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var request = new DeleteUserRequest { UserId = id };
-            return Response(await usersService.Delete(request));
+            await usersService.Delete(id);
+            return Response(BaseResponse<EmptyResultModel>.Ok(new EmptyResultModel()));
         }
 
        
-        [HttpGet("{id}")]
+        [HttpGet("{id:int:min(1)}")]
         public async Task<IActionResult> Get(int id)
         {
             var result = await usersService.Get(id);
-            return Response(result);
+            return Response(BaseResponse<UserResponse>.Ok(result));
         }
 
        
-        [HttpGet("all")]
+        [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var result = await usersService.GetAll();
-            return Response(result);
+            return Response(BaseResponse<List<UserResponse>>.Ok(result));
         }
 
     }

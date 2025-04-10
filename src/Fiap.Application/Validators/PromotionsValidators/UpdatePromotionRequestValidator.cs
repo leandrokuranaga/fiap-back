@@ -7,13 +7,6 @@ namespace Fiap.Application.Validators.PromotionsValidators
     {
         public UpdatePromotionRequestValidator() 
         { 
-            RuleFor(x => x.Id)
-                .NotEmpty()
-                .WithMessage("Id is required.")
-                .GreaterThan(0)
-                .WithMessage("Id must be greater than 0.");
-
-
             When(x => x.Discount != null, () =>
             {
                 RuleFor(x => x.Discount.Value)
@@ -35,7 +28,7 @@ namespace Fiap.Application.Validators.PromotionsValidators
                 RuleFor(x => x.GameId)
                     .Must(list => list.Any())
                     .WithMessage("At least one GameId is required.")
-                    .Must(list => list.All(id => id.HasValue))
+                    .Must(list => list == null || list.All(id => id.HasValue && id.Value > 0))
                     .WithMessage("All GameIds must be valid integers.");
             });
         }
