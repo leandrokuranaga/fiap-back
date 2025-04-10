@@ -23,8 +23,7 @@ namespace Fiap.Domain.PromotionAggregate
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
 
-        public virtual ICollection<GameDomain> Games { get; set; } = [];
-
+        public virtual ICollection<GameDomain> Games { get; set; } = new List<GameDomain>();
         public void UpdateDiscount(double? discount, DateTime? endDate)
         {
             if (discount.HasValue)
