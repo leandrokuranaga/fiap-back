@@ -1,5 +1,5 @@
 ﻿namespace Fiap.Application.Common
 {
-    public class Response : BaseResponse
-    { }
+    public class Response<T> : BaseResponse<T> { }
+
 }

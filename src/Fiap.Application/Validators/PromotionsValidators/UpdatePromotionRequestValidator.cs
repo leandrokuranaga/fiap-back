@@ -28,7 +28,7 @@ namespace Fiap.Application.Validators.PromotionsValidators
                 RuleFor(x => x.GameId)
                     .Must(list => list.Any())
                     .WithMessage("At least one GameId is required.")
-                    .Must(list => list.All(id => id.HasValue))
+                    .Must(list => list == null || list.All(id => id.HasValue && id.Value > 0))
                     .WithMessage("All GameIds must be valid integers.");
             });
         }

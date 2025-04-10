@@ -18,58 +18,30 @@ namespace Fiap.Api
 
         private bool IsValidOperation() => !_notification.HasNotification;
 
-        protected new IActionResult Response(BaseResponse response)
+        protected IActionResult Response<T>(BaseResponse<T> response)
         {
             if (IsValidOperation())
             {
-                if (response == null)
+                if (response.Data == null)
                     return NoContent();
 
                 return Ok(response);
             }
-            else
-            {
-                if (response == null)
-                    response = new Response();
 
-                response.Success = false;
-                response.Error = _notification.NotificationModel;
-                switch (_notification.NotificationModel.NotificationType)
-                {
-                    case ENotificationType.BusinessRules:
-                        return Conflict(response);
-                    case ENotificationType.NotFound:
-                        return NotFound(response);
-                    case ENotificationType.BadRequestError:
-                        return BadRequest(response);
-                    default:
-                        return StatusCode((int)HttpStatusCode.InternalServerError, response);
-                }
-            }
+            response.Success = false;
+            response.Data = default; 
+            response.Error = _notification.NotificationModel;
+
+            return response.Error.NotificationType switch
+            {
+                ENotificationType.BusinessRules => Conflict(response),
+                ENotificationType.NotFound => NotFound(response),
+                ENotificationType.BadRequestError => BadRequest(response),
+                _ => StatusCode((int)HttpStatusCode.InternalServerError, response)
+            };
         }
 
-        protected new IActionResult Response(object response)
-        {
-            if (IsValidOperation())
-            {
-                if (response == null)
-                    return NoContent();
-
-                return Ok(new
-                {
-                    success = true,
-                    data = response
-                });
-            }
-
-            return BadRequest(new
-            {
-                success = false,
-                error = _notification.NotificationModel
-            });
-        }
-
-        protected new IActionResult Response(int? id, object response)
+        protected new IActionResult Response<T>(int? id, object response)
         {
             if (IsValidOperation())
             {

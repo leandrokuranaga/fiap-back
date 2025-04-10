@@ -5,6 +5,7 @@ using Fiap.Application.Validators.PromotionsValidators;
 using Fiap.Domain.GameAggregate;
 using Fiap.Domain.PromotionAggregate;
 using Fiap.Domain.SeedWork;
+using static Fiap.Domain.SeedWork.NotificationModel;
 
 namespace Fiap.Application.Promotions.Services
 {
@@ -37,6 +38,7 @@ namespace Fiap.Application.Promotions.Services
 
         private async Task CreatePromotion(CreatePromotionRequest request, PromotionDomain promotion)
         {
+
             if (request.GameId != null && request.GameId.Count != 0)
             {
                 var validIds = request.GameId
@@ -49,11 +51,15 @@ namespace Fiap.Application.Promotions.Services
                 foreach (var gameId in validIds)
                 {
                     var game = await gameRepository.GetByIdAsync(gameId, noTracking: false);
-                    if (game is not null)
+                    if (game is null)
                     {
-                        game.PromotionId = promotion.Id;
-                        games.Add(game);
+                        _notification.AddNotification($"Game with ID {gameId} Not found", "Not Found", ENotificationType.NotFound);
+                        continue; 
                     }
+
+                    game.PromotionId = promotion.Id;
+                    games.Add(game);
+                    
                 }
 
                 if (games.Count != 0)
@@ -63,7 +69,7 @@ namespace Fiap.Application.Promotions.Services
             }
         }
 
-        public Task<PromotionResponse> UpdateAsync(int id,UpdatePromotionRequest request) => ExecuteAsync(async () =>
+        public Task<PromotionResponse> UpdateAsync(int id, UpdatePromotionRequest request) => ExecuteAsync(async () =>
         {
             var response = new PromotionResponse();
 
@@ -72,6 +78,12 @@ namespace Fiap.Application.Promotions.Services
                 Validate(request, new UpdatePromotionRequestValidator());
 
                 var promotion = await promotionRepository.GetByIdAsync(id, noTracking: false);
+
+                if (promotion is null)
+                {
+                    notification.AddNotification("PromotionId", "Promotion not found", NotificationModel.ENotificationType.NotFound);
+                    return null!;
+                }
 
                 promotion.UpdateDiscount(request.Discount, request.ExpirationDate);
 
@@ -104,11 +116,15 @@ namespace Fiap.Application.Promotions.Services
             foreach (var gameId in validIds)
             {
                 var game = await gameRepository.GetByIdAsync(gameId, noTracking: false);
-                if (game is not null)
+                if (game is null)
                 {
-                    game.AssignPromotion(promotionId);
-                    games.Add(game);
+                    _notification.AddNotification($"Game with ID {gameId} Not found", "Not Found", ENotificationType.NotFound);
+                    continue;
                 }
+
+                game.AssignPromotion(promotionId);
+                games.Add(game);
+                
             }
 
             if (games.Count > 0)
