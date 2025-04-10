@@ -1,4 +1,5 @@
 ﻿using Fiap.Domain.PromotionAggregate;
+using Fiap.Domain.SeedWork.Exceptions;
 
 namespace Fiap.Tests._3._Domain_Layer_Tests
 {
@@ -8,26 +9,104 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         public void PromotionDomainSuccess()
         {
             #region Arrange
-            var mockPromotionDomain = new PromotionDomain()
-            {
-                Discount = 10.0,
-                StartDate = DateTime.Now,
-                EndDate = DateTime.Now.AddDays(30),
-            };
+            var discount = 10.0;
+            var startDate = DateTime.Now;
+            var endDate = DateTime.Now.AddDays(30);
             #endregion
 
             #region Act
-            var mockPromotionDomainAct = new PromotionDomain(
-                mockPromotionDomain.Discount,
-                mockPromotionDomain.StartDate,
-                mockPromotionDomain.EndDate
-            );
+            var promotion = new PromotionDomain(discount, startDate, endDate);
             #endregion
 
             #region Assert
-            Assert.Equal(mockPromotionDomain.Discount, mockPromotionDomainAct.Discount);
-            Assert.Equal(mockPromotionDomain.StartDate, mockPromotionDomainAct.StartDate);
-            Assert.Equal(mockPromotionDomain.EndDate, mockPromotionDomainAct.EndDate);
+            Assert.Equal(discount, promotion.Discount);
+            Assert.Equal(startDate, promotion.StartDate);
+            Assert.Equal(endDate, promotion.EndDate);
+            #endregion
+        }
+
+        [Fact]
+        public void PromotionDomain_ThrowsException_WhenEndDateIsBeforeStartDate()
+        {
+            #region Arrange
+            var discount = 15.0;
+            var startDate = DateTime.Now;
+            var endDate = DateTime.Now.AddDays(-1);
+            #endregion
+
+            #region Act & Assert
+            var ex = Assert.Throws<BusinessRulesException>(() =>
+                new PromotionDomain(discount, startDate, endDate));
+
+            Assert.Equal("Promotion end date cannot be earlier than the start date.", ex.Message);
+            #endregion
+        }
+
+        [Fact]
+        public void Promotion_IsExpired_ReturnsTrue_WhenDateHasPassed()
+        {
+            #region Arrange
+            var promotion = new PromotionDomain(10.0, DateTime.Now.AddDays(-10), DateTime.Now.AddDays(-1));
+            #endregion
+
+            #region Act
+            var isExpired = promotion.IsExpired();
+            #endregion
+
+            #region Assert
+            Assert.True(isExpired);
+            #endregion
+        }
+
+        [Fact]
+        public void Promotion_IsActive_ReturnsTrue_WhenWithinPeriod()
+        {
+            #region Arrange
+            var promotion = new PromotionDomain(10.0, DateTime.Now.AddDays(-1), DateTime.Now.AddDays(10));
+            #endregion
+
+            #region Act
+            var isActive = promotion.IsActive();
+            #endregion
+
+            #region Assert
+            Assert.True(isActive);
+            #endregion
+        }
+
+        [Fact]
+        public void GetDiscountedPrice_ReturnsCorrectValue()
+        {
+            #region Arrange
+            var promotion = new PromotionDomain(25.0, DateTime.Now, DateTime.Now.AddDays(5));
+            var originalPrice = 100.0;
+            #endregion
+
+            #region Act
+            var discountedPrice = promotion.GetDiscountedPrice(originalPrice);
+            #endregion
+
+            #region Assert
+            Assert.Equal(75.0, discountedPrice);
+            #endregion
+        }
+
+        [Fact]
+        public void UpdateDiscount_UpdatesValuesCorrectly()
+        {
+            #region Arrange
+            var promotion = new PromotionDomain(10.0, DateTime.Now, DateTime.Now.AddDays(5));
+            var newDiscount = 20.0;
+            var newEndDate = DateTime.Now.AddDays(10);
+            #endregion
+
+            #region Act
+            promotion.UpdateDiscount(newDiscount, newEndDate);
+            #endregion
+
+            #region Assert
+            Assert.Equal(newDiscount, promotion.Discount);
+            Assert.Equal(newEndDate, promotion.EndDate);
             #endregion
         }
     }

@@ -26,5 +26,15 @@ namespace Fiap.Domain.UserAggregate
         public TypeUser TypeUser { get; set; }
         public bool Active { get; set; }
         public virtual LibraryDomain Library { get; set; }
+
+        public static UserDomain CreateByAdmin(string name, string email, string password, TypeUser typeUser, bool active)
+        {
+            return new UserDomain(name, email, password, typeUser, active);
+        }
+
+        public static UserDomain CreateByPublic(string name, string email, string password)
+        {
+            return new UserDomain(name, email, password, TypeUser.User, true);
+        }
     }
 }

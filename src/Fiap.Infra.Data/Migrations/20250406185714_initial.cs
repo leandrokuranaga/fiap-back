@@ -4,6 +4,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Fiap.Infra.Data.Migrations
 {
     /// <inheritdoc />
@@ -53,7 +55,7 @@ namespace Fiap.Infra.Data.Migrations
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Genre = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Price = table.Column<double>(type: "double precision", nullable: false),
-                    PromotionId = table.Column<int>(type: "integer", nullable: false)
+                    PromotionId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -62,8 +64,7 @@ namespace Fiap.Infra.Data.Migrations
                         name: "FK_Games_Promotion_PromotionId",
                         column: x => x.PromotionId,
                         principalTable: "Promotion",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -111,6 +112,64 @@ namespace Fiap.Infra.Data.Migrations
                         principalTable: "Library",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Games",
+                columns: new[] { "Id", "Genre", "Name", "Price", "PromotionId" },
+                values: new object[] { 8, "Action-adventure", "The Last of Us Part II", 49.990000000000002, null });
+
+            migrationBuilder.InsertData(
+                table: "Promotion",
+                columns: new[] { "Id", "Discount", "EndDate", "StartDate" },
+                values: new object[,]
+                {
+                    { 1, 1.0, new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2025, 4, 1, 0, 0, 0, 0, DateTimeKind.Utc) },
+                    { 2, 2.0, new DateTime(2025, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2025, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc) },
+                    { 3, 3.0, new DateTime(2025, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Utc) }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "Active", "Email", "Name", "Password", "TypeUser" },
+                values: new object[,]
+                {
+                    { 1, true, "admin@gmail.com", "Admin", "$2a$11$GtOwXg2TwrUQJZJP0rfbDO93ZdUuDAE6RrfI8sFSa5Zq1/hXQ6CKq", "Admin" },
+                    { 2, true, "user@gmail.com", "User", "$2a$11$GtOwXg2TwrUQJZJP0rfbDO93ZdUuDAE6RrfI8sFSa5Zq1/hXQ6CKq", "User" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Games",
+                columns: new[] { "Id", "Genre", "Name", "Price", "PromotionId" },
+                values: new object[,]
+                {
+                    { 1, "Action RPG", "The Legend of Zelda: Breath of the Wild", 299.0, 1 },
+                    { 2, "Action RPG", "The Witcher 3: Wild Hunt", 39.990000000000002, 1 },
+                    { 3, "Action-adventure", "Red Dead Redemption 2", 49.990000000000002, 3 },
+                    { 4, "Action RPG", "Dark Souls III", 29.989999999999998, 2 },
+                    { 5, "Action-adventure", "God of War", 39.990000000000002, 2 },
+                    { 6, "Sandbox", "Minecraft", 26.949999999999999, 1 },
+                    { 7, "First-person shooter", "Overwatch", 39.990000000000002, 3 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Library",
+                columns: new[] { "Id", "UserId" },
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 2, 2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "LibraryGames",
+                columns: new[] { "Id", "GameId", "LibraryId", "PricePaid", "PurchaseDate" },
+                values: new object[,]
+                {
+                    { 1, 1, 1, 200.0, new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc) },
+                    { 2, 2, 1, 50.0, new DateTime(2022, 3, 9, 0, 0, 0, 0, DateTimeKind.Utc) },
+                    { 3, 3, 1, 199.0, new DateTime(2020, 11, 22, 0, 0, 0, 0, DateTimeKind.Utc) },
+                    { 4, 4, 1, 60.0, new DateTime(2019, 5, 3, 0, 0, 0, 0, DateTimeKind.Utc) }
                 });
 
             migrationBuilder.CreateIndex(

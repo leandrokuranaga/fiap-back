@@ -1,4 +1,5 @@
 ﻿using Fiap.Domain.LibraryGameAggregate;
+using Fiap.Infra.Data.MapEntities.Seeds;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -25,6 +26,8 @@ namespace Fiap.Infra.Data.MapEntities
                    .WithMany(x => x.Libraries)
                    .HasForeignKey(x => x.GameId)
                    .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasData(LibraryGameSeed.LibraryGames());
         }
     }
 }

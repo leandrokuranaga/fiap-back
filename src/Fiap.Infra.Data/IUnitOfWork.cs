@@ -4,6 +4,5 @@
     {
         Context Context { get; }
         Task CommitAsync();
-        Task CommitWithIdentityInsertAsync(string table);
     }
 }

@@ -51,6 +51,71 @@ namespace Fiap.Infra.Data.Migrations
                     b.HasIndex("PromotionId");
 
                     b.ToTable("Games", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Genre = "Action RPG",
+                            Name = "The Legend of Zelda: Breath of the Wild",
+                            Price = 299.0,
+                            PromotionId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Genre = "Action RPG",
+                            Name = "The Witcher 3: Wild Hunt",
+                            Price = 39.990000000000002,
+                            PromotionId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Genre = "Action-adventure",
+                            Name = "Red Dead Redemption 2",
+                            Price = 49.990000000000002,
+                            PromotionId = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Genre = "Action RPG",
+                            Name = "Dark Souls III",
+                            Price = 29.989999999999998,
+                            PromotionId = 2
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Genre = "Action-adventure",
+                            Name = "God of War",
+                            Price = 39.990000000000002,
+                            PromotionId = 2
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Genre = "Sandbox",
+                            Name = "Minecraft",
+                            Price = 26.949999999999999,
+                            PromotionId = 1
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Genre = "First-person shooter",
+                            Name = "Overwatch",
+                            Price = 39.990000000000002,
+                            PromotionId = 3
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Genre = "Action-adventure",
+                            Name = "The Last of Us Part II",
+                            Price = 49.990000000000002
+                        });
                 });
 
             modelBuilder.Entity("Fiap.Domain.LibraryAggregate.LibraryDomain", b =>
@@ -70,6 +135,18 @@ namespace Fiap.Infra.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Library", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            UserId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            UserId = 2
+                        });
                 });
 
             modelBuilder.Entity("Fiap.Domain.LibraryGameAggregate.LibraryGameDomain", b =>
@@ -99,6 +176,40 @@ namespace Fiap.Infra.Data.Migrations
                     b.HasIndex("LibraryId");
 
                     b.ToTable("LibraryGames", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            GameId = 1,
+                            LibraryId = 1,
+                            PricePaid = 200.0,
+                            PurchaseDate = new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            GameId = 2,
+                            LibraryId = 1,
+                            PricePaid = 50.0,
+                            PurchaseDate = new DateTime(2022, 3, 9, 0, 0, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            GameId = 3,
+                            LibraryId = 1,
+                            PricePaid = 199.0,
+                            PurchaseDate = new DateTime(2020, 11, 22, 0, 0, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            GameId = 4,
+                            LibraryId = 1,
+                            PricePaid = 60.0,
+                            PurchaseDate = new DateTime(2019, 5, 3, 0, 0, 0, 0, DateTimeKind.Utc)
+                        });
                 });
 
             modelBuilder.Entity("Fiap.Domain.PromotionAggregate.PromotionDomain", b =>
@@ -121,6 +232,29 @@ namespace Fiap.Infra.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Promotion", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Discount = 1.0,
+                            EndDate = new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            StartDate = new DateTime(2025, 4, 1, 0, 0, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Discount = 2.0,
+                            EndDate = new DateTime(2025, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            StartDate = new DateTime(2025, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Discount = 3.0,
+                            EndDate = new DateTime(2025, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            StartDate = new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Utc)
+                        });
                 });
 
             modelBuilder.Entity("Fiap.Domain.UserAggregate.UserDomain", b =>
@@ -158,6 +292,26 @@ namespace Fiap.Infra.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Active = true,
+                            Email = "admin@gmail.com",
+                            Name = "Admin",
+                            Password = "$2a$11$GtOwXg2TwrUQJZJP0rfbDO93ZdUuDAE6RrfI8sFSa5Zq1/hXQ6CKq",
+                            TypeUser = "Admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Active = true,
+                            Email = "user@gmail.com",
+                            Name = "User",
+                            Password = "$2a$11$GtOwXg2TwrUQJZJP0rfbDO93ZdUuDAE6RrfI8sFSa5Zq1/hXQ6CKq",
+                            TypeUser = "User"
+                        });
                 });
 
             modelBuilder.Entity("Fiap.Domain.GameAggregate.GameDomain", b =>

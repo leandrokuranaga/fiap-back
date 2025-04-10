@@ -5,53 +5,28 @@ using Fiap.Application.Validators.PromotionsValidators;
 using Fiap.Domain.GameAggregate;
 using Fiap.Domain.PromotionAggregate;
 using Fiap.Domain.SeedWork;
+using static Fiap.Domain.SeedWork.NotificationModel;
 
 namespace Fiap.Application.Promotions.Services
 {
     public class PromotionsService(INotification notification, IPromotionRepository promotionRepository, IGameRepository gameRepository) : BaseService(notification), IPromotionsService
     {
-        public Task<CreatePromotionResponse> CreateAsync(CreatePromotionRequest request) => ExecuteAsync(async () =>
+        public Task<PromotionResponse> CreateAsync(CreatePromotionRequest request) => ExecuteAsync(async () =>
         {
-            var response = new CreatePromotionResponse();
+            var response = new PromotionResponse();
 
             try
             {
                 Validate(request, new CreatePromotionRequestValidator());
 
-                var promotion = new PromotionDomain(
-                    request.Discount,
-                    DateTime.UtcNow,
-                    request.ExpirationDate
-                );
+                var promotion = (PromotionDomain)request;
 
                 await promotionRepository.InsertOrUpdateAsync(promotion);
 
-                if (request.GameId != null && request.GameId.Count != 0)
-                {
-                    var validIds = request.GameId
-                        .Where(id => id.HasValue)
-                        .Select(id => id.Value)
-                        .ToList();
+                await CreatePromotion(request, promotion);
 
-                    var games = new List<GameDomain>();
+                response = (PromotionResponse)promotion;
 
-                    foreach (var gameId in validIds)
-                    {
-                        var game = await gameRepository.GetByIdAsync(gameId, noTracking: false);
-                        if (game is not null)
-                        {
-                            game.PromotionId = promotion.Id;
-                            games.Add(game);
-                        }
-                    }
-
-                    if (games.Count != 0)
-                    {
-                        await gameRepository.UpdateRangeAsync(games);
-                    }
-                }
-
-                response.PromotionId = promotion.Id;
                 return response;
             }
             catch (Exception ex)
@@ -61,49 +36,63 @@ namespace Fiap.Application.Promotions.Services
             }
         });
 
-
-        public Task<UpdatePromotionResponse> UpdateAsync(UpdatePromotionRequest request) => ExecuteAsync(async () =>
+        private async Task CreatePromotion(CreatePromotionRequest request, PromotionDomain promotion)
         {
-            var response = new UpdatePromotionResponse();
+
+            if (request.GameId != null && request.GameId.Count != 0)
+            {
+                var validIds = request.GameId
+                    .Where(id => id.HasValue)
+                    .Select(id => id.Value)
+                    .ToList();
+
+                var games = new List<GameDomain>();
+
+                foreach (var gameId in validIds)
+                {
+                    var game = await gameRepository.GetByIdAsync(gameId, noTracking: false);
+                    if (game is null)
+                    {
+                        _notification.AddNotification($"Game with ID {gameId} Not found", "Not Found", ENotificationType.NotFound);
+                        continue; 
+                    }
+
+                    game.PromotionId = promotion.Id;
+                    games.Add(game);
+                    
+                }
+
+                if (games.Count != 0)
+                {
+                    await gameRepository.UpdateRangeAsync(games);
+                }
+            }
+        }
+
+        public Task<PromotionResponse> UpdateAsync(int id, UpdatePromotionRequest request) => ExecuteAsync(async () =>
+        {
+            var response = new PromotionResponse();
 
             try
             {
                 Validate(request, new UpdatePromotionRequestValidator());
 
-                var promotion = await promotionRepository.GetByIdAsync(request.Id, noTracking: false);
+                var promotion = await promotionRepository.GetByIdAsync(id, noTracking: false);
 
-                if (request.Discount.HasValue)
-                    promotion.Discount = request.Discount.Value;
+                if (promotion is null)
+                {
+                    notification.AddNotification("PromotionId", "Promotion not found", NotificationModel.ENotificationType.NotFound);
+                    return null!;
+                }
 
-                if (request.ExpirationDate.HasValue)
-                    promotion.EndDate = request.ExpirationDate.Value;
+                promotion.UpdateDiscount(request.Discount, request.ExpirationDate);
 
                 await promotionRepository.UpdateAsync(promotion);
 
-                if (request.GameId != null && request.GameId.Count != 0)
-                {
-                    var validIds = request.GameId
-                        .Where(id => id.HasValue)
-                        .Select(id => id.Value)
-                        .ToList();
+                await UpdateGamesPromotion(request.GameId, promotion.Id);
 
-                    var games = new List<GameDomain>();
+                response = (PromotionResponse)promotion;
 
-                    foreach (var gameId in validIds)
-                    {
-                        var game = await gameRepository.GetByIdAsync(gameId, noTracking: false);
-                        if (game is not null)
-                        {
-                            game.PromotionId = promotion.Id;
-                            games.Add(game);
-                        }
-                    }
-
-                    if (games.Count != 0)
-                        await gameRepository.UpdateRangeAsync(games);
-                }
-
-                response.PromotionId = promotion.Id;
                 return response;
             }
             catch (Exception ex)
@@ -112,6 +101,37 @@ namespace Fiap.Application.Promotions.Services
                 return response;
             }
         });
+
+        private async Task<List<GameDomain>> UpdateGamesPromotion(List<int?>? gameIds, int promotionId)
+        {
+            var validIds = gameIds?
+                .Where(id => id.HasValue)
+                .Select(id => id.Value)
+                .ToList();
+
+            if (validIds == null || validIds.Count == 0)
+                return new List<GameDomain>();
+            var games = new List<GameDomain>();
+
+            foreach (var gameId in validIds)
+            {
+                var game = await gameRepository.GetByIdAsync(gameId, noTracking: false);
+                if (game is null)
+                {
+                    _notification.AddNotification($"Game with ID {gameId} Not found", "Not Found", ENotificationType.NotFound);
+                    continue;
+                }
+
+                game.AssignPromotion(promotionId);
+                games.Add(game);
+                
+            }
+
+            if (games.Count > 0)
+                await gameRepository.UpdateRangeAsync(games);
+
+            return games;
+        }
 
     }
 }

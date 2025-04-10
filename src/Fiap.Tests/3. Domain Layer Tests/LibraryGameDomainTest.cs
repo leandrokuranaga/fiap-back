@@ -10,6 +10,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
             #region Arrange
             var mockLibraryGameDomain = new LibraryGameDomain()
             {
+                Id = 1,
                 GameId = 1,
                 LibraryId = 1,
                 PurchaseDate = DateTime.Now,
@@ -19,6 +20,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
 
             #region Act
             var mockLibraryGameDomainAct = new LibraryGameDomain(
+                mockLibraryGameDomain.Id,
                 mockLibraryGameDomain.GameId,
                 mockLibraryGameDomain.LibraryId,
                 mockLibraryGameDomain.PurchaseDate,
@@ -27,6 +29,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
             #endregion
 
             #region Assert
+            Assert.Equal(mockLibraryGameDomain.Id, mockLibraryGameDomainAct.Id);
             Assert.Equal(mockLibraryGameDomain.GameId, mockLibraryGameDomainAct.GameId);
             Assert.Equal(mockLibraryGameDomain.LibraryId, mockLibraryGameDomainAct.LibraryId);
             Assert.Equal(mockLibraryGameDomain.PurchaseDate, mockLibraryGameDomainAct.PurchaseDate);
