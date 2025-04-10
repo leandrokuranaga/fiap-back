@@ -98,8 +98,7 @@ namespace Fiap.Application.Promotions.Services
                 .ToList();
 
             if (validIds == null || validIds.Count == 0)
-                return [];
-
+                return new List<GameDomain>();
             var games = new List<GameDomain>();
 
             foreach (var gameId in validIds)
