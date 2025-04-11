@@ -1,0 +1,77 @@
+name: Release on Main (.NET 8)
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+      
+permissions:
+  contents: write
+
+jobs:
+  release:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.x"
+
+      - name: Validate branch name
+        id: validate
+        run: |
+          BRANCH="${{ github.head_ref }}"
+          if [[ "$BRANCH" =~ ^release/[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            VERSION="${BRANCH#release/}"
+          elif [[ "$BRANCH" =~ ^hotfix/[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            VERSION="${BRANCH#hotfix/}"
+          else
+            echo "Invalid Branch: $BRANCH"
+            exit 1
+          fi
+          echo "version=v$VERSION" >> $GITHUB_OUTPUT
+          
+      - name: Extract Version to Phase Stage
+        id: phase
+        run: |
+          VERSION="${{ steps.validate.outputs.version }}" 
+          MAJOR=$(echo "$VERSION" | cut -d. -f1 | sed 's/v//') 
+          echo "phase=$MAJOR" >> $GITHUB_OUTPUT
+
+      - name: Restore dependencies
+        run: dotnet restore src/Fiap.Api/Fiap.Api.csproj
+
+      - name: Build application
+        run: dotnet build src/Fiap.Api/Fiap.Api.csproj --configuration Release --no-restore
+
+      - name: Publish application
+        run: dotnet publish src/Fiap.Api/Fiap.Api.csproj --configuration Release --output publish --no-restore
+
+      - name: Include appsettings no publish
+        run: |
+          cp src/Fiap.Api/appsettings.json publish/
+          cp src/Fiap.Api/appsettings.Development.json publish/
+
+      - name: Create Build ZIP
+        run: zip -r Fiap.Api-${{ steps.validate.outputs.version }}.zip publish/
+
+      - name: create release on github
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.validate.outputs.version }}
+          name: Fase ${{ steps.phase.outputs.phase }}
+          body: |
+            🎯 Fase ${{ steps.phase.outputs.phase }} do projeto FIAP finalizada!
+            ✅ Todas as funcionalidades desta fase foram integradas.
+
+            🔖 Versão completa: `${{ steps.validate.outputs.version }}`
+            🔀 Branch de origem: `${{ github.head_ref }}`
+          files: Fiap.Api-${{ steps.validate.outputs.version }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
