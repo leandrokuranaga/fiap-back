@@ -45,6 +45,16 @@ namespace Fiap.Api.Controllers
             return Response(BaseResponse<PromotionResponse>.Ok(result));
         }
 
-
+        [HttpDelete("{id:int:min(1)}")]
+        [SwaggerOperation("Delete a promotion by id")]
+        [ProducesResponseType(typeof(EmptyResultModel), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(BaseResponse<EmptyResultModel>), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(BaseResponse<EmptyResultModel>), (int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
+        [ProducesResponseType(StatusCodes.Status406NotAcceptable)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        public async Task<IActionResult> Delete([FromBody] int id)
+            => Response(await promotionsService.DeleteAsync(id));
     }
 }

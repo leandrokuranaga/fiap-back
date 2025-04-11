@@ -133,5 +133,18 @@ namespace Fiap.Application.Promotions.Services
             return games;
         }
 
+        public Task<BaseResponse<object>> DeleteAsync(int id) => ExecuteAsync(async () =>
+        {
+            var promotion = await promotionRepository.GetByIdAsync(id, noTracking: false);
+
+            if (promotion == null)
+            {
+                _notification.AddNotification("Delete Promotion", "Promotion Not found", NotificationModel.ENotificationType.NotFound);
+                return BaseResponse<object>.Fail(_notification.NotificationModel);
+            }
+
+            await promotionRepository.DeleteAsync(promotion);
+            return BaseResponse<object>.Ok(null);
+        });
     }
 }
