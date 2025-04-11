@@ -36,8 +36,8 @@ namespace Fiap.Api.Controllers
             var result = await usersService.Get(id);
             return Response(result);
         }
-
        
+
         [HttpGet("all")]
         public async Task<IActionResult> GetAll()
         {

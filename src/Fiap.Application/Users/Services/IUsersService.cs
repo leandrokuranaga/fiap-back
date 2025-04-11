@@ -8,7 +8,6 @@ namespace Fiap.Application.Users.Services
         Task<CreateUserResponse> Create(CreateUserRequest request);
         Task<UpdateUserResponse> Update(UpdateUserRequest request);
         Task<DeleteUserResponse> Delete(DeleteUserRequest request);
-
         Task<GetUserResponse> Get(int userId);
         Task<List<GetUserResponse>> GetAll();
 

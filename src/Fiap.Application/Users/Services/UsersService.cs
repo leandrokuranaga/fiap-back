@@ -20,7 +20,7 @@ namespace Fiap.Application.User.Services
             try
             {
                 Validate(request, new CreateUserRequestValidator());
-                                
+
                 var user = CreateUserDomain(request);
 
                 await userRepository.InsertOrUpdateAsync(user);
@@ -43,7 +43,7 @@ namespace Fiap.Application.User.Services
                 request.Name,
                 request.Email,
                 hashedPassword,
-                request.Type,
+                TypeUser.User,
                 request.Active
             );
         }
@@ -85,9 +85,9 @@ namespace Fiap.Application.User.Services
 
             try
             {
-                var user = await userRepository.GetByIdAsync(request.UserId, noTracking:false);
+                var user = await userRepository.GetByIdAsync(request.UserId, noTracking: false);
 
-                if(user == null)
+                if (user == null)
                 {
                     _notification.AddNotification("Delete User", "User Not found", NotificationModel.ENotificationType.InternalServerError);
                     return response;
@@ -107,7 +107,6 @@ namespace Fiap.Application.User.Services
                 response.Success = false;
                 return response;
             }
-
         });
 
         public Task<GetUserResponse> Get(int userId) => ExecuteAsync(async () =>
@@ -124,13 +123,7 @@ namespace Fiap.Application.User.Services
                     return response;
                 }
 
-                response.UserId = user.Id;
-                response.Name = user.Name;
-                response.Email = user.Email;
-                response.Type = user.TypeUser;
-                response.Active = user.Active;
-
-                return response;
+                return MapToGetUserResponse(user);
             }
             catch (Exception ex)
             {
@@ -139,34 +132,28 @@ namespace Fiap.Application.User.Services
             }
         });
 
+
+
         public Task<List<GetUserResponse>> GetAll() => ExecuteAsync(async () =>
-        {
-            var response = new List<GetUserResponse>();
+         {
+             var response = new List<GetUserResponse>();
 
-            try
-            {
-                var users = await userRepository.GetAllAsync();
+             try
+             {
+                 var users = await userRepository.GetAllAsync();
 
-                var allUsers = users
-                    .Where(u => u.TypeUser == TypeUser.Admin)
-                    .Select(user => new GetUserResponse
-                    {
-                        UserId = user.Id,
-                        Name = user.Name,
-                        Email = user.Email,
-                        Type = user.TypeUser,
-                        Active = user.Active
-                    })
-                    .ToList();
+                 response = users
+                     .Select(MapToGetUserResponse)
+                     .ToList();
 
-                return allUsers;
-            }
-            catch (Exception ex)
-            {
-                _notification.AddNotification("Get Admin Users", ex.Message, NotificationModel.ENotificationType.InternalServerError);
-                return response;
-            }
-        });
+                 return response;
+             }
+             catch (Exception ex)
+             {
+                 _notification.AddNotification("Get All Users", ex.Message, NotificationModel.ENotificationType.InternalServerError);
+                 return response;
+             }
+         });
 
 
 
@@ -179,6 +166,18 @@ namespace Fiap.Application.User.Services
 
             if (!string.IsNullOrEmpty(request.Password))
                 user.Password = PasswordHasher.HashPassword(request.Password);
+        }
+
+        private GetUserResponse MapToGetUserResponse(UserDomain user)
+        {
+            return new GetUserResponse
+            {
+                UserId = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                Type = user.TypeUser,
+                Active = user.Active
+            };
         }
     }
 }
