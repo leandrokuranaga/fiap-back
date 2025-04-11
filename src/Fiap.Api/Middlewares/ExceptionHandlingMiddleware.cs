@@ -17,7 +17,7 @@ public class ExceptionHandlingMiddleware(RequestDelegate next)
             var errorResponse = new
             {
                 message = ex.Message,
-                stackTrace = _environment.IsDevelopment() ? ex.StackTrace : null
+                stackTrace = ex.StackTrace
             };
 
             var json = JsonSerializer.Serialize(errorResponse);
