@@ -1,5 +1,4 @@
-﻿using Abp;
-using Fiap.Application.Common;
+﻿using Fiap.Application.Common;
 using Fiap.Application.Users.Models.Request;
 using Fiap.Application.Users.Models.Response;
 using Fiap.Application.Users.Services;
@@ -23,7 +22,7 @@ namespace Fiap.Application.User.Services
                 var exists = await userRepository.ExistAsync(u => u.Email == request.Email);
                 if (exists)
                 {
-                    _notification.AddNotification("Create User", "Email já está em uso.", NotificationModel.ENotificationType.BusinessRules);
+                    _notification.AddNotification("Create User", "Email already registered", NotificationModel.ENotificationType.BusinessRules);
                     return new UserResponse();
                 }
 
@@ -82,7 +81,6 @@ namespace Fiap.Application.User.Services
                 user.Password = PasswordHasher.HashPassword(request.Password);
         }
 
-
         public Task<BaseResponse<object>> Delete(int id) => ExecuteAsync(async () =>
         {
             var user = await userRepository.GetByIdAsync(id, noTracking: false);
@@ -96,8 +94,6 @@ namespace Fiap.Application.User.Services
             await userRepository.DeleteAsync(user);
             return BaseResponse<object>.Ok(null);
         });
-
-
 
         public Task<UserResponse> Get(int userId) => ExecuteAsync(async () =>
         {
@@ -144,9 +140,6 @@ namespace Fiap.Application.User.Services
                 return response;
             }
         });
-
-
-
 
     }
 }
