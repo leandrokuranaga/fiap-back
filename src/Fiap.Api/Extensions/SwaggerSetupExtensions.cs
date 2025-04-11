@@ -1,6 +1,7 @@
 ﻿using Fiap.Api.SwaggerExamples.Promotions;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using System.Reflection;
 
 namespace Fiap.Api.Extensions
 {
@@ -12,9 +13,9 @@ namespace Fiap.Api.Extensions
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "FIAP API",
+                    Title = "FCG",
                     Version = "v1",
-                    Description = "FIAP API to evaluate our knowledge"
+                    Description = "Fiap Cloud Games - API Tech Challenge "
                 });
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -42,6 +43,10 @@ namespace Fiap.Api.Extensions
                     }
                 });
 
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+
                 c.ExampleFilters();
                 c.OperationFilter<SetApplicationJsonAsDefaultFilter>();
             });
@@ -49,7 +54,7 @@ namespace Fiap.Api.Extensions
             services.AddSwaggerExamplesFromAssemblyOf<CreatePromotionRequestExample>();
         }
 
-        public static void UseSwaggerDocumentation(this WebApplication app)
+        public static void UseSwaggerDocumentation(this IApplicationBuilder app)
         {
             app.UseSwagger();
             app.UseSwaggerUI(c =>

@@ -17,7 +17,6 @@ namespace Fiap.Domain.PromotionAggregate
             EndDate = endDate;
 
             ValidatePeriod();
-
         }
 
         public double Discount { get; set; }
