@@ -2,6 +2,8 @@
 using Fiap.Application.Games.Models.Requests;
 using Fiap.Domain.GameAggregate;
 using Fiap.Domain.SeedWork;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Fiap.Application.Games.Models.Responses;
 
@@ -18,6 +20,7 @@ namespace Fiap.Application.Games.Services
             {
                 _notification.AddNotification("Nome", "O nome é obrigatório.", NotificationModel.ENotificationType.BadRequestError);
             }
+
             if (_notification.HasNotification)
                 return BaseResponse<GameResponse>.Fail(_notification.NotificationModel);
 
@@ -39,7 +42,15 @@ namespace Fiap.Application.Games.Services
                 PromotionId = game.PromotionId
             };
 
-            return BaseResponse<GameResponse>.Ok(new GameResponse
+            return BaseResponse<GameResponse>.Ok(response);
+        }
+
+       
+        public async Task<IEnumerable<GameResponse>> GetAllAsync()
+        {
+            var games = await _gameRepository.GetAllAsync();
+
+            return games.Select(game => new GameResponse
             {
                 Id = game.Id,
                 Name = game.Name,

@@ -16,8 +16,14 @@ namespace Fiap.Api.Controllers
         public async Task<IActionResult> Create([FromBody] CreateGameRequest request)
         {
             var result = await _gamesService.CreateAsync(request);
-
             return Response<GameResponse>(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetGames()
+        {
+            var games = await _gamesService.GetAllAsync(); 
+            return Ok(games);
         }
     }
 }

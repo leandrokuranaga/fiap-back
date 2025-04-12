@@ -6,4 +6,6 @@ using System.Threading.Tasks;
 public interface IGamesService
 {
     Task<BaseResponse<GameResponse>> CreateAsync(CreateGameRequest request);
+
+    Task<IEnumerable<GameResponse>> GetAllAsync();
 }

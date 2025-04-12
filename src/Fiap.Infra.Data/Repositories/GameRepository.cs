@@ -1,6 +1,8 @@
 ﻿using Fiap.Domain.GameAggregate;
 using Fiap.Domain.SeedWork;
 using Fiap.Infra.Data.Repositories.Base;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace Fiap.Infra.Data.Repositories
 {
@@ -14,5 +16,14 @@ namespace Fiap.Infra.Data.Repositories
         {
             await InsertOrUpdateAsync(game);
         }
+
+        public async Task<IEnumerable<GameDomain>> GetAllAsync()
+        {
+            return await ((UnitOfWork)_unitOfWork).Context.Games.ToListAsync();
+        }
+
+
+
+
     }
 }
