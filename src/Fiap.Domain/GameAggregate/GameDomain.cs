@@ -15,6 +15,14 @@ namespace Fiap.Domain.GameAggregate
             PromotionId = promotionId;
         }
 
+        public GameDomain(string name, string genre, double price, int? promotionId)
+        {
+            Name = name;
+            Genre = genre;
+            Price = price;
+            PromotionId = promotionId;
+        }
+
         public GameDomain()
         {
             

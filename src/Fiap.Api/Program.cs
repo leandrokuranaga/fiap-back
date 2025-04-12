@@ -2,6 +2,10 @@ using Fiap.Api.Extensions;
 using Fiap.Infra.CrossCutting.IoC;
 using Fiap.Infra.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using Fiap.Domain.GameAggregate; 
+using Fiap.Infra.Data.Repositories; 
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +16,9 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<Context>(options =>
     options.UseNpgsql(connectionString));
+
+builder.Services.AddScoped<IGameRepository, GameRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddLocalHttpClients(builder.Configuration);
 builder.Services.AddLocalServices(builder.Configuration);
