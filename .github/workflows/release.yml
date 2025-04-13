@@ -5,7 +5,7 @@ on:
     types: [closed]
     branches:
       - main
-      
+
 permissions:
   contents: write
 
@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        
+
       - name: Fetch last release version
         id: last_release
         run: |
@@ -54,8 +54,8 @@ jobs:
           echo "type=$TYPE" >> $GITHUB_OUTPUT
           echo "major=$MAJOR" >> $GITHUB_OUTPUT
           echo "minor=$MINOR" >> $GITHUB_OUTPUT
-          
-     - name: Validate sequencial release
+
+      - name: Validate sequencial release
         if: steps.validate.outputs.type == 'release'
         run: |
           LAST_MAJOR=$(echo "${{ steps.last_release.outputs.last_release }}" | sed 's/v//' | cut -d. -f1)
@@ -70,8 +70,8 @@ jobs:
             echo "❌ Próxima release deve ser v${EXPECTED}.0.0"
             exit 1
           fi
-          
-     - name: Validate hotfix based on the last patch
+
+      - name: Validate hotfix based on the last patch
         if: steps.validate.outputs.type == 'hotfix'
         run: |
           git fetch --tags
@@ -96,7 +96,7 @@ jobs:
             echo "❌ Hotfix inválido. O próximo patch permitido é Z = $EXPECTED (ex: hotfix/$CURRENT_MAJOR.$CURRENT_MINOR.$EXPECTED)"
             exit 1
           fi
-          
+
       - name: Extract Version to Phase Stage
         id: phase
         run: |
@@ -116,7 +116,7 @@ jobs:
       - name: Create Build ZIP
         run: zip -r Fiap.Api-${{ steps.validate.outputs.version }}.zip publish/
 
-      - name: create release on github
+      - name: Create release on GitHub
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.validate.outputs.version }}
@@ -124,17 +124,12 @@ jobs:
             ${{ steps.validate.outputs.type == 'release' && format('Fase {0} - Release {1}', steps.phase.outputs.phase, steps.validate.outputs.version) || format('Fase {0} - Hotfix {1}', steps.phase.outputs.phase, steps.validate.outputs.version) }}
           body: >-
             ${{ steps.validate.outputs.type == 'release' && format(
-              '🎯 Fase {0} do projeto FIAP finalizada!
-              ✅ Todas as funcionalidades desta fase foram integradas.
-              🔖 Versão: {1}
-              🔀 Branch: {2}',
+              '🎯 Fase {0} do projeto FIAP finalizada!\n✅ Todas as funcionalidades desta fase foram integradas.\n🔖 Versão: {1}\n🔀 Branch: {2}',
               steps.phase.outputs.phase,
               steps.validate.outputs.version,
               github.head_ref
             ) || format(
-              '🚑 Hotfix da fase {0} aplicado com sucesso!
-              🔖 Versão corrigida: {1}
-              🔀 Branch: {2}',
+              '🚑 Hotfix da fase {0} aplicado com sucesso!\n🔖 Versão corrigida: {1}\n🔀 Branch: {2}',
               steps.phase.outputs.phase,
               steps.validate.outputs.version,
               github.head_ref
