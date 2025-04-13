@@ -2,9 +2,9 @@ name: CodeQL
 
 on:
   push:
-    branches: [main, dev]
+    branches: [main, dev, release/**, hotfix/**]
   pull_request:
-    branches: [main, dev]
+    branches: [main, dev, release/**, hotfix/**]
 
 jobs:
   analyze:
@@ -23,10 +23,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.x"
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
         with:
           languages: ${{ matrix.language }}
+          build-mode: manual
+
+      - name: Build solution
+        run: dotnet build src/Fiap.Api/Fiap.Api.csproj --configuration Release
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
