@@ -10,10 +10,12 @@ using System.Net;
 namespace Fiap.Api.Controllers
 {
     /// <summary>
-    /// Controller responsible for managing promotions and related operations.
+    /// Controller used by admin to manage all promotions for the games
     /// </summary>
-    [Route("api/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
+    [ApiExplorerSettings(GroupName = "v1")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class PromotionsController(IPromotionsService promotionsService, INotification notification) : BaseController(notification)
     {
         /// <summary>
