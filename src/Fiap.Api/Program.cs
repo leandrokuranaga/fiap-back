@@ -2,6 +2,9 @@ using Fiap.Api.Extensions;
 using Fiap.Infra.CrossCutting.IoC;
 using Fiap.Infra.Data;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
+using Serilog.Extensions.Hosting;
+using Serilog.Sinks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,9 +35,18 @@ builder.Services.AddApiVersioningConfiguration();
 
 builder.Services.AddSwaggerDocumentation();
 
+builder.Host.UseSerilog((context, services, configuration) =>
+{
+    configuration
+        .MinimumLevel.Warning()
+        .WriteTo.Console()
+        .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+        .Enrich.FromLogContext();
+});
+
 var app = builder.Build();
 
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseExceptionHandling();
 
 app.UseCustomStatusCodePages();
 
