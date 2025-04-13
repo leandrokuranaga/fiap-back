@@ -19,12 +19,13 @@ builder.Services.AddLocalServices(builder.Configuration);
 builder.Services.AddCustomMvc();
 
 builder.Services.AddHealthChecks()
-    .AddNpgSql(connectionString);
-    
+    .AddNpgSql(connectionString);    
 
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddGlobalCorsPolicy();
+
+builder.Services.AddApiVersioningConfiguration();
 
 builder.Services.AddSwaggerDocumentation();
 

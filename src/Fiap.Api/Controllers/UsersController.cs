@@ -9,8 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace Fiap.Api.Controllers
 {
     [Authorize(Roles = "Admin")]
-    [Route("api/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
+    [ApiExplorerSettings(GroupName = "v1")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class UsersController(IUsersService usersService, INotification notification) : BaseController(notification)
     {
         [AllowAnonymous]

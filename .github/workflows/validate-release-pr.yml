@@ -1,23 +1,21 @@
-name: Release on Main (.NET 8)
+name: Pré-validação de Release/Hotfix
 
 on:
   pull_request:
-    types: [closed]
     branches:
       - main
-      
+
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  release:
-    if: github.event.pull_request.merged == true
+  validate:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v3
-        
+
       - name: Fetch last release version
         id: last_release
         run: |
@@ -26,27 +24,24 @@ jobs:
           echo "Última release: $LAST_RELEASE"
           echo "last_release=$LAST_RELEASE" >> $GITHUB_OUTPUT
 
-      - name: Setup .NET 8
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: "8.x"
-
-      - name: Validate branch name
+      - name: Validate branch name and extract version
         id: validate
         run: |
           BRANCH="${{ github.head_ref }}"
+          echo "Branch: $BRANCH"
+
           if [[ "$BRANCH" =~ ^release/([0-9]+)\.0\.0$ ]]; then
             VERSION="${BASH_REMATCH[1]}.0.0"
             TYPE="release"
             MAJOR="${BASH_REMATCH[1]}"
           elif [[ "$BRANCH" =~ ^hotfix/([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+            VERSION="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.${BASH_REMATCH[3]}"
             TYPE="hotfix"
             MAJOR="${BASH_REMATCH[1]}"
             MINOR="${BASH_REMATCH[2]}"
             PATCH="${BASH_REMATCH[3]}"
-            VERSION="$MAJOR.$MINOR.$PATCH"
           else
-            echo "❌ Nome de branch inválido: $BRANCH"
+            echo "❌ Nome de branch inválido. Use 'release/X.0.0' ou 'hotfix/X.Y.Z'"
             exit 1
           fi
 
@@ -54,8 +49,8 @@ jobs:
           echo "type=$TYPE" >> $GITHUB_OUTPUT
           echo "major=$MAJOR" >> $GITHUB_OUTPUT
           echo "minor=$MINOR" >> $GITHUB_OUTPUT
-          
-     - name: Validate sequencial release
+
+      - name: Validate sequencial release
         if: steps.validate.outputs.type == 'release'
         run: |
           LAST_MAJOR=$(echo "${{ steps.last_release.outputs.last_release }}" | sed 's/v//' | cut -d. -f1)
@@ -67,11 +62,11 @@ jobs:
           echo "Atual: $CURRENT_MAJOR"
 
           if [ "$CURRENT_MAJOR" -ne "$EXPECTED" ]; then
-            echo "❌ Próxima release deve ser v${EXPECTED}.0.0"
+            echo "❌ Release inválida. Use 'release/${EXPECTED}.0.0'"
             exit 1
           fi
-          
-     - name: Validate hotfix based on the last patch
+
+      - name: Validate hotfix based on the last patch
         if: steps.validate.outputs.type == 'hotfix'
         run: |
           git fetch --tags
@@ -96,49 +91,3 @@ jobs:
             echo "❌ Hotfix inválido. O próximo patch permitido é Z = $EXPECTED (ex: hotfix/$CURRENT_MAJOR.$CURRENT_MINOR.$EXPECTED)"
             exit 1
           fi
-          
-      - name: Extract Version to Phase Stage
-        id: phase
-        run: |
-          VERSION="${{ steps.validate.outputs.version }}" 
-          MAJOR=$(echo "$VERSION" | cut -d. -f1 | sed 's/v//') 
-          echo "phase=$MAJOR" >> $GITHUB_OUTPUT
-
-      - name: Restore dependencies
-        run: dotnet restore src/Fiap.Api/Fiap.Api.csproj
-
-      - name: Build application
-        run: dotnet build src/Fiap.Api/Fiap.Api.csproj --configuration Release --no-restore
-
-      - name: Publish application
-        run: dotnet publish src/Fiap.Api/Fiap.Api.csproj --configuration Release --output publish --no-restore
-
-      - name: Create Build ZIP
-        run: zip -r Fiap.Api-${{ steps.validate.outputs.version }}.zip publish/
-
-      - name: create release on github
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ steps.validate.outputs.version }}
-          name: >-
-            ${{ steps.validate.outputs.type == 'release' && format('Fase {0} - Release {1}', steps.phase.outputs.phase, steps.validate.outputs.version) || format('Fase {0} - Hotfix {1}', steps.phase.outputs.phase, steps.validate.outputs.version) }}
-          body: >-
-            ${{ steps.validate.outputs.type == 'release' && format(
-              '🎯 Fase {0} do projeto FIAP finalizada!
-              ✅ Todas as funcionalidades desta fase foram integradas.
-              🔖 Versão: {1}
-              🔀 Branch: {2}',
-              steps.phase.outputs.phase,
-              steps.validate.outputs.version,
-              github.head_ref
-            ) || format(
-              '🚑 Hotfix da fase {0} aplicado com sucesso!
-              🔖 Versão corrigida: {1}
-              🔀 Branch: {2}',
-              steps.phase.outputs.phase,
-              steps.validate.outputs.version,
-              github.head_ref
-            ) }}
-          files: Fiap.Api-${{ steps.validate.outputs.version }}.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
