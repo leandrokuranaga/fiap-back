@@ -8,14 +8,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Fiap.Infra.Data
 {
-    public class Context(DbContextOptions<Context> options) : DbContext(options)
+    public class Context : DbContext 
     {
+        public Context(DbContextOptions<Context> options) : base(options)
+        {
+            Database.Migrate();
+        }
 
-        public DbSet<UserDomain> Users { get; set; }
-        public DbSet<PromotionDomain> Promotions { get; set; }
-        public DbSet<GameDomain> Games { get; set; }
-        public DbSet<LibraryDomain> Libraries { get; set; }
-        public DbSet<LibraryGameDomain> LibraryGames { get; set; }
+        public DbSet<UserDomain> Users { get; set; } = null!;
+        public DbSet<PromotionDomain> Promotions { get; set; } = null!;
+        public DbSet<GameDomain> Games { get; set; } = null!; 
+        public DbSet<LibraryDomain> Libraries { get; set; } = null!; 
+        public DbSet<LibraryGameDomain> LibraryGames { get; set; } = null!; 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,6 +29,5 @@ namespace Fiap.Infra.Data
             modelBuilder.ApplyConfiguration(new LibrariesMap());
             modelBuilder.ApplyConfiguration(new LibraryGameMap());
         }
-
     }
 }

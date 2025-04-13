@@ -6,6 +6,10 @@
 *.user
 *.sln.docstates
 
+.sonarqube/
+
+!.env-*
+
 # Ignore Visual Studio folder
 .vs/
 
@@ -46,6 +50,8 @@ x64/
 *.log
 *.svclog
 *.scc
+
+!.env-*
 
 # Visual C++ cache files
 ipch/

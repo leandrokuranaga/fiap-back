@@ -116,3 +116,83 @@ A entrega final do projeto será feita via **Release no GitHub**, publicada a pa
 
 > Para mais detalhes sobre PRs e contribuições, acesse o arquivo [📄 Guia de Contribuição](./Contributing%20Guide.md).
 
+# 🧪 Guia para rodar o projeto com Docker e SonarQube
+
+Este projeto depende de **Docker** para executar seus serviços (API, banco de dados e SonarQube).
+
+---
+
+## 🐳 Subindo os serviços com Docker
+
+### 🔁 Subir todos os serviços:
+
+```bash
+docker compose up -d --build
+```
+
+http://localhost:8080/swagger/index.html endereço da api
+
+### 🎯 Subir serviços específicos:
+
+```bash
+docker compose up -d db sonarqube
+```
+
+Você também pode iniciar um serviço por vez:
+
+```bash
+docker compose up -d db          # Banco de dados
+docker compose up -d app         # API
+docker compose up -d sonarqube   # SonarQube
+```
+
+---
+
+## 🔐 Configuração do SonarQube
+
+1. Acesse: [http://localhost:9000](http://localhost:9000)
+2. Faça login com:
+   - **Usuário:** `admin`
+   - **Senha:** `admin`
+3. Altere a senha quando solicitado.
+4. Vá em **My Account > Security**
+5. Gere um token de autenticação
+6. No arquivo `.env-dev`, adicione:
+
+```env
+SONAR_TOKEN=seu_token_gerado
+```
+
+7. Após isso, renomeie o arquivo:
+
+```bash
+mv .env-dev .env
+```
+
+---
+
+## ▶️ Rodando a análise com SonarQube
+
+Para executar a análise de código:
+
+1. Dê dois cliques no arquivo `sonar-analyze.bat`
+2. Acesse o painel do Sonar em [http://localhost:9000](http://localhost:9000)
+3. Vá até a seção "Projetos" para visualizar os resultados da análise
+
+---
+
+## 🛢️ Configuração do banco de dados
+
+No arquivo `.env` (anteriormente `.env-dev`), configure as variáveis:
+
+```env
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=sua_senha
+POSTGRES_DB=FIAP
+```
+
+Essas variáveis são usadas pelo Docker para inicializar o banco e pela aplicação para se conectar a ele.
+
+---
+
+
