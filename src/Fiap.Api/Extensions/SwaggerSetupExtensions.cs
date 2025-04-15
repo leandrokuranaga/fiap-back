@@ -1,4 +1,5 @@
 ﻿using Fiap.Api.SwaggerExamples.Promotions;
+using Fiap.Api.SwaggerExamples.Games;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Reflection;
@@ -52,6 +53,8 @@ namespace Fiap.Api.Extensions
             });
 
             services.AddSwaggerExamplesFromAssemblyOf<CreatePromotionRequestExample>();
+            services.AddSwaggerExamplesFromAssemblyOf<CreateGameRequestExample>();
+
         }
 
         public static void UseSwaggerDocumentation(this IApplicationBuilder app)
