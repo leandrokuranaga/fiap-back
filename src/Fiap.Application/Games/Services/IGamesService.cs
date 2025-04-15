@@ -1,11 +1,13 @@
 ﻿using Fiap.Application.Common;
-using Fiap.Application.Games.Models.Requests;
-using Fiap.Application.Games.Models.Responses;
+using Fiap.Application.Games.Models.Request;
+using Fiap.Application.Games.Models.Response;
 using System.Threading.Tasks;
 
-public interface IGamesService
+namespace Fiap.Application.Games.Services
 {
-    Task<BaseResponse<GameResponse>> CreateAsync(CreateGameRequest request);
-
-    Task<IEnumerable<GameResponse>> GetAllAsync();
+    public interface IGamesService
+    {
+        Task<GameResponse> CreateAsync(CreateGameRequest request);
+        Task<IEnumerable<GameResponse>> GetAllAsync();
+    }
 }

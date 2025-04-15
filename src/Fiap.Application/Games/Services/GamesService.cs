@@ -1,63 +1,42 @@
 ﻿using Fiap.Application.Common;
-using Fiap.Application.Games.Models.Requests;
+using Fiap.Application.Games.Models.Request;
+using Fiap.Application.Games.Models.Response;
+using Fiap.Application.Validators.GamesValidators;
 using Fiap.Domain.GameAggregate;
 using Fiap.Domain.SeedWork;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Fiap.Application.Games.Models.Responses;
+using static Fiap.Domain.SeedWork.NotificationModel;
 
 namespace Fiap.Application.Games.Services
 {
     public class GamesService(INotification notification, IGameRepository gameRepository)
         : BaseService(notification), IGamesService
     {
-        private readonly IGameRepository _gameRepository = gameRepository;
-
-        public async Task<BaseResponse<GameResponse>> CreateAsync(CreateGameRequest request)
+        public Task<GameResponse> CreateAsync(CreateGameRequest request) => ExecuteAsync(async () =>
         {
-            if (string.IsNullOrWhiteSpace(request.Name))
+            var response = new GameResponse();
+
+            try
             {
-                _notification.AddNotification("Nome", "O nome é obrigatório.", NotificationModel.ENotificationType.BadRequestError);
+                Validate(request, new CreateGameRequestValidator());
+
+                var game = (GameDomain)request;
+                await gameRepository.InsertOrUpdateAsync(game);
+
+                response = (GameResponse)game;
+                return response;
             }
-
-            if (_notification.HasNotification)
-                return BaseResponse<GameResponse>.Fail(_notification.NotificationModel);
-
-            var game = new GameDomain(
-                name: request.Name,
-                genre: request.Genre,
-                price: request.Price,
-                promotionId: request.PromotionId
-            );
-
-            await _gameRepository.AddAsync(game);
-
-            var response = new GameResponse
+            catch (Exception ex)
             {
-                Id = game.Id,
-                Name = game.Name,
-                Genre = game.Genre,
-                Price = game.Price,
-                PromotionId = game.PromotionId
-            };
+                notification.AddNotification("Create Game", ex.Message, ENotificationType.NotFound);
+                return response;
+            }
+        });
 
-            return BaseResponse<GameResponse>.Ok(response);
-        }
-
-       
-        public async Task<IEnumerable<GameResponse>> GetAllAsync()
+        public Task<IEnumerable<GameResponse>> GetAllAsync() => ExecuteAsync(async () =>
         {
-            var games = await _gameRepository.GetAllAsync();
-
-            return games.Select(game => new GameResponse
-            {
-                Id = game.Id,
-                Name = game.Name,
-                Genre = game.Genre,
-                Price = game.Price,
-                PromotionId = game.PromotionId
-            });
-        }
+            var games = await gameRepository.GetAllAsync();
+            var responses = games.Select(game => (GameResponse)game);
+            return responses;
+        });
     }
 }

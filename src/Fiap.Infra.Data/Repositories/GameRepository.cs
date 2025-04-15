@@ -12,18 +12,6 @@ namespace Fiap.Infra.Data.Repositories
         {
         }
 
-        public async Task AddAsync(GameDomain game)
-        {
-            await InsertOrUpdateAsync(game);
-        }
-
-        public async Task<IEnumerable<GameDomain>> GetAllAsync()
-        {
-            return await ((UnitOfWork)_unitOfWork).Context.Games.ToListAsync();
-        }
-
-
-
-
+                       
     }
 }
