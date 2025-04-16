@@ -62,6 +62,8 @@ namespace Fiap.Tests._1._Api_Layer_Tests
             Assert.Equal(mockCreateResponse.UserId, response.Data.UserId);
             Assert.Equal(mockCreateResponse.Name, response.Data.Name);
             Assert.Equal(mockCreateResponse.Email, response.Data.Email);
+            Assert.Equal(mockCreateResponse.Active, response.Data.Active);
+            Assert.Equal(mockCreateResponse.Type, response.Data.Type);
             #endregion
         }
 
@@ -109,6 +111,8 @@ namespace Fiap.Tests._1._Api_Layer_Tests
             Assert.Equal(mockUpdateResponse.UserId, response.Data.UserId);
             Assert.Equal(mockUpdateResponse.Name, response.Data.Name);
             Assert.Equal(mockUpdateResponse.Email, response.Data.Email);
+            Assert.Equal(mockUpdateResponse.Active, response.Data.Active);
+            Assert.Equal(mockUpdateResponse.Type, response.Data.Type);
             #endregion
         }
 
@@ -175,6 +179,8 @@ namespace Fiap.Tests._1._Api_Layer_Tests
             Assert.Equal(mockGetResponse.UserId, response.Data.UserId);
             Assert.Equal(mockGetResponse.Name, response.Data.Name);
             Assert.Equal(mockGetResponse.Email, response.Data.Email);
+            Assert.Equal(mockGetResponse.Active, response.Data.Active);
+            Assert.Equal(mockGetResponse.Type, response.Data.Type);            
             #endregion
         }
 
@@ -206,9 +212,7 @@ namespace Fiap.Tests._1._Api_Layer_Tests
             var response = Assert.IsType<BaseResponse<List<UserResponse>>>(okResult.Value);
 
             Assert.True(response.Success);
-            Assert.Equal(mockGetAllResponse.Count, response.Data.Count);
-            Assert.Equal(mockGetAllResponse[0].Name, response.Data[0].Name);
-            Assert.Equal(mockGetAllResponse[1].Name, response.Data[1].Name);
+            Assert.Equal(mockGetAllResponse, response.Data);
             #endregion
         }
 
