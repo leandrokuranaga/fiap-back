@@ -8,8 +8,11 @@ using Fiap.Infra.Data.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.SetBasePath(Directory.GetCurrentDirectory())
-                     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
+    .AddEnvironmentVariables();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -23,12 +26,13 @@ builder.Services.AddLocalServices(builder.Configuration);
 builder.Services.AddCustomMvc();
 
 builder.Services.AddHealthChecks()
-    .AddNpgSql(connectionString);
-    
+    .AddNpgSql(connectionString);    
 
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddGlobalCorsPolicy();
+
+builder.Services.AddApiVersioningConfiguration();
 
 builder.Services.AddSwaggerDocumentation();
 

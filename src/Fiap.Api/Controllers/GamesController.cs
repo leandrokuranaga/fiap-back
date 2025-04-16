@@ -9,8 +9,10 @@ using System.Net;
 
 namespace Fiap.Api.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
+    [ApiExplorerSettings(GroupName = "v1")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class GamesController(IGamesService gamesService, INotification notification) : BaseController(notification)
     {
         /// <summary>

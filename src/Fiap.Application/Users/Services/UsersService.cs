@@ -36,7 +36,8 @@ namespace Fiap.Application.User.Services
             }
             catch (Exception ex)
             {
-                _notification.AddNotification("Create User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
+                if (!_notification.HasNotification)
+                    _notification.AddNotification("Create User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
                 return response;
             }
         });
@@ -140,6 +141,5 @@ namespace Fiap.Application.User.Services
                 return response;
             }
         });
-
     }
 }

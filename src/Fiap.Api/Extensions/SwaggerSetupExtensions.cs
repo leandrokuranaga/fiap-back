@@ -44,19 +44,26 @@ namespace Fiap.Api.Extensions
                     }
                 });
 
+                c.DocInclusionPredicate((docName, apiDesc) =>
+                {
+                    var groupName = apiDesc.GroupName;
+                    return groupName == docName;
+                });
+
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath);
+                c.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
 
                 c.ExampleFilters();
                 c.OperationFilter<SetApplicationJsonAsDefaultFilter>();
+                c.EnableAnnotations();
+
             });
 
             services.AddSwaggerExamplesFromAssemblyOf<CreatePromotionRequestExample>();
             services.AddSwaggerExamplesFromAssemblyOf<CreateGameRequestExample>();
 
         }
-
         public static void UseSwaggerDocumentation(this IApplicationBuilder app)
         {
             app.UseSwagger();

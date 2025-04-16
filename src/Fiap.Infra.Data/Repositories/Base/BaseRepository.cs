@@ -10,7 +10,18 @@ namespace Fiap.Infra.Data.Repositories.Base
 
         public async Task<TEntity> InsertOrUpdateAsync(TEntity entity)
         {
-            await _unitOfWork.Context.Set<TEntity>().AddAsync(entity);
+            var dbSet = _unitOfWork.Context.Set<TEntity>();
+            var entry = _unitOfWork.Context.Entry(entity);
+
+            if (entry.State == EntityState.Detached)
+            {
+                var exists = await dbSet.FindAsync(entry.Property("Id").CurrentValue);
+                if (exists != null)                
+                    dbSet.Update(entity);
+                else
+                    await dbSet.AddAsync(entity);
+            }
+
             await _unitOfWork.CommitAsync();
             return entity;
         }
@@ -32,7 +43,7 @@ namespace Fiap.Infra.Data.Repositories.Base
 
         public async Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> expression) => await GetAll().Where(expression).ToListAsync();
 
-        public async Task<TEntity> GetByIdAsync(int id, bool noTracking) => await _unitOfWork.Context.Set<TEntity>().FindAsync(id);
+        public async Task<TEntity> GetByIdAsync(int id, bool noTracking) => noTracking ? await _unitOfWork.Context.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id) : await _unitOfWork.Context.Set<TEntity>().FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
 
         public virtual IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> expression) => GetAll().Where(expression);
 
@@ -50,7 +61,7 @@ namespace Fiap.Infra.Data.Repositories.Base
 
         public async Task<TEntity> GetOneNoTracking(Expression<Func<TEntity, bool>> expression) => await _unitOfWork.Context.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync(expression);
 
-        public async Task<TEntity> GetOneTracking(Expression<Func<TEntity, bool>> expression) => await _unitOfWork.Context.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync(expression);
+        public async Task<TEntity> GetOneTracking(Expression<Func<TEntity, bool>> expression) => await _unitOfWork.Context.Set<TEntity>().FirstOrDefaultAsync(expression);
         public async Task<IEnumerable<TEntity>> GetNoTrackingAsync(Expression<Func<TEntity, bool>> expression) => await GetAll().AsNoTracking().Where(expression).ToListAsync();
 
         public async Task AddRangeAsync(IEnumerable<TEntity> entities)
