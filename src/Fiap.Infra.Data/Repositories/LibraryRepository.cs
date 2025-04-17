@@ -3,7 +3,7 @@ using Fiap.Infra.Data.Repositories.Base;
 
 namespace Fiap.Infra.Data.Repositories
 {
-    public class LibraryRepository(IUnitOfWork unitOfWork) : BaseRepository<LibraryDomain>(unitOfWork), ILibraryRepository
+    public class LibraryRepository(Context context) : BaseRepository<LibraryDomain>(context), ILibraryRepository
     {
     }
 }

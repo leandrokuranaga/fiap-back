@@ -15,8 +15,6 @@ namespace Fiap.Domain.PromotionAggregate
             Discount = discount;
             StartDate = startDate;
             EndDate = endDate;
-
-            ValidatePeriod();
         }
 
         public double Discount { get; set; }
@@ -31,8 +29,6 @@ namespace Fiap.Domain.PromotionAggregate
 
             if (endDate.HasValue)
                 EndDate = endDate.Value;
-
-            ValidatePeriod();
         }
 
         public void ValidatePeriod()
