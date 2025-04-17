@@ -17,6 +17,13 @@ namespace Fiap.Infra.Data.MapEntities
                 .IsRequired()
                 .HasMaxLength(100);
 
+            builder.HasIndex(x => x.Name)
+                .IsUnique()
+                .HasDatabaseName("IX_Games_Name");
+
+            builder.HasIndex(x => x.PromotionId)
+                .HasDatabaseName("IX_Games_PromotionId");
+
             builder.Property(x => x.Genre)
                 .IsRequired()
                 .HasMaxLength(100);

@@ -13,6 +13,12 @@ namespace Fiap.Infra.Data.MapEntities
 
             builder.HasKey(x => x.Id);
 
+            builder.HasIndex(x => x.LibraryId)
+                   .HasDatabaseName("IX_LibraryGames_LibraryId");
+
+            builder.HasIndex(x => x.GameId)
+                   .HasDatabaseName("IX_LibraryGames_GameId");
+
             builder.Property(x => x.PurchaseDate).IsRequired();
 
             builder.Property(x => x.PricePaid).IsRequired();

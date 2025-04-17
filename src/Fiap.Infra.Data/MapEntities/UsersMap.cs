@@ -14,6 +14,10 @@ namespace Fiap.Infra.Data.MapEntities
 
             builder.HasKey(x => x.Id);
 
+            builder.HasIndex(x => x.Email)
+                .IsUnique()
+                .HasDatabaseName("IX_Users_Email");
+
             builder.Property(x => x.Name)
                 .IsRequired()
                 .HasMaxLength(100);
