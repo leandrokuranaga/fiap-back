@@ -13,6 +13,9 @@ namespace Fiap.Infra.Data.MapEntities
 
             builder.HasKey(x => x.Id);
 
+            builder.HasIndex(x => x.UserId)
+                   .HasDatabaseName("IX_Library_UserId");
+
             builder.HasOne(x => x.User)
                    .WithOne(u => u.Library)
                    .HasForeignKey<LibraryDomain>(x => x.UserId);
