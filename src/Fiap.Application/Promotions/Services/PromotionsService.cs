@@ -41,6 +41,7 @@ namespace Fiap.Application.Promotions.Services
             }
             catch (Exception ex)
             {
+                await unitOfWork.RollbackAsync();
                 notification.AddNotification("Not Found", ex.Message, NotificationModel.ENotificationType.NotFound);
                 return response;
             }
@@ -68,8 +69,7 @@ namespace Fiap.Application.Promotions.Services
                     }
 
                     game.PromotionId = promotion.Id;
-                    games.Add(game);
-                    
+                    games.Add(game);                    
                 }
 
                 if (games.Count != 0)
@@ -113,6 +113,7 @@ namespace Fiap.Application.Promotions.Services
             }
             catch (Exception ex)
             {
+                await unitOfWork.RollbackAsync();
                 notification.AddNotification("Update Promotion", ex.Message, NotificationModel.ENotificationType.NotFound);
                 return response;
             }

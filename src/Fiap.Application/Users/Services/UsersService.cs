@@ -19,7 +19,7 @@ namespace Fiap.Application.User.Services
             {
                 Validate(request, new CreateUserRequestValidator());
 
-                var exists = await userRepository.ExistAsync(u => u.Email == request.Email);
+                var exists = await userRepository.ExistAsync(u => u.Email.Trim().ToLower() == request.Email.Trim().ToLower());
                 if (exists)
                 {
                     _notification.AddNotification("Create User", "Email already registered", NotificationModel.ENotificationType.BusinessRules);
@@ -37,6 +37,8 @@ namespace Fiap.Application.User.Services
             }
             catch (Exception ex)
             {
+                await userRepository.RollbackAsync();
+
                 if (!_notification.HasNotification)
                     _notification.AddNotification("Create User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
                 return response;
@@ -68,6 +70,8 @@ namespace Fiap.Application.User.Services
             }
             catch (Exception ex)
             {
+                await userRepository.RollbackAsync();
+
                 _notification.AddNotification("Update User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
                 return response;
             }
@@ -86,18 +90,27 @@ namespace Fiap.Application.User.Services
 
         public Task<BaseResponse<object>> Delete(int id) => ExecuteAsync(async () =>
         {
-            var user = await userRepository.GetByIdAsync(id, noTracking: false);
-
-            if (user == null)
+            try
             {
-                _notification.AddNotification("Delete User", "User Not found", NotificationModel.ENotificationType.NotFound);
+                var user = await userRepository.GetByIdAsync(id, noTracking: false);
+
+                if (user == null)
+                {
+                    _notification.AddNotification("Delete User", "User Not found", NotificationModel.ENotificationType.NotFound);
+                    return BaseResponse<object>.Fail(_notification.NotificationModel);
+                }
+
+                await userRepository.DeleteAsync(user);
+                await userRepository.SaveChangesAsync();
+
+                return BaseResponse<object>.Ok(null);
+            }
+            catch(Exception ex)
+            {
+                await userRepository.RollbackAsync();
+                _notification.AddNotification("Delete User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
                 return BaseResponse<object>.Fail(_notification.NotificationModel);
             }
-
-            await userRepository.DeleteAsync(user);
-            await userRepository.SaveChangesAsync();
-
-            return BaseResponse<object>.Ok(null);
         });
 
         public Task<UserResponse> Get(int userId) => ExecuteAsync(async () =>
