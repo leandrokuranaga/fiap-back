@@ -19,7 +19,9 @@ namespace Fiap.Application.User.Services
             {
                 Validate(request, new CreateUserRequestValidator());
 
-                var exists = await userRepository.ExistAsync(u => u.Email.Trim().ToLower() == request.Email.Trim().ToLower());
+                request.Email = request.Email.Trim().ToLowerInvariant();
+
+                var exists = await userRepository.ExistAsync(u => u.Email == request.Email);
                 if (exists)
                 {
                     _notification.AddNotification("Create User", "Email already registered", NotificationModel.ENotificationType.BusinessRules);
