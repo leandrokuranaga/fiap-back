@@ -2,7 +2,6 @@ using Fiap.Application.User.Services;
 using Fiap.Application.Users.Models.Request;
 using Fiap.Domain.SeedWork;
 using Fiap.Domain.UserAggregate;
-using Fiap.Domain.UsersAggregate;
 using Moq;
 using System.Linq.Expressions;
 
@@ -46,7 +45,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _usersService.Create(request);
+            var result = await _usersService.CreateAsync(request);
             #endregion
 
             #region Assert
@@ -82,7 +81,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _usersService.Create(request);
+            var result = await _usersService.CreateAsync(request);
             #endregion
 
             #region Assert
@@ -119,7 +118,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _usersService.Update(userId, request);
+            var result = await _usersService.UpdateAsync(userId, request);
             #endregion
 
             #region Assert
@@ -146,7 +145,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _usersService.Update(userId, request);
+            var result = await _usersService.UpdateAsync(userId, request);
             #endregion
 
             #region Assert
@@ -178,7 +177,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _usersService.Delete(userId);
+            var result = await _usersService.DeleteAsync(userId);
             #endregion
 
             #region Assert
@@ -199,7 +198,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _usersService.Delete(userId);
+            var result = await _usersService.DeleteAsync(userId);
             #endregion
 
             #region Assert
@@ -228,7 +227,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _usersService.Get(userId);
+            var result = await _usersService.GetAsync(userId);
             #endregion
 
             #region Assert
@@ -250,7 +249,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _usersService.Get(userId);
+            var result = await _usersService.GetAsync(userId);
             #endregion
 
             #region Assert
@@ -275,7 +274,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _usersService.GetAll();
+            var result = await _usersService.GetAllAsync();
             #endregion
 
             #region Assert
@@ -302,7 +301,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _usersService.Create(request);
+            var result = await _usersService.CreateAsync(request);
             #endregion
 
             #region Assert
@@ -327,7 +326,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _usersService.Update(userId, request);
+            var result = await _usersService.UpdateAsync(userId, request);
             #endregion
 
             #region Assert
@@ -347,7 +346,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _usersService.Get(userId);
+            var result = await _usersService.GetAsync(userId);
             #endregion
 
             #region Assert
@@ -365,7 +364,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _usersService.GetAll();
+            var result = await _usersService.GetAllAsync();
             #endregion
 
             #region Assert
@@ -402,7 +401,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _usersService.Delete(userId);
+            var result = await _usersService.DeleteAsync(userId);
             #endregion
 
             #region Assert

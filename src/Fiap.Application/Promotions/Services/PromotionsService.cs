@@ -26,10 +26,6 @@ namespace Fiap.Application.Promotions.Services
 
                 await unitOfWork.BeginTransactionAsync();
 
-                promotion.ValidatePeriod();
-
-                await unitOfWork.BeginTransactionAsync();
-
                 await promotionRepository.InsertOrUpdateAsync(promotion);
                 await promotionRepository.SaveChangesAsync();
 
