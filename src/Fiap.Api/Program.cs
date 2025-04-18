@@ -38,20 +38,14 @@ builder.Services.AddSwaggerDocumentation();
 
 builder.Host.UseSerilog((context, services, configuration) =>
 {
-    configuration
-        .MinimumLevel.Error()
-        .Enrich.FromLogContext()
-        .Enrich.WithProperty("Application", "Fiap.Api")
-        .WriteTo.Console(new JsonFormatter(renderMessage: true))
-        .WriteTo.File(new JsonFormatter(renderMessage: true), "logs/log-.json", rollingInterval: RollingInterval.Day);
-    ;
+    SerilogExtensions.ConfigureSerilog(context, services, configuration);
 });
 
 var app = builder.Build();
 
 app.UseExceptionHandling();
 
-//app.UseCustomStatusCodePages();
+app.UseCustomStatusCodePages();
 
 if (app.Environment.IsDevelopment())
 {
