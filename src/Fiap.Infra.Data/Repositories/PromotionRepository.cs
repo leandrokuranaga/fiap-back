@@ -1,9 +1,9 @@
-﻿using Fiap.Domain.PromotionAggregate;
+﻿using Fiap.Domain.Promotion;
 using Fiap.Infra.Data.Repositories.Base;
 
 namespace Fiap.Infra.Data.Repositories
 {
-    public class PromotionRepository(IUnitOfWork unitOfWork) : BaseRepository<PromotionDomain>(unitOfWork), IPromotionRepository
+    public class PromotionRepository(Context context) : BaseRepository<Promotion>(context), IPromotionRepository
     {
     }
 }

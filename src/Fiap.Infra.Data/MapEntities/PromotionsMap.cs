@@ -1,13 +1,13 @@
-﻿using Fiap.Domain.PromotionAggregate;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using Fiap.Infra.Data.MapEntities.Seeds;
+using Fiap.Domain.Promotion;
 
 namespace Fiap.Infra.Data.MapEntities
 {
-    public class PromotionsMap : IEntityTypeConfiguration<PromotionDomain>
+    public class PromotionsMap : IEntityTypeConfiguration<Promotion>
     {
-        public void Configure(EntityTypeBuilder<PromotionDomain> builder)
+        public void Configure(EntityTypeBuilder<Promotion> builder)
         {
             builder.ToTable("Promotion");
 

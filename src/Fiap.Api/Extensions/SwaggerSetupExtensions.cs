@@ -61,7 +61,6 @@ namespace Fiap.Api.Extensions
 
             services.AddSwaggerExamplesFromAssemblyOf<CreatePromotionRequestExample>();
         }
-
         public static void UseSwaggerDocumentation(this IApplicationBuilder app)
         {
             app.UseSwagger();

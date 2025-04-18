@@ -1,4 +1,4 @@
-﻿using Fiap.Domain.PromotionAggregate;
+﻿using Fiap.Domain.Promotion;
 
 namespace Fiap.Application.Promotions.Models.Response
 {
@@ -10,7 +10,7 @@ namespace Fiap.Application.Promotions.Models.Response
         public DateTime EndDate { get; set; }
 
 
-        public static explicit operator PromotionResponse(PromotionDomain promotion)
+        public static explicit operator PromotionResponse(Promotion promotion)
         {
             return new PromotionResponse
             {

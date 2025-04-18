@@ -1,14 +1,14 @@
-﻿using Fiap.Domain.SeedWork.Enums;
-using Fiap.Domain.UserAggregate;
+﻿using Fiap.Domain.UserAggregate;
+using Fiap.Domain.UserAggregate.Enums;
 
 namespace Fiap.Infra.Data.MapEntities.Seeds
 {
     public static class UserSeed
     {
-        public static List<UserDomain> Users()
+        public static List<User> Users()
         {
             return [
-                new UserDomain
+                new User
                 {
                     Id = 1,
                     Name = "Admin",
@@ -17,7 +17,7 @@ namespace Fiap.Infra.Data.MapEntities.Seeds
                     TypeUser = TypeUser.Admin,
                     Active = true
                 },
-                new UserDomain
+                new User
                 {
                     Id = 2,
                     Name = "User",

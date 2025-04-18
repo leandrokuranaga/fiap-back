@@ -2,7 +2,9 @@
 {
     public interface IUnitOfWork
     {
-        Context Context { get; }
         Task CommitAsync();
+        Task SaveChangesAsync();
+        Task RollbackAsync();
+        Task BeginTransactionAsync();
     }
 }

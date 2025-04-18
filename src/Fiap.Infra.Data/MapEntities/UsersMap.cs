@@ -1,18 +1,21 @@
-﻿using Fiap.Domain.LibraryAggregate;
-using Fiap.Domain.UserAggregate;
+﻿using Fiap.Domain.UserAggregate;
 using Fiap.Infra.Data.MapEntities.Seeds;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Fiap.Infra.Data.MapEntities
 {
-    public class UsersMap : IEntityTypeConfiguration<UserDomain>
+    public class UsersMap : IEntityTypeConfiguration<User>
     {
-        public void Configure(EntityTypeBuilder<UserDomain> builder)
+        public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.ToTable("Users");
 
             builder.HasKey(x => x.Id);
+
+            builder.HasIndex(x => x.Email)
+                .IsUnique()
+                .HasDatabaseName("IX_Users_Email");
 
             builder.Property(x => x.Name)
                 .IsRequired()
@@ -34,9 +37,10 @@ namespace Fiap.Infra.Data.MapEntities
                 .IsRequired()
                 .HasDefaultValue(true);
 
-            builder.HasOne(x => x.Library)
-                .WithOne(l => l.User)
-                .HasForeignKey<LibraryDomain>(l => l.UserId);
+            builder.HasMany(x => x.LibraryGames)
+                   .WithOne(lg => lg.User)
+                   .HasForeignKey(lg => lg.UserId)
+                   .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasData(UserSeed.Users());
         }
