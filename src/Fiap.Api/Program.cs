@@ -4,6 +4,7 @@ using Fiap.Infra.Data;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Extensions.Hosting;
+using Serilog.Formatting.Json;
 using Serilog.Sinks;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,17 +39,19 @@ builder.Services.AddSwaggerDocumentation();
 builder.Host.UseSerilog((context, services, configuration) =>
 {
     configuration
-        .MinimumLevel.Warning()
-        .WriteTo.Console()
-        .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
-        .Enrich.FromLogContext();
+        .MinimumLevel.Error()
+        .Enrich.FromLogContext()
+        .Enrich.WithProperty("Application", "Fiap.Api")
+        .WriteTo.Console(new JsonFormatter(renderMessage: true))
+        .WriteTo.File(new JsonFormatter(renderMessage: true), "logs/log-.json", rollingInterval: RollingInterval.Day);
+    ;
 });
 
 var app = builder.Build();
 
 app.UseExceptionHandling();
 
-app.UseCustomStatusCodePages();
+//app.UseCustomStatusCodePages();
 
 if (app.Environment.IsDevelopment())
 {
