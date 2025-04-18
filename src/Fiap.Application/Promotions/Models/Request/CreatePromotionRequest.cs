@@ -1,4 +1,4 @@
-﻿using Fiap.Domain.PromotionAggregate;
+﻿using Fiap.Domain.Promotion;
 
 namespace Fiap.Application.Promotions.Models.Request
 {
@@ -8,9 +8,9 @@ namespace Fiap.Application.Promotions.Models.Request
         public DateTime ExpirationDate { get; set; }
         public List<int?>? GameId { get; set; }
 
-        public static explicit operator PromotionDomain(CreatePromotionRequest c)
+        public static explicit operator Promotion(CreatePromotionRequest c)
         {
-            return new PromotionDomain
+            return new Promotion
             {
                 Discount = c.Discount,
                 EndDate = c.ExpirationDate,

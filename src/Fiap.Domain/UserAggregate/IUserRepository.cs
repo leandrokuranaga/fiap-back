@@ -4,7 +4,7 @@ using Fiap.Infra.Data;
 
 namespace Fiap.Domain.UsersAggregate
 {
-    public interface IUserRepository : IBaseRepository<UserDomain>, IUnitOfWork
+    public interface IUserRepository : IBaseRepository<User>, IUnitOfWork
     {
     }
 }

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Fiap.Infra.Data.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20250417182836_games-name-unique")]
-    partial class gamesnameunique
+    [Migration("20250417184947_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -126,38 +126,6 @@ namespace Fiap.Infra.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Fiap.Domain.LibraryAggregate.LibraryDomain", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique()
-                        .HasDatabaseName("IX_Library_UserId");
-
-                    b.ToTable("Library", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            UserId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            UserId = 2
-                        });
-                });
-
             modelBuilder.Entity("Fiap.Domain.LibraryGameAggregate.LibraryGameDomain", b =>
                 {
                     b.Property<int>("Id")
@@ -169,22 +137,22 @@ namespace Fiap.Infra.Data.Migrations
                     b.Property<int>("GameId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("LibraryId")
-                        .HasColumnType("integer");
-
                     b.Property<double>("PricePaid")
                         .HasColumnType("double precision");
 
                     b.Property<DateTime>("PurchaseDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("GameId")
                         .HasDatabaseName("IX_LibraryGames_GameId");
 
-                    b.HasIndex("LibraryId")
-                        .HasDatabaseName("IX_LibraryGames_LibraryId");
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("IX_LibraryGames_UserId");
 
                     b.ToTable("LibraryGames", (string)null);
 
@@ -193,33 +161,33 @@ namespace Fiap.Infra.Data.Migrations
                         {
                             Id = 1,
                             GameId = 1,
-                            LibraryId = 1,
                             PricePaid = 200.0,
-                            PurchaseDate = new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc)
+                            PurchaseDate = new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = 1
                         },
                         new
                         {
                             Id = 2,
                             GameId = 2,
-                            LibraryId = 1,
                             PricePaid = 50.0,
-                            PurchaseDate = new DateTime(2022, 3, 9, 0, 0, 0, 0, DateTimeKind.Utc)
+                            PurchaseDate = new DateTime(2022, 3, 9, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = 1
                         },
                         new
                         {
                             Id = 3,
                             GameId = 3,
-                            LibraryId = 1,
                             PricePaid = 199.0,
-                            PurchaseDate = new DateTime(2020, 11, 22, 0, 0, 0, 0, DateTimeKind.Utc)
+                            PurchaseDate = new DateTime(2020, 11, 22, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = 1
                         },
                         new
                         {
                             Id = 4,
                             GameId = 4,
-                            LibraryId = 1,
                             PricePaid = 60.0,
-                            PurchaseDate = new DateTime(2019, 5, 3, 0, 0, 0, 0, DateTimeKind.Utc)
+                            PurchaseDate = new DateTime(2019, 5, 3, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = 1
                         });
                 });
 
@@ -338,17 +306,6 @@ namespace Fiap.Infra.Data.Migrations
                     b.Navigation("Promotion");
                 });
 
-            modelBuilder.Entity("Fiap.Domain.LibraryAggregate.LibraryDomain", b =>
-                {
-                    b.HasOne("Fiap.Domain.UserAggregate.UserDomain", "User")
-                        .WithOne("Library")
-                        .HasForeignKey("Fiap.Domain.LibraryAggregate.LibraryDomain", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Fiap.Domain.LibraryGameAggregate.LibraryGameDomain", b =>
                 {
                     b.HasOne("Fiap.Domain.GameAggregate.GameDomain", "Game")
@@ -357,25 +314,20 @@ namespace Fiap.Infra.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Fiap.Domain.LibraryAggregate.LibraryDomain", "Library")
-                        .WithMany("Games")
-                        .HasForeignKey("LibraryId")
+                    b.HasOne("Fiap.Domain.UserAggregate.UserDomain", "User")
+                        .WithMany("LibraryGames")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Game");
 
-                    b.Navigation("Library");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Fiap.Domain.GameAggregate.GameDomain", b =>
                 {
                     b.Navigation("Libraries");
-                });
-
-            modelBuilder.Entity("Fiap.Domain.LibraryAggregate.LibraryDomain", b =>
-                {
-                    b.Navigation("Games");
                 });
 
             modelBuilder.Entity("Fiap.Domain.PromotionAggregate.PromotionDomain", b =>
@@ -385,8 +337,7 @@ namespace Fiap.Infra.Data.Migrations
 
             modelBuilder.Entity("Fiap.Domain.UserAggregate.UserDomain", b =>
                 {
-                    b.Navigation("Library")
-                        .IsRequired();
+                    b.Navigation("LibraryGames");
                 });
 #pragma warning restore 612, 618
         }

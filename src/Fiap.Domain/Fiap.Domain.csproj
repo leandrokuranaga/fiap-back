@@ -10,4 +10,8 @@
     <PackageReference Include="Abp" Version="9.4.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="SeedWork\Enums\" />
+  </ItemGroup>
+
 </Project>

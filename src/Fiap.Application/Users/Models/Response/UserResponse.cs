@@ -1,5 +1,5 @@
-﻿using Fiap.Domain.SeedWork.Enums;
-using Fiap.Domain.UserAggregate;
+﻿using Fiap.Domain.UserAggregate;
+using Fiap.Domain.UserAggregate.Enums;
 
 namespace Fiap.Application.Users.Models.Response
 {
@@ -11,7 +11,7 @@ namespace Fiap.Application.Users.Models.Response
         public TypeUser Type { get; set; }
         public bool Active { get; set; }
 
-        public static explicit operator UserResponse(UserDomain user)
+        public static explicit operator UserResponse(Domain.UserAggregate.User user)
         {
             return new UserResponse
             {

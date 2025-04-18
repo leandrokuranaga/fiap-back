@@ -1,4 +1,4 @@
-﻿namespace Fiap.Domain.SeedWork.Enums
+﻿namespace Fiap.Domain.UserAggregate.Enums
 {
     public enum TypeUser
     {

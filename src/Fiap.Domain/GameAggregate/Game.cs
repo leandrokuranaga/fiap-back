@@ -1,12 +1,11 @@
 ﻿using Abp.Domain.Entities;
-using Fiap.Domain.LibraryGameAggregate;
-using Fiap.Domain.PromotionAggregate;
+using Fiap.Domain.UserAggregate.Entities;
 
-namespace Fiap.Domain.GameAggregate
+namespace Fiap.Domain.Game
 {
-    public class GameDomain : Entity
+    public class Game : Entity
     {
-        public GameDomain(int id, string name, string genre, double price, int? promotionId)
+        public Game(int id, string name, string genre, double price, int? promotionId)
         {
             Id = id;
             Name = name;
@@ -15,7 +14,7 @@ namespace Fiap.Domain.GameAggregate
             PromotionId = promotionId;
         }
 
-        public GameDomain()
+        public Game()
         {
             
         }
@@ -25,8 +24,8 @@ namespace Fiap.Domain.GameAggregate
         public double Price { get; set; }
         public int? PromotionId { get; set; }
 
-        public virtual PromotionDomain Promotion { get; set; }
-        public virtual ICollection<LibraryGameDomain> Libraries { get; set; }
+        public virtual Promotion.Promotion Promotion { get; set; }
+        public virtual ICollection<LibraryGame> Libraries { get; set; }
 
 
         public void AssignPromotion(int promotionId) 

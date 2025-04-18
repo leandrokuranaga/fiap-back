@@ -1,13 +1,13 @@
-﻿using Fiap.Domain.GameAggregate;
+﻿using Fiap.Domain.Game;
 using Fiap.Infra.Data.MapEntities.Seeds;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Fiap.Infra.Data.MapEntities
 {
-    public class GamesMap : IEntityTypeConfiguration<GameDomain>
+    public class GamesMap : IEntityTypeConfiguration<Game>
     {
-        public void Configure(EntityTypeBuilder<GameDomain> builder)
+        public void Configure(EntityTypeBuilder<Game> builder)
         {
             builder.ToTable("Games");
 

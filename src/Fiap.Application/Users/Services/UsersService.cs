@@ -28,7 +28,7 @@ namespace Fiap.Application.User.Services
                     return new UserResponse();
                 }
 
-                var user = (UserDomain)request;
+                var user = (Domain.UserAggregate.User)request;
 
                 await userRepository.InsertOrUpdateAsync(user);
                 await userRepository.SaveChangesAsync();
@@ -79,7 +79,7 @@ namespace Fiap.Application.User.Services
             }
         });
 
-        private void UpdateUserProperties(UserDomain user, UpdateUserRequest request)
+        private void UpdateUserProperties(Domain.UserAggregate.User user, UpdateUserRequest request)
         {
             user.Name = request.Name ?? user.Name;
             user.Email = request.Email ?? user.Email;
