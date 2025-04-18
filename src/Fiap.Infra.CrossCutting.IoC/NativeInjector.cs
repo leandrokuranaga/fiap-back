@@ -2,10 +2,8 @@
 using Fiap.Application.Promotions.Services;
 using Fiap.Application.User.Services;
 using Fiap.Application.Users.Services;
-using Fiap.Domain.GameAggregate;
-using Fiap.Domain.LibraryAggregate;
-using Fiap.Domain.LibraryGameAggregate;
-using Fiap.Domain.PromotionAggregate;
+using Fiap.Domain.Game;
+using Fiap.Domain.Promotion;
 using Fiap.Domain.SeedWork;
 using Fiap.Domain.UsersAggregate;
 using Fiap.Infra.Data;
@@ -27,9 +25,7 @@ namespace Fiap.Infra.CrossCutting.IoC
             #region Repositories
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IGameRepository, GameRepository>();
-            services.AddScoped<ILibraryGameRepository, LibraryGameRepository>();
             services.AddScoped<IPromotionRepository, PromotionRepository>();
-            services.AddScoped<ILibraryRepository, LibraryRepository>();
             #endregion
 
             #region Services

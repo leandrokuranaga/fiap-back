@@ -33,12 +33,12 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             };
 
             _mockUserRepository
-                .Setup(repo => repo.ExistAsync(It.IsAny<Expression<Func<UserDomain, bool>>>()))
+                .Setup(repo => repo.ExistAsync(It.IsAny<Expression<Func<User, bool>>>()))
                 .ReturnsAsync(false);
 
             _mockUserRepository
-                .Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<UserDomain>()))
-                .ReturnsAsync((UserDomain user) =>
+                .Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<User>()))
+                .ReturnsAsync((User user) =>
                 {
                     user.Id = 1;
                     return user;
@@ -69,12 +69,12 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             };
 
             _mockUserRepository
-                .Setup(repo => repo.ExistAsync(It.IsAny<Expression<Func<UserDomain, bool>>>()))
+                .Setup(repo => repo.ExistAsync(It.IsAny<Expression<Func<User, bool>>>()))
                 .ReturnsAsync(true);
 
             _mockUserRepository
-              .Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<UserDomain>()))
-              .ReturnsAsync((UserDomain user) =>
+              .Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<User>()))
+              .ReturnsAsync((User user) =>
               {
                   user.Id = 1;
                   return user;
@@ -102,7 +102,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
                 Email = "updated.email@example.com"
             };
 
-            var user = new UserDomain
+            var user = new User
             {
                 Id = userId,
                 Name = "Original Name",
@@ -114,7 +114,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
                 .ReturnsAsync(user);
 
             _mockUserRepository
-                .Setup(repo => repo.UpdateAsync(It.IsAny<UserDomain>()))
+                .Setup(repo => repo.UpdateAsync(It.IsAny<User>()))
                 .Returns(Task.CompletedTask);
             #endregion
 
@@ -142,7 +142,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
 
             _mockUserRepository
                 .Setup(repo => repo.GetByIdAsync(userId, It.IsAny<bool>()))
-                .ReturnsAsync((UserDomain)null);
+                .ReturnsAsync((User)null);
             #endregion
 
             #region Act
@@ -161,7 +161,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #region Arrange
             int userId = 1;
 
-            var user = new UserDomain
+            var user = new User
             {
                 Id = userId,
                 Name = "Bruno Moura",
@@ -173,7 +173,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
                 .ReturnsAsync(user);
 
             _mockUserRepository
-                .Setup(repo => repo.DeleteAsync(It.IsAny<UserDomain>()))
+                .Setup(repo => repo.DeleteAsync(It.IsAny<User>()))
                 .Returns(Task.CompletedTask);
             #endregion
 
@@ -195,7 +195,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
 
             _mockUserRepository
                 .Setup(repo => repo.GetByIdAsync(userId, It.IsAny<bool>()))
-                .ReturnsAsync((UserDomain)null);
+                .ReturnsAsync((User)null);
             #endregion
 
             #region Act
@@ -215,7 +215,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #region Arrange
             int userId = 1;
 
-            var user = new UserDomain
+            var user = new User
             {
                 Id = userId,
                 Name = "Bruno Moura",
@@ -246,7 +246,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
 
             _mockUserRepository
                 .Setup(repo => repo.GetByIdAsync(userId, It.IsAny<bool>()))
-                .ReturnsAsync((UserDomain)null);
+                .ReturnsAsync((User)null);
             #endregion
 
             #region Act
@@ -263,10 +263,10 @@ namespace Fiap.Tests._2._Application_Layer_Tests
         public async Task GetAll_ShouldReturnListOfUserResponses()
         {
             #region Arrange
-            var users = new List<UserDomain>
+            var users = new List<User>
             {
-                new UserDomain { Id = 1, Name = "Bruno Moura", Email = "bruno@example.com" },
-                new UserDomain { Id = 2, Name = "Jane Doe", Email = "jane.doe@example.com" }
+                new User { Id = 1, Name = "Bruno Moura", Email = "bruno@example.com" },
+                new User { Id = 2, Name = "Jane Doe", Email = "jane.doe@example.com" }
             };
 
             _mockUserRepository
@@ -297,7 +297,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             };
 
             _mockUserRepository
-                .Setup(repo => repo.ExistAsync(It.IsAny<Expression<Func<UserDomain, bool>>>()))
+                .Setup(repo => repo.ExistAsync(It.IsAny<Expression<Func<User, bool>>>()))
                 .ThrowsAsync(new Exception("Unexpected error"));
             #endregion
 
@@ -381,7 +381,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #region Arrange
             int userId = 1;
 
-            var user = new UserDomain
+            var user = new User
             {
                 Id = userId,
                 Name = "Bruno Moura",
@@ -393,7 +393,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
                 .ReturnsAsync(user);
 
             _mockUserRepository
-                .Setup(repo => repo.DeleteAsync(It.IsAny<UserDomain>()))
+                .Setup(repo => repo.DeleteAsync(It.IsAny<User>()))
                 .ThrowsAsync(new Exception("Unexpected error"));
 
             _mockUserRepository

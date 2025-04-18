@@ -68,32 +68,13 @@ namespace Fiap.Infra.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Library",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Library", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Library_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "LibraryGames",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    LibraryId = table.Column<int>(type: "integer", nullable: false),
                     GameId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
                     PurchaseDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     PricePaid = table.Column<double>(type: "double precision", nullable: false)
                 },
@@ -107,9 +88,9 @@ namespace Fiap.Infra.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_LibraryGames_Library_LibraryId",
-                        column: x => x.LibraryId,
-                        principalTable: "Library",
+                        name: "FK_LibraryGames_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -153,24 +134,21 @@ namespace Fiap.Infra.Data.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Library",
-                columns: new[] { "Id", "UserId" },
+                table: "LibraryGames",
+                columns: new[] { "Id", "GameId", "PricePaid", "PurchaseDate", "UserId" },
                 values: new object[,]
                 {
-                    { 1, 1 },
-                    { 2, 2 }
+                    { 1, 1, 200.0, new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc), 1 },
+                    { 2, 2, 50.0, new DateTime(2022, 3, 9, 0, 0, 0, 0, DateTimeKind.Utc), 1 },
+                    { 3, 3, 199.0, new DateTime(2020, 11, 22, 0, 0, 0, 0, DateTimeKind.Utc), 1 },
+                    { 4, 4, 60.0, new DateTime(2019, 5, 3, 0, 0, 0, 0, DateTimeKind.Utc), 1 }
                 });
 
-            migrationBuilder.InsertData(
-                table: "LibraryGames",
-                columns: new[] { "Id", "GameId", "LibraryId", "PricePaid", "PurchaseDate" },
-                values: new object[,]
-                {
-                    { 1, 1, 1, 200.0, new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc) },
-                    { 2, 2, 1, 50.0, new DateTime(2022, 3, 9, 0, 0, 0, 0, DateTimeKind.Utc) },
-                    { 3, 3, 1, 199.0, new DateTime(2020, 11, 22, 0, 0, 0, 0, DateTimeKind.Utc) },
-                    { 4, 4, 1, 60.0, new DateTime(2019, 5, 3, 0, 0, 0, 0, DateTimeKind.Utc) }
-                });
+            migrationBuilder.CreateIndex(
+                name: "IX_Games_Name",
+                table: "Games",
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Games_PromotionId",
@@ -178,20 +156,20 @@ namespace Fiap.Infra.Data.Migrations
                 column: "PromotionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Library_UserId",
-                table: "Library",
-                column: "UserId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_LibraryGames_GameId",
                 table: "LibraryGames",
                 column: "GameId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LibraryGames_LibraryId",
+                name: "IX_LibraryGames_UserId",
                 table: "LibraryGames",
-                column: "LibraryId");
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Email",
+                table: "Users",
+                column: "Email",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -204,13 +182,10 @@ namespace Fiap.Infra.Data.Migrations
                 name: "Games");
 
             migrationBuilder.DropTable(
-                name: "Library");
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Promotion");
-
-            migrationBuilder.DropTable(
-                name: "Users");
         }
     }
 }

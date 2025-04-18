@@ -1,5 +1,4 @@
 ﻿using Fiap.Application.Common;
-using Fiap.Domain.UserAggregate;
 
 namespace Fiap.Application.Users.Models.Request
 {
@@ -9,9 +8,9 @@ namespace Fiap.Application.Users.Models.Request
         public string Email { get; set; }
         public string Password { get; set; }
 
-        public static explicit operator UserDomain(CreateUserRequest request)
+        public static explicit operator Domain.UserAggregate.User(CreateUserRequest request)
         {
-            return UserDomain.CreateByPublic(
+            return Domain.UserAggregate.User.CreateByPublic(
                 request.Name,
                 request.Email,
                 PasswordHasher.HashPassword(request.Password)

@@ -1,14 +1,14 @@
-﻿using Fiap.Domain.GameAggregate;
+﻿using Fiap.Domain.Game;
 
 namespace Fiap.Tests._3._Domain_Layer_Tests
 {
-    public class GameDomainTest
+    public class GameTest
     {
         [Fact]
-        public void GameDomainSuccess()
+        public void GameSuccess()
         {
             #region Arrange
-            var mockGameDomain = new GameDomain()
+            var mockGame = new Game()
             {
                 Id = 1,
                 Name = "Test Game",
@@ -20,20 +20,20 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
             #endregion
 
             #region Act
-            var mockGameDomainAct = new GameDomain(
-                mockGameDomain.Id,
-                mockGameDomain.Name,
-                mockGameDomain.Genre,
-                mockGameDomain.Price,
-                mockGameDomain.PromotionId
+            var mockGameAct = new Game(
+                mockGame.Id,
+                mockGame.Name,
+                mockGame.Genre,
+                mockGame.Price,
+                mockGame.PromotionId
             );
             #endregion
 
             #region Assert
-            Assert.Equal(mockGameDomain.Name, mockGameDomainAct.Name);
-            Assert.Equal(mockGameDomain.Genre, mockGameDomainAct.Genre);
-            Assert.Equal(mockGameDomain.Price, mockGameDomainAct.Price);
-            Assert.Equal(mockGameDomain.PromotionId, mockGameDomainAct.PromotionId);
+            Assert.Equal(mockGame.Name, mockGameAct.Name);
+            Assert.Equal(mockGame.Genre, mockGameAct.Genre);
+            Assert.Equal(mockGame.Price, mockGameAct.Price);
+            Assert.Equal(mockGame.PromotionId, mockGameAct.PromotionId);
             #endregion
         }
     }

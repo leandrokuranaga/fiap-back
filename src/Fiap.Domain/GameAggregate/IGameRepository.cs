@@ -1,9 +1,9 @@
 ﻿using Fiap.Infra.Data;
 using Fiap.Domain.SeedWork;
 
-namespace Fiap.Domain.GameAggregate
+namespace Fiap.Domain.Game
 {
-    public interface IGameRepository : IBaseRepository<GameDomain>, IUnitOfWork
+    public interface IGameRepository : IBaseRepository<Game>, IUnitOfWork
     {
     }
 }

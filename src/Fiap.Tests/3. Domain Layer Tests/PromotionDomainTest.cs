@@ -1,12 +1,12 @@
-﻿using Fiap.Domain.PromotionAggregate;
+﻿using Fiap.Domain.Promotion;
 using Fiap.Domain.SeedWork.Exceptions;
 
 namespace Fiap.Tests._3._Domain_Layer_Tests
 {
-    public class PromotionDomainTest
+    public class PromotionTest
     {
         [Fact]
-        public void PromotionDomainSuccess()
+        public void PromotionSuccess()
         {
             #region Arrange
             var discount = 10.0;
@@ -15,7 +15,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
             #endregion
 
             #region Act
-            var promotion = new PromotionDomain(discount, startDate, endDate);
+            var promotion = new Promotion(discount, startDate, endDate);
             #endregion
 
             #region Assert
@@ -29,7 +29,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         public void Promotion_IsExpired_ReturnsTrue_WhenDateHasPassed()
         {
             #region Arrange
-            var promotion = new PromotionDomain(10.0, DateTime.Now.AddDays(-10), DateTime.Now.AddDays(-1));
+            var promotion = new Promotion(10.0, DateTime.Now.AddDays(-10), DateTime.Now.AddDays(-1));
             #endregion
 
             #region Act
@@ -45,7 +45,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         public void Promotion_IsActive_ReturnsTrue_WhenWithinPeriod()
         {
             #region Arrange
-            var promotion = new PromotionDomain(10.0, DateTime.Now.AddDays(-1), DateTime.Now.AddDays(10));
+            var promotion = new Promotion(10.0, DateTime.Now.AddDays(-1), DateTime.Now.AddDays(10));
             #endregion
 
             #region Act
@@ -61,7 +61,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         public void ValidatePeriod_ShouldThrow_WhenEndDateIsBeforeStartDate()
         {
             #region Arrange
-            var promotion = new PromotionDomain(10, DateTime.UtcNow, DateTime.UtcNow.AddDays(-1));
+            var promotion = new Promotion(10, DateTime.UtcNow, DateTime.UtcNow.AddDays(-1));
             #endregion
 
             #region Act & Assert
@@ -75,7 +75,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         public void GetDiscountedPrice_ReturnsCorrectValue()
         {
             #region Arrange
-            var promotion = new PromotionDomain(25.0, DateTime.Now, DateTime.Now.AddDays(5));
+            var promotion = new Promotion(25.0, DateTime.Now, DateTime.Now.AddDays(5));
             var originalPrice = 100.0;
             #endregion
 
@@ -92,7 +92,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         public void UpdateDiscount_UpdatesValuesCorrectly()
         {
             #region Arrange
-            var promotion = new PromotionDomain(10.0, DateTime.Now, DateTime.Now.AddDays(5));
+            var promotion = new Promotion(10.0, DateTime.Now, DateTime.Now.AddDays(5));
             var newDiscount = 20.0;
             var newEndDate = DateTime.Now.AddDays(10);
             #endregion

@@ -1,7 +1,7 @@
 ﻿using Fiap.Application.Promotions.Models.Request;
 using Fiap.Application.Promotions.Services;
-using Fiap.Domain.GameAggregate;
-using Fiap.Domain.PromotionAggregate;
+using Fiap.Domain.Game;
+using Fiap.Domain.Promotion;
 using Fiap.Domain.SeedWork;
 using Fiap.Infra.Data;
 using Moq;
@@ -40,8 +40,8 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             };
 
             _mockPromotionRepositoryMock
-                .Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<PromotionDomain>()))
-                .ReturnsAsync((PromotionDomain p) => 
+                .Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<Promotion>()))
+                .ReturnsAsync((Promotion p) => 
                 {
                     p.Id = 1;
                     return p;
@@ -49,7 +49,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
 
             _mockGameRepositoryMock
                 .Setup(repo => repo.GetByIdAsync(It.IsAny<int>(), It.IsAny<bool>()))
-                .ReturnsAsync(new GameDomain());
+                .ReturnsAsync(new Game());
             #endregion
 
             #region Act
@@ -79,7 +79,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
                 ExpirationDate = DateTime.UtcNow.AddDays(30),
                 GameId = new List<int?> { 1, 2, 3 }
             };
-            _mockPromotionRepositoryMock.Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<PromotionDomain>()))
+            _mockPromotionRepositoryMock.Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<Promotion>()))
                 .ThrowsAsync(new Exception("Test exception"));
 
             #endregion
@@ -107,7 +107,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
                 ExpirationDate = DateTime.UtcNow.AddDays(30)
             };
 
-            var promotion = new PromotionDomain(request.Discount ?? 0, DateTime.UtcNow, request.ExpirationDate ?? DateTime.UtcNow)
+            var promotion = new Promotion(request.Discount ?? 0, DateTime.UtcNow, request.ExpirationDate ?? DateTime.UtcNow)
             {
                 Id = promotionId
             };
@@ -115,7 +115,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             _mockPromotionRepositoryMock.Setup(repo => repo.GetByIdAsync(promotionId, It.IsAny<bool>()))
                 .ReturnsAsync(promotion);
 
-            _mockPromotionRepositoryMock.Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<PromotionDomain>()))
+            _mockPromotionRepositoryMock.Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<Promotion>()))
                 .ReturnsAsync(promotion);
             #endregion
 
@@ -175,13 +175,13 @@ namespace Fiap.Tests._2._Application_Layer_Tests
                 GameId = [101, 102]
             };
 
-            var promotion = new PromotionDomain(request.Discount.Value, DateTime.UtcNow, request.ExpirationDate.Value)
+            var promotion = new Promotion(request.Discount.Value, DateTime.UtcNow, request.ExpirationDate.Value)
             {
                 Id = promotionId
             };
 
-            var game1 = new GameDomain() { Id = 101, Name = "Game 1", Genre = "Action", Price = 59.90 };
-            var game2 = new GameDomain() { Id = 102, Name = "Game 2", Genre = "Adventure", Price = 49.90 };
+            var game1 = new Game() { Id = 101, Name = "Game 1", Genre = "Action", Price = 59.90 };
+            var game2 = new Game() { Id = 102, Name = "Game 2", Genre = "Adventure", Price = 49.90 };
 
             _mockPromotionRepositoryMock.Setup(repo => repo.GetByIdAsync(promotionId, It.IsAny<bool>()))
                 .ReturnsAsync(promotion);
@@ -192,10 +192,10 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             _mockGameRepositoryMock.Setup(repo => repo.GetByIdAsync(102, It.IsAny<bool>()))
                 .ReturnsAsync(game2);
 
-            _mockPromotionRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<PromotionDomain>()))
+            _mockPromotionRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<Promotion>()))
                 .Returns(Task.CompletedTask);
 
-            _mockGameRepositoryMock.Setup(repo => repo.UpdateRangeAsync(It.IsAny<IEnumerable<GameDomain>>()))
+            _mockGameRepositoryMock.Setup(repo => repo.UpdateRangeAsync(It.IsAny<IEnumerable<Game>>()))
                 .Returns(Task.CompletedTask);
 
             #endregion
@@ -211,7 +211,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             Assert.Equal(request.ExpirationDate, result.EndDate);
             Assert.Equal(promotion.StartDate, result.StartDate);
 
-            _mockGameRepositoryMock.Verify(repo => repo.UpdateRangeAsync(It.Is<IEnumerable<GameDomain>>(games =>
+            _mockGameRepositoryMock.Verify(repo => repo.UpdateRangeAsync(It.Is<IEnumerable<Game>>(games =>
                 games.Any(g => g.Id == 101 && g.PromotionId == promotionId) &&
                 games.Any(g => g.Id == 102 && g.PromotionId == promotionId) 
             )), Times.Once);
@@ -231,7 +231,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
 
             _mockPromotionRepositoryMock
                 .Setup(repo => repo.GetByIdAsync(promotionId, It.IsAny<bool>()))
-                .ReturnsAsync((PromotionDomain?)null);
+                .ReturnsAsync((Promotion?)null);
             #endregion
 
             #region Act
@@ -257,14 +257,14 @@ namespace Fiap.Tests._2._Application_Layer_Tests
                 GameId = [1, 2, 3]
             };
 
-            var promotion = new PromotionDomain(request.Discount, DateTime.UtcNow, request.ExpirationDate)
+            var promotion = new Promotion(request.Discount, DateTime.UtcNow, request.ExpirationDate)
             {
                 Id = 99
             };
 
             _mockPromotionRepositoryMock
-                .Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<PromotionDomain>()))
-                .ReturnsAsync((PromotionDomain p) =>
+                .Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<Promotion>()))
+                .ReturnsAsync((Promotion p) =>
                 {
                     p.Id = 99; 
                     return p;
@@ -272,7 +272,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
 
             _mockGameRepositoryMock
                 .Setup(repo => repo.GetByIdAsync(It.IsAny<int>(), It.IsAny<bool>()))
-                .ReturnsAsync((GameDomain?)null);
+                .ReturnsAsync((Game?)null);
 
             _mockUnitOfWork.Setup(uow => uow.BeginTransactionAsync()).Returns(Task.CompletedTask);
             _mockUnitOfWork.Setup(uow => uow.SaveChangesAsync()).Returns(Task.CompletedTask);
@@ -305,13 +305,13 @@ namespace Fiap.Tests._2._Application_Layer_Tests
                 GameId = [101, 102, 999]
             };
 
-            var promotion = new PromotionDomain(request.Discount.Value, DateTime.UtcNow, request.ExpirationDate.Value)
+            var promotion = new Promotion(request.Discount.Value, DateTime.UtcNow, request.ExpirationDate.Value)
             {
                 Id = promotionId
             };
 
-            var game1 = new GameDomain() { Id = 101, Name = "Game 1", Genre = "Action", Price = 59.90 };
-            var game2 = new GameDomain() { Id = 102, Name = "Game 2", Genre = "Adventure", Price = 49.90 };
+            var game1 = new Game() { Id = 101, Name = "Game 1", Genre = "Action", Price = 59.90 };
+            var game2 = new Game() { Id = 102, Name = "Game 2", Genre = "Adventure", Price = 49.90 };
 
             _mockPromotionRepositoryMock
                 .Setup(repo => repo.GetByIdAsync(promotionId, It.IsAny<bool>()))
@@ -327,14 +327,14 @@ namespace Fiap.Tests._2._Application_Layer_Tests
 
             _mockGameRepositoryMock
                 .Setup(repo => repo.GetByIdAsync(999, It.IsAny<bool>()))
-                .ReturnsAsync((GameDomain?)null);
+                .ReturnsAsync((Game?)null);
 
             _mockPromotionRepositoryMock
-                .Setup(repo => repo.UpdateAsync(It.IsAny<PromotionDomain>()))
+                .Setup(repo => repo.UpdateAsync(It.IsAny<Promotion>()))
                 .Returns(Task.CompletedTask);
 
             _mockGameRepositoryMock
-                .Setup(repo => repo.UpdateRangeAsync(It.IsAny<IEnumerable<GameDomain>>()))
+                .Setup(repo => repo.UpdateRangeAsync(It.IsAny<IEnumerable<Game>>()))
                 .Returns(Task.CompletedTask);
 
             #endregion
