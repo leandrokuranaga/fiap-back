@@ -5,7 +5,7 @@ using Fiap.Application.Users.Services;
 using Fiap.Domain.Game;
 using Fiap.Domain.Promotion;
 using Fiap.Domain.SeedWork;
-using Fiap.Domain.UsersAggregate;
+using Fiap.Domain.UserAggregate;
 using Fiap.Infra.Data;
 using Fiap.Infra.Data.Repositories;
 using Microsoft.Extensions.Configuration;

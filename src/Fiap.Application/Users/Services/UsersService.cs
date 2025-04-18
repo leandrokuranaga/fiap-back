@@ -5,13 +5,58 @@ using Fiap.Application.Users.Services;
 using Fiap.Application.Validators.UsersValidators;
 using Fiap.Domain.SeedWork;
 using Fiap.Domain.UserAggregate;
-using Fiap.Domain.UsersAggregate;
 
 namespace Fiap.Application.User.Services
 {
     public class UsersService(INotification notification, IUserRepository userRepository) : BaseService(notification), IUsersService
     {
-        public Task<UserResponse> Create(CreateUserRequest request) => ExecuteAsync(async () =>
+        public Task<List<UserResponse>> GetAllAsync() => ExecuteAsync(async () =>
+        {
+            var response = new List<UserResponse>();
+
+            try
+            {
+                var users = await userRepository.GetAllAsync();
+
+                var allUsers = users
+                    .Select(user => (UserResponse)user)
+                    .ToList();
+
+                return allUsers;
+            }
+            catch (Exception ex)
+            {
+                _notification.AddNotification("Get Users", ex.Message, NotificationModel.ENotificationType.InternalServerError);
+                return response;
+            }
+        });
+
+        public Task<UserResponse> GetAsync(int userId) => ExecuteAsync(async () =>
+        {
+            var response = new UserResponse();
+
+            try
+            {
+                var user = await userRepository.GetByIdAsync(userId, noTracking: false);
+
+                if (user == null)
+                {
+                    _notification.AddNotification("Get User", "User not found", NotificationModel.ENotificationType.NotFound);
+                    return response;
+                }
+
+                response = (UserResponse)user;
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _notification.AddNotification("Get User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
+                return response;
+            }
+        });
+
+        public Task<UserResponse> CreateAsync(CreateUserRequest request) => ExecuteAsync(async () =>
         {
             var response = new UserResponse();
 
@@ -47,7 +92,7 @@ namespace Fiap.Application.User.Services
             }
         });
 
-        public Task<UserResponse> Update(int id, UpdateUserRequest request) => ExecuteAsync(async () =>
+        public Task<UserResponse> UpdateAsync(int id, UpdateUserRequest request) => ExecuteAsync(async () =>
         {
             var response = new UserResponse();
 
@@ -83,14 +128,14 @@ namespace Fiap.Application.User.Services
         {
             user.Name = request.Name ?? user.Name;
             user.Email = request.Email ?? user.Email;
-            user.TypeUser = request.Type ?? user.TypeUser;
+            user.TypeUser = request.Type.HasValue ? request.Type.Value : user.TypeUser;
             user.Active = request.Active ?? user.Active;
 
             if (!string.IsNullOrEmpty(request.Password))
                 user.Password = PasswordHasher.HashPassword(request.Password);
         }
 
-        public Task<BaseResponse<object>> Delete(int id) => ExecuteAsync(async () =>
+        public Task<BaseResponse<object>> DeleteAsync(int id) => ExecuteAsync(async () =>
         {
             try
             {
@@ -112,52 +157,6 @@ namespace Fiap.Application.User.Services
                 await userRepository.RollbackAsync();
                 _notification.AddNotification("Delete User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
                 return BaseResponse<object>.Fail(_notification.NotificationModel);
-            }
-        });
-
-        public Task<UserResponse> Get(int userId) => ExecuteAsync(async () =>
-        {
-            var response = new UserResponse();
-
-            try
-            {
-                var user = await userRepository.GetByIdAsync(userId, noTracking: false);
-
-                if (user == null)
-                {
-                    _notification.AddNotification("Get User", "User not found", NotificationModel.ENotificationType.NotFound);
-                    return response;
-                }
-
-                response = (UserResponse)user;
-
-                return response;
-            }
-            catch (Exception ex)
-            {
-                _notification.AddNotification("Get User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
-                return response;
-            }
-        });
-
-        public Task<List<UserResponse>> GetAll() => ExecuteAsync(async () =>
-        {
-            var response = new List<UserResponse>();
-
-            try
-            {
-                var users = await userRepository.GetAllAsync();
-
-                var allUsers = users
-                    .Select(user => (UserResponse)user)
-                    .ToList();
-
-                return allUsers;
-            }
-            catch (Exception ex)
-            {
-                _notification.AddNotification("Get Users", ex.Message, NotificationModel.ENotificationType.InternalServerError);
-                return response;
             }
         });
     }

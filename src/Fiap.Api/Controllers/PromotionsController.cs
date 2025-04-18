@@ -28,7 +28,7 @@ namespace Fiap.Api.Controllers
         [ProducesResponseType(typeof(BaseResponse<PromotionResponse>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> Create([FromBody] CreatePromotionRequest request)
+        public async Task<IActionResult> CreateAsync([FromBody] CreatePromotionRequest request)
         {
             var result = await promotionsService.CreateAsync(request);
             return Response(BaseResponse<PromotionResponse>.Ok(result));
@@ -46,7 +46,7 @@ namespace Fiap.Api.Controllers
         [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(BaseResponse<PromotionResponse>), (int)HttpStatusCode.NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> Update(int id, [FromBody] UpdatePromotionRequest request)
+        public async Task<IActionResult> UpdateAsync(int id, [FromBody] UpdatePromotionRequest request)
         {
             var result = await promotionsService.UpdateAsync(id, request);
             return Response(BaseResponse<PromotionResponse>.Ok(result));
