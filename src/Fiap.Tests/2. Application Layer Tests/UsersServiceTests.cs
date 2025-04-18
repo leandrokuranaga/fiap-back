@@ -374,5 +374,45 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             _mockNotification.Verify(n => n.AddNotification("Get Users", "Unexpected error", NotificationModel.ENotificationType.InternalServerError), Times.Once);
             #endregion
         }
+
+        [Fact]
+        public async Task Delete_ShouldAddNotification_WhenExceptionIsThrown()
+        {
+            #region Arrange
+            int userId = 1;
+
+            var user = new UserDomain
+            {
+                Id = userId,
+                Name = "Bruno Moura",
+                Email = "bruno@example.com"
+            };
+
+            _mockUserRepository
+                .Setup(repo => repo.GetByIdAsync(userId, It.IsAny<bool>()))
+                .ReturnsAsync(user);
+
+            _mockUserRepository
+                .Setup(repo => repo.DeleteAsync(It.IsAny<UserDomain>()))
+                .ThrowsAsync(new Exception("Unexpected error"));
+
+            _mockUserRepository
+                .Setup(repo => repo.RollbackAsync())
+                .Returns(Task.CompletedTask);
+            #endregion
+
+            #region Act
+            var result = await _usersService.Delete(userId);
+            #endregion
+
+            #region Assert
+            Assert.NotNull(result);
+            Assert.False(result.Success);
+            _mockUserRepository.Verify(r => r.RollbackAsync(), Times.Once);
+            _mockNotification.Verify(n =>
+                n.AddNotification("Delete User", "Unexpected error", NotificationModel.ENotificationType.InternalServerError),
+                Times.Once);
+            #endregion
+        }
     }
 }

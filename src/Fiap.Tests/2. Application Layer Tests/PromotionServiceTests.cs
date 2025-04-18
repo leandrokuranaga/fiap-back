@@ -3,7 +3,9 @@ using Fiap.Application.Promotions.Services;
 using Fiap.Domain.GameAggregate;
 using Fiap.Domain.PromotionAggregate;
 using Fiap.Domain.SeedWork;
+using Fiap.Infra.Data;
 using Moq;
+using static Fiap.Domain.SeedWork.NotificationModel;
 
 namespace Fiap.Tests._2._Application_Layer_Tests
 {
@@ -12,6 +14,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
         readonly Mock<IPromotionRepository> _mockPromotionRepositoryMock;
         readonly Mock<IGameRepository> _mockGameRepositoryMock;
         readonly Mock<INotification> _mockNotification;
+        readonly Mock<IUnitOfWork> _mockUnitOfWork;
         readonly PromotionsService _promotionService;
 
         public PromotionServiceTests()
@@ -19,7 +22,8 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             _mockPromotionRepositoryMock = new Mock<IPromotionRepository>();
             _mockGameRepositoryMock = new Mock<IGameRepository>();
             _mockNotification = new Mock<INotification>();
-            _promotionService = new PromotionsService(_mockNotification.Object, _mockPromotionRepositoryMock.Object, _mockGameRepositoryMock.Object);
+            _mockUnitOfWork = new Mock<IUnitOfWork>();
+            _promotionService = new PromotionsService(_mockNotification.Object, _mockPromotionRepositoryMock.Object, _mockGameRepositoryMock.Object, _mockUnitOfWork.Object);
         }
 
         [Fact]
@@ -213,5 +217,143 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             )), Times.Once);
             #endregion
         }
+
+        [Fact]
+        public async Task UpdatePromotion_ShouldAddNotification_WhenPromotionNotFound()
+        {
+            #region Arrange
+            var promotionId = 1;
+            var request = new UpdatePromotionRequest
+            {
+                Discount = 15,
+                ExpirationDate = DateTime.UtcNow.AddDays(10)
+            };
+
+            _mockPromotionRepositoryMock
+                .Setup(repo => repo.GetByIdAsync(promotionId, It.IsAny<bool>()))
+                .ReturnsAsync((PromotionDomain?)null);
+            #endregion
+
+            #region Act
+            var result = await _promotionService.UpdateAsync(promotionId, request);
+            #endregion
+
+            #region Assert
+            Assert.Null(result);
+            _mockNotification.Verify(n =>
+                n.AddNotification("PromotionId", "Promotion not found", NotificationModel.ENotificationType.NotFound),
+                Times.Once);
+            #endregion
+        }
+
+        [Fact]
+        public async Task CreatePromotion_ShouldAddNotification_WhenSomeGamesNotFound()
+        {
+            #region Arrange
+            var request = new CreatePromotionRequest
+            {
+                Discount = 20,
+                ExpirationDate = DateTime.UtcNow.AddDays(10),
+                GameId = [1, 2, 3]
+            };
+
+            var promotion = new PromotionDomain(request.Discount, DateTime.UtcNow, request.ExpirationDate)
+            {
+                Id = 99
+            };
+
+            _mockPromotionRepositoryMock
+                .Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<PromotionDomain>()))
+                .ReturnsAsync((PromotionDomain p) =>
+                {
+                    p.Id = 99; 
+                    return p;
+                });
+
+            _mockGameRepositoryMock
+                .Setup(repo => repo.GetByIdAsync(It.IsAny<int>(), It.IsAny<bool>()))
+                .ReturnsAsync((GameDomain?)null);
+
+            _mockUnitOfWork.Setup(uow => uow.BeginTransactionAsync()).Returns(Task.CompletedTask);
+            _mockUnitOfWork.Setup(uow => uow.SaveChangesAsync()).Returns(Task.CompletedTask);
+            _mockUnitOfWork.Setup(uow => uow.CommitAsync()).Returns(Task.CompletedTask);
+            #endregion
+
+            #region Act
+            var result = await _promotionService.CreateAsync(request);
+            #endregion
+
+            #region Assert
+            Assert.NotNull(result);
+            Assert.Equal(99, result.PromotionId);
+            _mockNotification.Verify(n =>
+                n.AddNotification(It.Is<string>(s => s.Contains("Game with ID")), "Not Found", NotificationModel.ENotificationType.NotFound),
+                Times.Exactly(3));
+            #endregion
+        }
+
+        [Fact]
+        public async Task UpdatePromotion_ShouldAddNotification_WhenSomeGamesNotFound()
+        {
+            #region Arrange
+            int promotionId = 1;
+
+            var request = new UpdatePromotionRequest
+            {
+                Discount = 15,
+                ExpirationDate = DateTime.UtcNow.AddDays(20),
+                GameId = [101, 102, 999]
+            };
+
+            var promotion = new PromotionDomain(request.Discount.Value, DateTime.UtcNow, request.ExpirationDate.Value)
+            {
+                Id = promotionId
+            };
+
+            var game1 = new GameDomain() { Id = 101, Name = "Game 1", Genre = "Action", Price = 59.90 };
+            var game2 = new GameDomain() { Id = 102, Name = "Game 2", Genre = "Adventure", Price = 49.90 };
+
+            _mockPromotionRepositoryMock
+                .Setup(repo => repo.GetByIdAsync(promotionId, It.IsAny<bool>()))
+                .ReturnsAsync(promotion);
+
+            _mockGameRepositoryMock
+                .Setup(repo => repo.GetByIdAsync(101, It.IsAny<bool>()))
+                .ReturnsAsync(game1);
+
+            _mockGameRepositoryMock
+                .Setup(repo => repo.GetByIdAsync(102, It.IsAny<bool>()))
+                .ReturnsAsync(game2);
+
+            _mockGameRepositoryMock
+                .Setup(repo => repo.GetByIdAsync(999, It.IsAny<bool>()))
+                .ReturnsAsync((GameDomain?)null);
+
+            _mockPromotionRepositoryMock
+                .Setup(repo => repo.UpdateAsync(It.IsAny<PromotionDomain>()))
+                .Returns(Task.CompletedTask);
+
+            _mockGameRepositoryMock
+                .Setup(repo => repo.UpdateRangeAsync(It.IsAny<IEnumerable<GameDomain>>()))
+                .Returns(Task.CompletedTask);
+
+            #endregion
+
+            #region Act
+            var result = await _promotionService.UpdateAsync(promotionId, request);
+            #endregion
+
+            #region Assert
+            Assert.NotNull(result);
+            Assert.Equal(promotionId, result.PromotionId);
+            Assert.Equal(request.Discount, result.Discount);
+            Assert.Equal(request.ExpirationDate, result.EndDate);
+
+            _mockNotification.Verify(n =>
+                n.AddNotification("Game with ID 999 Not found", "Not Found", ENotificationType.NotFound),
+                Times.Once);
+            #endregion
+        }
+
     }
 }

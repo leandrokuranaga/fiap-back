@@ -26,23 +26,6 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         }
 
         [Fact]
-        public void PromotionDomain_ThrowsException_WhenEndDateIsBeforeStartDate()
-        {
-            #region Arrange
-            var discount = 15.0;
-            var startDate = DateTime.Now;
-            var endDate = DateTime.Now.AddDays(-1);
-            #endregion
-
-            #region Act & Assert
-            var ex = Assert.Throws<BusinessRulesException>(() =>
-                new PromotionDomain(discount, startDate, endDate));
-
-            Assert.Equal("Promotion end date cannot be earlier than the start date.", ex.Message);
-            #endregion
-        }
-
-        [Fact]
         public void Promotion_IsExpired_ReturnsTrue_WhenDateHasPassed()
         {
             #region Arrange
@@ -71,6 +54,20 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
 
             #region Assert
             Assert.True(isActive);
+            #endregion
+        }
+
+        [Fact]
+        public void ValidatePeriod_ShouldThrow_WhenEndDateIsBeforeStartDate()
+        {
+            #region Arrange
+            var promotion = new PromotionDomain(10, DateTime.UtcNow, DateTime.UtcNow.AddDays(-1));
+            #endregion
+
+            #region Act & Assert
+            var ex = Assert.Throws<BusinessRulesException>(() => promotion.ValidatePeriod());
+
+            Assert.Equal("Promotion end date cannot be earlier than the start date.", ex.Message);
             #endregion
         }
 

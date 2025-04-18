@@ -5,11 +5,12 @@ using Fiap.Application.Validators.PromotionsValidators;
 using Fiap.Domain.GameAggregate;
 using Fiap.Domain.PromotionAggregate;
 using Fiap.Domain.SeedWork;
+using Fiap.Infra.Data;
 using static Fiap.Domain.SeedWork.NotificationModel;
 
 namespace Fiap.Application.Promotions.Services
 {
-    public class PromotionsService(INotification notification, IPromotionRepository promotionRepository, IGameRepository gameRepository) : BaseService(notification), IPromotionsService
+    public class PromotionsService(INotification notification, IPromotionRepository promotionRepository, IGameRepository gameRepository, IUnitOfWork unitOfWork) : BaseService(notification), IPromotionsService
     {
         public Task<PromotionResponse> CreateAsync(CreatePromotionRequest request) => ExecuteAsync(async () =>
         {
@@ -21,9 +22,18 @@ namespace Fiap.Application.Promotions.Services
 
                 var promotion = (PromotionDomain)request;
 
+                promotion.ValidatePeriod();
+
+                await unitOfWork.BeginTransactionAsync();
+
                 await promotionRepository.InsertOrUpdateAsync(promotion);
+                await promotionRepository.SaveChangesAsync();
 
                 await CreatePromotion(request, promotion);
+
+                await gameRepository.SaveChangesAsync();
+
+                await unitOfWork.CommitAsync();
 
                 response = (PromotionResponse)promotion;
 
@@ -31,6 +41,7 @@ namespace Fiap.Application.Promotions.Services
             }
             catch (Exception ex)
             {
+                await unitOfWork.RollbackAsync();
                 notification.AddNotification("Not Found", ex.Message, NotificationModel.ENotificationType.NotFound);
                 return response;
             }
@@ -58,8 +69,7 @@ namespace Fiap.Application.Promotions.Services
                     }
 
                     game.PromotionId = promotion.Id;
-                    games.Add(game);
-                    
+                    games.Add(game);                    
                 }
 
                 if (games.Count != 0)
@@ -86,10 +96,16 @@ namespace Fiap.Application.Promotions.Services
                 }
 
                 promotion.UpdateDiscount(request.Discount, request.ExpirationDate);
+                await unitOfWork.BeginTransactionAsync();
 
                 await promotionRepository.UpdateAsync(promotion);
+                await promotionRepository.SaveChangesAsync();
 
                 await UpdateGamesPromotion(request.GameId, promotion.Id);
+
+                await gameRepository.SaveChangesAsync();
+
+                await unitOfWork.CommitAsync();
 
                 response = (PromotionResponse)promotion;
 
@@ -97,6 +113,7 @@ namespace Fiap.Application.Promotions.Services
             }
             catch (Exception ex)
             {
+                await unitOfWork.RollbackAsync();
                 notification.AddNotification("Update Promotion", ex.Message, NotificationModel.ENotificationType.NotFound);
                 return response;
             }

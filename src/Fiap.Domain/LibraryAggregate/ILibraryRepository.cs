@@ -1,8 +1,9 @@
-﻿using Fiap.Domain.SeedWork;
+﻿using Fiap.Infra.Data;
+using Fiap.Domain.SeedWork;
 
 namespace Fiap.Domain.LibraryAggregate
 {
-    public interface ILibraryRepository : IBaseRepository<LibraryDomain>
+    public interface ILibraryRepository : IBaseRepository<LibraryDomain>, IUnitOfWork
     {
     }
 }
