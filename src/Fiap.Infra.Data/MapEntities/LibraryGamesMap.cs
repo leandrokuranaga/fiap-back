@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Fiap.Infra.Data.MapEntities
 {
-    public class LibraryGameMap : IEntityTypeConfiguration<LibraryGame>
+    public class LibraryGamesMap : IEntityTypeConfiguration<LibraryGame>
     {
         public void Configure(EntityTypeBuilder<LibraryGame> builder)
         {

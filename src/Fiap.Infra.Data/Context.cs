@@ -24,7 +24,7 @@ namespace Fiap.Infra.Data
             modelBuilder.ApplyConfiguration(new UsersMap());
             modelBuilder.ApplyConfiguration(new PromotionsMap());
             modelBuilder.ApplyConfiguration(new GamesMap());
-            modelBuilder.ApplyConfiguration(new LibraryGameMap());
+            modelBuilder.ApplyConfiguration(new LibraryGamesMap());
         }
     }
 }

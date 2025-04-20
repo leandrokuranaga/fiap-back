@@ -9,7 +9,7 @@ namespace Fiap.Infra.Data.MapEntities
     {
         public void Configure(EntityTypeBuilder<Promotion> builder)
         {
-            builder.ToTable("Promotion");
+            builder.ToTable("Promotions");
 
             builder.HasKey(x => x.Id);
 
