@@ -14,10 +14,17 @@ namespace Fiap.Application.Games.Services
         public Task<GameResponse> CreateAsync(CreateGameRequest request) => ExecuteAsync(async () =>
         {
             var response = new GameResponse();
-
             try
             {
                 Validate(request, new CreateGameRequestValidator());
+
+              
+                var existingGame = await gameRepository.GetByNameAsync(request.Name);
+                if (existingGame != null)
+                {
+                    notification.AddNotification("Create Game", $"The Game '{request.Name}'has already been registered", ENotificationType.BusinessRules);
+                    return response;
+                }
 
                 var game = (GameDomain)request;
                 await gameRepository.InsertOrUpdateAsync(game);
