@@ -5,28 +5,34 @@ using Fiap.Domain.SeedWork.Exceptions;
 
 namespace Fiap.Domain.GameAggregate
 {
+    
     public class GameDomain : Entity
     {
         public GameDomain(int id, string name, string genre, double price, int? promotionId)
         {
             Id = id;
+            ValidateName(name);
+            ValidateGenre(genre);
+            ValidatePrice(price);
+
             Name = name;
             Genre = genre;
-            PromotionId = promotionId;
-
-            ValidatePrice(price);
             Price = price;
+            PromotionId = promotionId;
         }
 
         public GameDomain(string name, string genre, double price, int? promotionId)
         {
+            ValidateName(name);
+            ValidateGenre(genre);
+            ValidatePrice(price);
+
             Name = name;
             Genre = genre;
-            PromotionId = promotionId;
-
-            ValidatePrice(price);
             Price = price;
+            PromotionId = promotionId;
         }
+
 
         public GameDomain() { }
 
@@ -48,5 +54,19 @@ namespace Fiap.Domain.GameAggregate
             if (price < 0)
                 throw new BusinessRulesException("The price of the game must be greater than or equal to 0.");
         }
+
+        private void ValidateName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new BusinessRulesException("The name of the game is required.");
+        }
+
+        private void ValidateGenre(string genre)
+        {
+            if (string.IsNullOrWhiteSpace(genre))
+                throw new BusinessRulesException("The genre of the game is required.");
+        }
+
+
     }
 }
