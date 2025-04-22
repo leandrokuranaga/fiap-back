@@ -11,13 +11,17 @@ namespace Fiap.Application.Validators.GamesValidators
                 .NotEmpty()
                 .WithMessage("Game name is required.")
                 .Matches(@"^[A-Za-z0-9\s]+$")
-                .WithMessage("Game name can only contain letters, numbers, and spaces.");
+                .WithMessage("Game name can only contain letters, numbers, and spaces.")
+                .MaximumLength(100)
+                .WithMessage("Game name must be at most 100 characters long.");
 
             RuleFor(x => x.Genre)
                 .NotEmpty()
                 .WithMessage("Genre is required.")
                 .Matches(@"^[A-Za-z\s]+$")
-                .WithMessage("Genre can only contain letters and spaces.");
+                .WithMessage("Genre can only contain letters and spaces.")
+                .MaximumLength(30)
+                .WithMessage("Genre must be at most 30 characters long.");
 
             RuleFor(x => x.Price)
                 .NotEmpty()
