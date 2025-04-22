@@ -2,7 +2,6 @@ using Fiap.Api.Extensions;
 using Fiap.Infra.CrossCutting.IoC;
 using Fiap.Infra.Data;
 using Microsoft.EntityFrameworkCore;
-using Fiap.Domain.GameAggregate; 
 using Fiap.Infra.Data.Repositories; 
 
 
