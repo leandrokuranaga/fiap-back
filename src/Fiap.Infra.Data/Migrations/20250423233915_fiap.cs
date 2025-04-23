@@ -9,13 +9,13 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Fiap.Infra.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class fiap : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Promotion",
+                name: "Promotions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -26,7 +26,7 @@ namespace Fiap.Infra.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Promotion", x => x.Id);
+                    table.PrimaryKey("PK_Promotions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -61,9 +61,9 @@ namespace Fiap.Infra.Data.Migrations
                 {
                     table.PrimaryKey("PK_Games", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Games_Promotion_PromotionId",
+                        name: "FK_Games_Promotions_PromotionId",
                         column: x => x.PromotionId,
-                        principalTable: "Promotion",
+                        principalTable: "Promotions",
                         principalColumn: "Id");
                 });
 
@@ -101,7 +101,7 @@ namespace Fiap.Infra.Data.Migrations
                 values: new object[] { 8, "Action-adventure", "The Last of Us Part II", 49.990000000000002, null });
 
             migrationBuilder.InsertData(
-                table: "Promotion",
+                table: "Promotions",
                 columns: new[] { "Id", "Discount", "EndDate", "StartDate" },
                 values: new object[,]
                 {
@@ -185,7 +185,7 @@ namespace Fiap.Infra.Data.Migrations
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Promotion");
+                name: "Promotions");
         }
     }
 }
