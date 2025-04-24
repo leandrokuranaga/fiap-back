@@ -22,7 +22,7 @@ namespace Fiap.Infra.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Fiap.Domain.GameAggregate.GameDomain", b =>
+            modelBuilder.Entity("Fiap.Domain.Game.Game", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -123,7 +123,52 @@ namespace Fiap.Infra.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Fiap.Domain.LibraryGameAggregate.LibraryGameDomain", b =>
+            modelBuilder.Entity("Fiap.Domain.Promotion.Promotion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<double>("Discount")
+                        .HasColumnType("double precision");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Promotions", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Discount = 1.0,
+                            EndDate = new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            StartDate = new DateTime(2025, 4, 1, 0, 0, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Discount = 2.0,
+                            EndDate = new DateTime(2025, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            StartDate = new DateTime(2025, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Discount = 3.0,
+                            EndDate = new DateTime(2025, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            StartDate = new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Utc)
+                        });
+                });
+
+            modelBuilder.Entity("Fiap.Domain.UserAggregate.Entities.LibraryGame", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -188,52 +233,7 @@ namespace Fiap.Infra.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Fiap.Domain.PromotionAggregate.PromotionDomain", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<double>("Discount")
-                        .HasColumnType("double precision");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Promotion", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Discount = 1.0,
-                            EndDate = new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            StartDate = new DateTime(2025, 4, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Discount = 2.0,
-                            EndDate = new DateTime(2025, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            StartDate = new DateTime(2025, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Discount = 3.0,
-                            EndDate = new DateTime(2025, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            StartDate = new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        });
-                });
-
-            modelBuilder.Entity("Fiap.Domain.UserAggregate.UserDomain", b =>
+            modelBuilder.Entity("Fiap.Domain.UserAggregate.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -294,24 +294,24 @@ namespace Fiap.Infra.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Fiap.Domain.GameAggregate.GameDomain", b =>
+            modelBuilder.Entity("Fiap.Domain.Game.Game", b =>
                 {
-                    b.HasOne("Fiap.Domain.PromotionAggregate.PromotionDomain", "Promotion")
+                    b.HasOne("Fiap.Domain.Promotion.Promotion", "Promotion")
                         .WithMany("Games")
                         .HasForeignKey("PromotionId");
 
                     b.Navigation("Promotion");
                 });
 
-            modelBuilder.Entity("Fiap.Domain.LibraryGameAggregate.LibraryGameDomain", b =>
+            modelBuilder.Entity("Fiap.Domain.UserAggregate.Entities.LibraryGame", b =>
                 {
-                    b.HasOne("Fiap.Domain.GameAggregate.GameDomain", "Game")
+                    b.HasOne("Fiap.Domain.Game.Game", "Game")
                         .WithMany("Libraries")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Fiap.Domain.UserAggregate.UserDomain", "User")
+                    b.HasOne("Fiap.Domain.UserAggregate.User", "User")
                         .WithMany("LibraryGames")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -322,17 +322,17 @@ namespace Fiap.Infra.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Fiap.Domain.GameAggregate.GameDomain", b =>
+            modelBuilder.Entity("Fiap.Domain.Game.Game", b =>
                 {
                     b.Navigation("Libraries");
                 });
 
-            modelBuilder.Entity("Fiap.Domain.PromotionAggregate.PromotionDomain", b =>
+            modelBuilder.Entity("Fiap.Domain.Promotion.Promotion", b =>
                 {
                     b.Navigation("Games");
                 });
 
-            modelBuilder.Entity("Fiap.Domain.UserAggregate.UserDomain", b =>
+            modelBuilder.Entity("Fiap.Domain.UserAggregate.User", b =>
                 {
                     b.Navigation("LibraryGames");
                 });
