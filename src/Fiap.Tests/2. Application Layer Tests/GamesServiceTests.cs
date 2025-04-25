@@ -84,8 +84,8 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #region Arrange
             var games = new List<GameDomain>
             {
-                new GameDomain("Game 1", "Ação", 59.90, null) { Id = 1 },
-                new GameDomain("Game 2", "Aventura", 49.90, null) { Id = 2 }
+                new GameDomain("Game 1", "Action", 59.90, null) { Id = 1 },
+                new GameDomain("Game 2", "Adventure", 49.90, null) { Id = 2 }
             };
 
             _mockGameRepository
