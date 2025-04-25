@@ -5,6 +5,7 @@ using Fiap.Application.Users.Services;
 using Fiap.Application.Validators.UsersValidators;
 using Fiap.Domain.SeedWork;
 using Fiap.Domain.UserAggregate;
+using Fiap.Domain.UserAggregate.ValueObjects;
 
 namespace Fiap.Application.User.Services
 {
@@ -132,7 +133,7 @@ namespace Fiap.Application.User.Services
             user.Active = request.Active ?? user.Active;
 
             if (!string.IsNullOrEmpty(request.Password))
-                user.Password = PasswordHasher.HashPassword(request.Password);
+                user.Password = new Password(request.Password);
         }
 
         public Task<BaseResponse<object>> DeleteAsync(int id) => ExecuteAsync(async () =>

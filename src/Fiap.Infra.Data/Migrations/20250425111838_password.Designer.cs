@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Fiap.Infra.Data.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20250424002914_FIAP")]
-    partial class FIAP
+    [Migration("20250425111838_password")]
+    partial class password
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -259,11 +259,6 @@ namespace Fiap.Infra.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
                     b.Property<string>("TypeUser")
                         .IsRequired()
                         .HasColumnType("text");
@@ -283,7 +278,6 @@ namespace Fiap.Infra.Data.Migrations
                             Active = true,
                             Email = "admin@gmail.com",
                             Name = "Admin",
-                            Password = "$2a$11$GtOwXg2TwrUQJZJP0rfbDO93ZdUuDAE6RrfI8sFSa5Zq1/hXQ6CKq",
                             TypeUser = "Admin"
                         },
                         new
@@ -292,7 +286,6 @@ namespace Fiap.Infra.Data.Migrations
                             Active = true,
                             Email = "user@gmail.com",
                             Name = "User",
-                            Password = "$2a$11$GtOwXg2TwrUQJZJP0rfbDO93ZdUuDAE6RrfI8sFSa5Zq1/hXQ6CKq",
                             TypeUser = "User"
                         });
                 });
@@ -323,6 +316,49 @@ namespace Fiap.Infra.Data.Migrations
                     b.Navigation("Game");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Fiap.Domain.UserAggregate.User", b =>
+                {
+                    b.OwnsOne("Fiap.Domain.UserAggregate.ValueObjects.Password", "Password", b1 =>
+                        {
+                            b1.Property<int>("UserId")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Hash")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("PasswordHash");
+
+                            b1.Property<string>("PasswordSalt")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("PasswordSalt");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("Users");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+
+                            b1.HasData(
+                                new
+                                {
+                                    UserId = 1,
+                                    Hash = "10000.6O0ksK7RcY+koP2vTclK0g==.Tu79I/VFmqjTUFuGlTKTOqpR2zovm2jPrEVn4sUYXXw=",
+                                    PasswordSalt = "6O0ksK7RcY+koP2vTclK0g=="
+                                },
+                                new
+                                {
+                                    UserId = 2,
+                                    Hash = "10000.8WQ7yoG2Z4EyAwT9lHpOgg==.THjXUlDZ5dyMBgkDZpHZ6UD22O6GZwSR6s1FFgrTNU0=",
+                                    PasswordSalt = "8WQ7yoG2Z4EyAwT9lHpOgg=="
+                                });
+                        });
+
+                    b.Navigation("Password")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Fiap.Domain.Game.Game", b =>

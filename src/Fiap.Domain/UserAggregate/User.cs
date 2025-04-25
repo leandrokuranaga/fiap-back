@@ -1,6 +1,7 @@
 ﻿using Abp.Domain.Entities;
 using Fiap.Domain.UserAggregate.Entities;
 using Fiap.Domain.UserAggregate.Enums;
+using Fiap.Domain.UserAggregate.ValueObjects;
 
 namespace Fiap.Domain.UserAggregate
 {
@@ -15,14 +16,14 @@ namespace Fiap.Domain.UserAggregate
         {
             Name = name;
             Email = email.Trim().ToLowerInvariant();
-            Password = password;
+            Password = new Password(password);
             TypeUser = typeUser;
             Active = active;
         }
 
         public string Name { get; set; }
         public string Email { get; set; }
-        public string Password { get; set; }
+        public Password Password { get; set; }
         public TypeUser TypeUser { get; set; }
         public bool Active { get; set; }
         public ICollection<LibraryGame> LibraryGames { get; private set; } = [];
