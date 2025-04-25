@@ -20,8 +20,8 @@ namespace Fiap.Application.Validators.GamesValidators
                 .WithMessage("Genre is required.")
                 .Matches(@"^[A-Za-z\s]+$")
                 .WithMessage("Genre can only contain letters and spaces.")
-                .MaximumLength(30)
-                .WithMessage("Genre must be at most 30 characters long.");
+                .MaximumLength(100)
+                .WithMessage("Genre must be at most 100 characters long.");
 
             RuleFor(x => x.Price)
                 .NotEmpty()
