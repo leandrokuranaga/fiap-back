@@ -34,7 +34,9 @@
             InternalServerError = 1,
             BusinessRules = 2,
             NotFound = 3,
-            BadRequestError = 4
+            BadRequestError = 4,
+            Unauthorized = 5
+
         }
     }
 }
