@@ -1,28 +1,32 @@
 ﻿using Fiap.Application.Auth.Models;
 using Fiap.Domain.SeedWork;
-using Fiap.Domain.UserAggregate;
+using Fiap.Domain.UserAggregate; // CERTA importação do User do domínio
+using Fiap.Application.Users.Services;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.IdentityModel.Tokens; // IMPORTANTE: adiciona
+using System.IdentityModel.Tokens.Jwt; // IMPORTANTE: adiciona
 
 namespace Fiap.Application.Auth.Services
 {
-    public class AuthService(IUserService userRepository, INotification notification) : IAuthService
+    public class AuthService(IUserRepository userRepository, INotification notification) : IAuthService
     {
         public async Task<LoginResponse> LoginAsync(LoginRequest request)
         {
-            var user = await userRepository.ge(request.Username);
+            var user = await userRepository.GetOneNoTracking(a => a.Email == request.Username);
 
             if (user == null)
             {
-                notification.Add("Usuário ou senha inválidos.");
+                notification.AddNotification("Login Failed", "Invalid username or password.", NotificationModel.ENotificationType.Unauthorized);
                 return null;
             }
 
-            var hashedPassword = HashPassword(request.Password, user.Salt);
+            // Agora usa o ValueObject Password
+            bool validPassword = user.Password.Challenge(request.Password, user.Password.PasswordSalt);
 
-            if (hashedPassword != user.PasswordHash)
+            if (!validPassword)
             {
-                notification.Add("Usuário ou senha inválidos.");
+                notification.AddNotification("Login Failed", "Invalid username or password.", NotificationModel.ENotificationType.Unauthorized);
                 return null;
             }
 
@@ -35,25 +39,15 @@ namespace Fiap.Application.Auth.Services
             };
         }
 
-        private static string HashPassword(string password, string salt)
+        private static string GenerateJwtToken(Fiap.Domain.UserAggregate.User user)
         {
-            using var sha256 = SHA256.Create();
-            var saltedPassword = password + salt;
-            var bytes = Encoding.UTF8.GetBytes(saltedPassword);
-            var hash = sha256.ComputeHash(bytes);
-            return Convert.ToBase64String(hash);
-        }
-
-        private static string GenerateJwtToken(User user)
-        {
-            var key = Encoding.ASCII.GetBytes("seu-secret-key-super-seguro"); // Ajustar depois para appsettings
+            var key = Encoding.ASCII.GetBytes("seu-secret-key-super-seguro"); // Trocar depois pra appsettings
 
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Username),
-                // Exemplo: se seu user tiver um campo Role
-                new Claim(ClaimTypes.Role, user.Role ?? "User")
+                new Claim(ClaimTypes.Name, user.Email),
+                new Claim(ClaimTypes.Role, user.TypeUser.ToString())
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor
