@@ -1,0 +1,134 @@
+﻿using Abp.Domain.Values;
+using Fiap.Application.Utils;
+using System.Security.Cryptography;
+
+namespace Fiap.Domain.UserAggregate.ValueObjects
+{
+    public class Password : ValueObject
+    {
+        public string Hash { get; } = string.Empty;
+        public string PasswordSalt { get; private set; } = string.Empty;
+
+        private const string Valid = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        private const string Special = "!@#$%ˆ&*(){}[];";
+        private const int KeySize = 32;
+        private const int SaltSize = 16;
+        private const int Iterations = 10000;
+
+        protected Password()
+        {
+        }
+
+        public Password(string hash, string salt)
+        {
+            Hash = hash;
+            PasswordSalt = salt;
+        }
+
+        public Password(string? text = null)
+        {
+            if (string.IsNullOrEmpty(text) || string.IsNullOrWhiteSpace(text))
+                text = Generate();
+
+            string password;
+
+            if (Base64Utils.IsBase64String(text))
+                password = Base64Utils.DecodeBase64String(text);
+            else
+                password = text;
+
+            PasswordSalt = Convert.ToBase64String(GenerateSalt(16));
+            Hash = Hashing(password, PasswordSalt);
+        }
+
+        public bool Challenge(string password, string saltSaved) =>
+            Verify(Hash, password, saltSaved);
+
+
+        private static string Generate(
+            short length = 16,
+            bool includeSpecialChars = true,
+            bool upperCase = false)
+        {
+            var chars = includeSpecialChars ? Valid + Special : Valid;
+            var startRandom = upperCase ? 26 : 0;
+            var index = 0;
+            var res = new char[length];
+            var rnd = new Random();
+
+            while (index < length)
+                res[index++] = chars[rnd.Next(startRandom, chars.Length)];
+
+            return new string(res);
+        }
+
+        private static string Hashing(
+            string password,
+            string passwordSalt,
+            short saltSize = SaltSize,
+            short keySize = KeySize,
+            int iterations = Iterations,
+            char splitChar = '.')
+        {
+            if (string.IsNullOrEmpty(password))
+                throw new Exception("Password should not be null or empty");
+
+            password += passwordSalt;
+
+            using var algorithm = new Rfc2898DeriveBytes(
+                password,
+                saltSize,
+                iterations,
+                HashAlgorithmName.SHA256);
+            var key = Convert.ToBase64String(algorithm.GetBytes(keySize));
+            var salt = Convert.ToBase64String(algorithm.Salt);
+
+            return $"{iterations}{splitChar}{salt}{splitChar}{key}";
+        }
+
+        private static bool Verify(
+            string hash,
+            string password,
+            string passwordSalt,
+            short keySize = KeySize,
+            int iterations = Iterations,
+            char splitChar = '.')
+        {
+            password += passwordSalt;
+
+            var parts = hash.Split(splitChar, 3);
+            if (parts.Length != 3)
+                return false;
+
+            var hashIterations = Convert.ToInt32(parts[0]);
+            var salt = Convert.FromBase64String(parts[1]);
+            var key = Convert.FromBase64String(parts[2]);
+
+            if (hashIterations != iterations)
+                return false;
+
+            using var algorithm = new Rfc2898DeriveBytes(
+                password,
+                salt,
+                iterations,
+                HashAlgorithmName.SHA256);
+            var keyToCheck = algorithm.GetBytes(keySize);
+
+            return keyToCheck.SequenceEqual(key);
+        }
+
+        private static byte[] GenerateSalt(int size = 16)
+        {
+            using RNGCryptoServiceProvider rng = new();
+            var salt = new byte[size];
+            rng.GetBytes(salt);
+            return salt;
+        }
+
+        protected override IEnumerable<object> GetAtomicValues()
+        {
+            yield return Hash;
+            yield return PasswordSalt;
+        }
+    }
+}

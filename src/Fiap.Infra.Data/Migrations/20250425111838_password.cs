@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Fiap.Infra.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class FIAP : Migration
+    public partial class password : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -37,7 +37,8 @@ namespace Fiap.Infra.Data.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Password = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    PasswordHash = table.Column<string>(type: "text", nullable: false),
+                    PasswordSalt = table.Column<string>(type: "text", nullable: false),
                     TypeUser = table.Column<string>(type: "text", nullable: false),
                     Active = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true)
                 },
@@ -112,11 +113,11 @@ namespace Fiap.Infra.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Active", "Email", "Name", "Password", "TypeUser" },
+                columns: new[] { "Id", "Active", "Email", "Name", "TypeUser", "PasswordHash", "PasswordSalt" },
                 values: new object[,]
                 {
-                    { 1, true, "admin@gmail.com", "Admin", "$2a$11$GtOwXg2TwrUQJZJP0rfbDO93ZdUuDAE6RrfI8sFSa5Zq1/hXQ6CKq", "Admin" },
-                    { 2, true, "user@gmail.com", "User", "$2a$11$GtOwXg2TwrUQJZJP0rfbDO93ZdUuDAE6RrfI8sFSa5Zq1/hXQ6CKq", "User" }
+                    { 1, true, "admin@gmail.com", "Admin", "Admin", "10000.6O0ksK7RcY+koP2vTclK0g==.Tu79I/VFmqjTUFuGlTKTOqpR2zovm2jPrEVn4sUYXXw=", "6O0ksK7RcY+koP2vTclK0g==" },
+                    { 2, true, "user@gmail.com", "User", "User", "10000.8WQ7yoG2Z4EyAwT9lHpOgg==.THjXUlDZ5dyMBgkDZpHZ6UD22O6GZwSR6s1FFgrTNU0=", "8WQ7yoG2Z4EyAwT9lHpOgg==" }
                 });
 
             migrationBuilder.InsertData(
