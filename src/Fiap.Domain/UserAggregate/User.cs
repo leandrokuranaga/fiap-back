@@ -30,7 +30,7 @@ namespace Fiap.Domain.UserAggregate
 
         public static User CreateByAdmin(string name, string email, string password, TypeUser typeUser, bool active)
         {
-            return new User(name, email, password, TypeUser.Admin, active);
+            return new User(name, email, password, typeUser, active);
         }
 
         public static User CreateByPublic(string name, string email, string password)

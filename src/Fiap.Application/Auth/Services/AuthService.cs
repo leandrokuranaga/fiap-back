@@ -1,4 +1,5 @@
 ﻿using Fiap.Application.Auth.Models;
+using Fiap.Application.Common;
 using Fiap.Domain.SeedWork;
 using Fiap.Domain.UserAggregate;
 using Microsoft.Extensions.Configuration;
@@ -9,18 +10,21 @@ using System.Text;
 
 namespace Fiap.Application.Auth.Services
 {
-    public class AuthService : IAuthService
+    public class AuthService : BaseService, IAuthService
     {
         private readonly IUserRepository _userRepository;
         private readonly INotification _notification;
         private readonly IConfiguration _configuration;
 
-      
-        public AuthService(IUserRepository userRepository, INotification notification, IConfiguration configuration)
+        public AuthService(
+            IUserRepository userRepository,
+            INotification notification,
+            IConfiguration configuration
+        ) : base(notification)
         {
             _userRepository = userRepository;
             _notification = notification;
-            _configuration = configuration; 
+            _configuration = configuration;
         }
 
         public async Task<LoginResponse> LoginAsync(LoginRequest request)
