@@ -1,0 +1,24 @@
+﻿using Fiap.Application.Common;
+using Fiap.Domain.UserAggregate.Enums;
+
+namespace Fiap.Application.Users.Models.Request
+{
+    public record CreateUserAdminRequest
+    {
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
+        public TypeUser TypeUser { get; set; }
+
+        public static explicit operator Domain.UserAggregate.User(CreateUserAdminRequest request)
+        {
+            return Domain.UserAggregate.User.CreateByAdmin(
+                request.Name,
+                request.Email,
+                request.Password,
+                request.TypeUser,
+                true
+            );
+        }
+    }
+}

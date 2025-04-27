@@ -6,12 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Fiap.Api.Controllers
 {
-    /// <summary>
-    /// Controller used to authenticate users and provide access tokens.
-    /// </summary>
     [ApiController]
     [ApiVersion("1.0")]
     [ApiExplorerSettings(GroupName = "v1")]

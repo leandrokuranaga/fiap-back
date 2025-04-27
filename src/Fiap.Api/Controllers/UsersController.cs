@@ -16,10 +16,17 @@ namespace Fiap.Api.Controllers
     public class UsersController(IUsersService usersService, INotification notification) : BaseController(notification)
     {
         [AllowAnonymous]
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<IActionResult> CreateAsync([FromBody] CreateUserRequest request) 
         {
             var result = await usersService.CreateAsync(request);
+            return Response(BaseResponse<UserResponse>.Ok(result));
+        }
+
+        [HttpPost("create-admin")]
+        public async Task<IActionResult> CreateAdminAsync([FromBody] CreateUserAdminRequest request)
+        {
+            var result = await usersService.CreateAdminAsync(request);
             return Response(BaseResponse<UserResponse>.Ok(result));
         }
 

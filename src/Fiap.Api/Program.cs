@@ -30,7 +30,10 @@ builder.Services.AddGlobalCorsPolicy();
 
 builder.Services.AddApiVersioningConfiguration();
 
+builder.Services.AddCustomAuthentication(builder.Configuration);
+
 builder.Services.AddSwaggerDocumentation();
+
 
 var app = builder.Build();
 
@@ -49,6 +52,7 @@ app.UseHttpsRedirection();
 
 app.UseCors("AllowAllOrigins");
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

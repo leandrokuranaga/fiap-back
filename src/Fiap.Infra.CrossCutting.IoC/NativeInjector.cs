@@ -1,4 +1,5 @@
-﻿using Fiap.Application.Games.Services;
+﻿using Fiap.Application.Auth.Services;
+using Fiap.Application.Games.Services;
 using Fiap.Application.Promotions.Services;
 using Fiap.Application.User.Services;
 using Fiap.Application.Users.Services;
@@ -32,6 +33,7 @@ namespace Fiap.Infra.CrossCutting.IoC
             services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<IGamesService, GamesService>();
             services.AddScoped<IPromotionsService, PromotionsService>();
+            services.AddScoped<IAuthService, AuthService>();
 
             #endregion
         }

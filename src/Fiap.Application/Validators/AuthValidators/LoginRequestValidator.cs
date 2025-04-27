@@ -13,10 +13,17 @@ namespace Fiap.Application.Validators.AuthValidators
         public LoginRequestValidator()
         {
             RuleFor(x => x.Username)
-                .NotEmpty().WithMessage("Username is required.");
+              .NotEmpty()
+              .WithMessage("Username is required.")
+              .EmailAddress()
+              .WithMessage("Email must be a valid email address.")
+              .MaximumLength(100)
+              .WithMessage("Email must be less than or equal to 100 characters.");
 
             RuleFor(x => x.Password)
                 .NotEmpty().WithMessage("Password is required.");
+
+           
         }
     }
 }

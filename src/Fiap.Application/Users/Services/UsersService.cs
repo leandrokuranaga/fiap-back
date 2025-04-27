@@ -93,6 +93,44 @@ namespace Fiap.Application.User.Services
             }
         });
 
+        
+
+        public Task<UserResponse> CreateAdminAsync(CreateUserAdminRequest request) => ExecuteAsync(async () =>
+        {
+            var response = new UserResponse();
+
+            try
+            {
+                Validate(request, new CreateUserAdminRequestValidator());
+
+                request.Email = request.Email.Trim().ToLowerInvariant();
+
+                var exists = await userRepository.ExistAsync(u => u.Email == request.Email);
+                if (exists)
+                {
+                    _notification.AddNotification("Create User", "Email already registered", NotificationModel.ENotificationType.BusinessRules);
+                    return new UserResponse();
+                }
+
+                var user = (Domain.UserAggregate.User)request;               
+
+                await userRepository.InsertOrUpdateAsync(user);
+                await userRepository.SaveChangesAsync();
+
+                response = (UserResponse)user;
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                await userRepository.RollbackAsync();
+
+                if (!_notification.HasNotification)
+                    _notification.AddNotification("Create User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
+                return response;
+            }
+        });
+
         public Task<UserResponse> UpdateAsync(int id, UpdateUserRequest request) => ExecuteAsync(async () =>
         {
             var response = new UserResponse();
@@ -160,5 +198,7 @@ namespace Fiap.Application.User.Services
                 return BaseResponse<object>.Fail(_notification.NotificationModel);
             }
         });
+
+        
     }
 }
