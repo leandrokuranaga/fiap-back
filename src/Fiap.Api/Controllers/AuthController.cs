@@ -33,9 +33,8 @@ namespace Fiap.Api.Controllers
         public async Task<IActionResult> LoginAsync([FromBody] Application.Auth.Models.LoginRequest request)
         {
             var result = await authService.LoginAsync(request);
-            if (result == null)
+            if (!result.Success)
             {
-                notification.AddNotification("Login Failed", "Invalid username or password.", NotificationModel.ENotificationType.Unauthorized);
                 return Unauthorized(BaseResponse<LoginResponse>.Fail(notification.NotificationModel));
             }
 

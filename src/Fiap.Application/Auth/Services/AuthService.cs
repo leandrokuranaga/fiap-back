@@ -31,16 +31,16 @@ namespace Fiap.Application.Auth.Services
         {
             var user = await _userRepository.GetOneNoTracking(a => a.Email == request.Username);
 
-            if (user == null)
+            if (user is null)
             {
                 _notification.AddNotification("Login Failed", "Invalid username or password.", NotificationModel.ENotificationType.Unauthorized);
-                return null;
+                return new LoginResponse { Success = false };
             }
 
             if (!user.Active)
             {
                 _notification.AddNotification("Login Failed", "Your account is disabled. Please contact support.", NotificationModel.ENotificationType.Unauthorized);
-                return null;
+                return new LoginResponse { Success = false };
             }
             
             bool validPassword = user.Password.Challenge(request.Password, user.Password.PasswordSalt);
@@ -48,7 +48,7 @@ namespace Fiap.Application.Auth.Services
             if (!validPassword)
             {
                 _notification.AddNotification("Login Failed", "Invalid username or password.", NotificationModel.ENotificationType.Unauthorized);
-                return null;
+                return new LoginResponse { Success = false };
             }
 
             var token = GenerateJwtToken(user); 
@@ -56,7 +56,8 @@ namespace Fiap.Application.Auth.Services
             return new LoginResponse
             {
                 Token = token,
-                Expiration = DateTime.UtcNow.AddHours(2)
+                Expiration = DateTime.UtcNow.AddHours(2),
+                Success = true
             };
         }
 
