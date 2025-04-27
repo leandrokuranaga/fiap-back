@@ -105,6 +105,8 @@ namespace Fiap.Application.User.Services
 
                 request.Email = request.Email.Trim().ToLowerInvariant();
 
+                await userRepository.BeginTransactionAsync();
+
                 var exists = await userRepository.ExistAsync(u => u.Email == request.Email);
                 if (exists)
                 {
@@ -116,6 +118,8 @@ namespace Fiap.Application.User.Services
 
                 await userRepository.InsertOrUpdateAsync(user);
                 await userRepository.SaveChangesAsync();
+
+                await userRepository.CommitAsync();
 
                 response = (UserResponse)user;
 

@@ -33,14 +33,12 @@ namespace Fiap.Application.Auth.Services
                 return null;
             }
 
-            if (user.Active == false)
+            if (!user.Active)
             {
                 _notification.AddNotification("Login Failed", "Your account is disabled. Please contact support.", NotificationModel.ENotificationType.Unauthorized);
                 return null;
             }
-
-
-            // Agora usa o ValueObject Password
+            
             bool validPassword = user.Password.Challenge(request.Password, user.Password.PasswordSalt);
 
             if (!validPassword)
@@ -54,7 +52,7 @@ namespace Fiap.Application.Auth.Services
             return new LoginResponse
             {
                 Token = token,
-                Expiration = DateTime.UtcNow.AddHours(1)
+                Expiration = DateTime.UtcNow.AddHours(2)
             };
         }
 
@@ -68,7 +66,7 @@ namespace Fiap.Application.Auth.Services
             var claims = new List<Claim>
             {
                 new Claim("id", user.Id.ToString()),   
-                new Claim("name", user.Email),
+                new Claim("username", user.Email),
                 new(ClaimTypes.Role, user.TypeUser.ToString())
             };
 

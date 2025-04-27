@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Fiap.Application.Auth.Models
 {
-    public class LoginResponse
+    public record LoginResponse
     {
         public string Token { get; set; }
         public DateTime Expiration { get; set; }
