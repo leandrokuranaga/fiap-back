@@ -1,6 +1,4 @@
-﻿using Fiap.Application.Common;
-
-namespace Fiap.Application.Users.Models.Request
+﻿namespace Fiap.Application.Users.Models.Request
 {
     public record CreateUserRequest
     {

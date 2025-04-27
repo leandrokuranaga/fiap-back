@@ -1,4 +1,4 @@
-﻿using Fiap.Domain.Promotion;
+﻿using Fiap.Domain.PromotionAggregate;
 
 namespace Fiap.Application.Promotions.Models.Request
 {

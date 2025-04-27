@@ -1,27 +1,30 @@
 ﻿using System.Net;
 using System.Text.Json;
 
-public class ExceptionHandlingMiddleware(RequestDelegate next)
+namespace Fiap.Api.Middlewares
 {
-    public async Task Invoke(HttpContext context)
+    public class ExceptionHandlingMiddleware(RequestDelegate next)
     {
-        try
+        public async Task Invoke(HttpContext context)
         {
-            await next(context);
-        }
-        catch (Exception ex)
-        {
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            context.Response.ContentType = "application/json";
-
-            var errorResponse = new
+            try
             {
-                message = ex.Message,
-                stackTrace = ex.StackTrace
-            };
+                await next(context);
+            }
+            catch (Exception ex)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                context.Response.ContentType = "application/json";
 
-            var json = JsonSerializer.Serialize(errorResponse);
-            await context.Response.WriteAsync(json);
+                var errorResponse = new
+                {
+                    message = ex.Message,
+                    stackTrace = ex.StackTrace
+                };
+
+                var json = JsonSerializer.Serialize(errorResponse);
+                await context.Response.WriteAsync(json);
+            }
         }
     }
 }

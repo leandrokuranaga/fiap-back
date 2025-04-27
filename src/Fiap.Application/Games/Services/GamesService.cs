@@ -1,5 +1,5 @@
 ﻿using Fiap.Application.Common;
-using Fiap.Domain.Game;
+using Fiap.Domain.GameAggregate;
 using Fiap.Domain.SeedWork;
 
 namespace Fiap.Application.Games.Services

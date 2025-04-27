@@ -1,4 +1,4 @@
-﻿using Fiap.Domain.Game;
+﻿using Fiap.Domain.GameAggregate;
 
 namespace Fiap.Tests._3._Domain_Layer_Tests
 {
