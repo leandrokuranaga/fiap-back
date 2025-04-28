@@ -1,5 +1,5 @@
-﻿using Fiap.Domain.Game;
-using Fiap.Domain.Promotion;
+﻿using Fiap.Domain.GameAggregate;
+using Fiap.Domain.PromotionAggregate;
 using Fiap.Domain.UserAggregate.Entities;
 using Fiap.Domain.SeedWork.Exceptions;
 using Xunit;

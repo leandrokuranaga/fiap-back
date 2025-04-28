@@ -2,7 +2,7 @@
 using Fiap.Application.Games.Models.Request;
 using Fiap.Application.Games.Models.Response;
 using Fiap.Application.Validators.GamesValidators;
-using Fiap.Domain.Game;
+using Fiap.Domain.GameAggregate;
 using Fiap.Domain.SeedWork;
 using static Fiap.Domain.SeedWork.NotificationModel;
 

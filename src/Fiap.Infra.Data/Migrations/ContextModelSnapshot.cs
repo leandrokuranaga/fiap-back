@@ -22,7 +22,7 @@ namespace Fiap.Infra.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Fiap.Domain.Game.Game", b =>
+            modelBuilder.Entity("Fiap.Domain.GameAggregate.Game", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -123,7 +123,7 @@ namespace Fiap.Infra.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Fiap.Domain.Promotion.Promotion", b =>
+            modelBuilder.Entity("Fiap.Domain.PromotionAggregate.Promotion", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -256,11 +256,6 @@ namespace Fiap.Infra.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
                     b.Property<string>("TypeUser")
                         .IsRequired()
                         .HasColumnType("text");
@@ -280,7 +275,6 @@ namespace Fiap.Infra.Data.Migrations
                             Active = true,
                             Email = "admin@gmail.com",
                             Name = "Admin",
-                            Password = "$2a$11$GtOwXg2TwrUQJZJP0rfbDO93ZdUuDAE6RrfI8sFSa5Zq1/hXQ6CKq",
                             TypeUser = "Admin"
                         },
                         new
@@ -289,14 +283,13 @@ namespace Fiap.Infra.Data.Migrations
                             Active = true,
                             Email = "user@gmail.com",
                             Name = "User",
-                            Password = "$2a$11$GtOwXg2TwrUQJZJP0rfbDO93ZdUuDAE6RrfI8sFSa5Zq1/hXQ6CKq",
                             TypeUser = "User"
                         });
                 });
 
-            modelBuilder.Entity("Fiap.Domain.Game.Game", b =>
+            modelBuilder.Entity("Fiap.Domain.GameAggregate.Game", b =>
                 {
-                    b.HasOne("Fiap.Domain.Promotion.Promotion", "Promotion")
+                    b.HasOne("Fiap.Domain.PromotionAggregate.Promotion", "Promotion")
                         .WithMany("Games")
                         .HasForeignKey("PromotionId");
 
@@ -305,7 +298,7 @@ namespace Fiap.Infra.Data.Migrations
 
             modelBuilder.Entity("Fiap.Domain.UserAggregate.Entities.LibraryGame", b =>
                 {
-                    b.HasOne("Fiap.Domain.Game.Game", "Game")
+                    b.HasOne("Fiap.Domain.GameAggregate.Game", "Game")
                         .WithMany("Libraries")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -322,12 +315,55 @@ namespace Fiap.Infra.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Fiap.Domain.Game.Game", b =>
+            modelBuilder.Entity("Fiap.Domain.UserAggregate.User", b =>
+                {
+                    b.OwnsOne("Fiap.Domain.UserAggregate.ValueObjects.Password", "Password", b1 =>
+                        {
+                            b1.Property<int>("UserId")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Hash")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("PasswordHash");
+
+                            b1.Property<string>("PasswordSalt")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("PasswordSalt");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("Users");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+
+                            b1.HasData(
+                                new
+                                {
+                                    UserId = 1,
+                                    Hash = "10000.LW59V9G+BlFV/Bb19uYa4g==.eYihrqMpMG7icxurO2Gz4Zf8XrqNxk+rWALXrqHmbgI=",
+                                    PasswordSalt = "LW59V9G+BlFV/Bb19uYa4g=="
+                                },
+                                new
+                                {
+                                    UserId = 2,
+                                    Hash = "10000.V2BkMe/V+PQUC1g6VczN/g==.xAqE2zHO+O2FYokAs6Dn7DkHLaeVZ4xiJh7n8xF2rFg=",
+                                    PasswordSalt = "V2BkMe/V+PQUC1g6VczN/g=="
+                                });
+                        });
+
+                    b.Navigation("Password")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Fiap.Domain.GameAggregate.Game", b =>
                 {
                     b.Navigation("Libraries");
                 });
 
-            modelBuilder.Entity("Fiap.Domain.Promotion.Promotion", b =>
+            modelBuilder.Entity("Fiap.Domain.PromotionAggregate.Promotion", b =>
                 {
                     b.Navigation("Games");
                 });

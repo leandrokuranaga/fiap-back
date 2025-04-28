@@ -1,8 +1,8 @@
 ﻿using Abp.Domain.Entities;
-using Fiap.Domain.Game;
+using Fiap.Domain.GameAggregate;
 using Fiap.Domain.SeedWork.Exceptions;
 
-namespace Fiap.Domain.Promotion
+namespace Fiap.Domain.PromotionAggregate
 {
     public class Promotion : Entity
     {
@@ -21,7 +21,7 @@ namespace Fiap.Domain.Promotion
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
 
-        public virtual ICollection<Game.Game> Games { get; set; } = [];
+        public virtual ICollection<Game> Games { get; set; } = [];
         public void UpdateDiscount(double? discount, DateTime? endDate)
         {
             if (discount.HasValue)

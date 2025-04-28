@@ -1,6 +1,6 @@
 using Fiap.Application.Games.Models.Request;
 using Fiap.Application.Games.Services;
-using Fiap.Domain.Game;
+using Fiap.Domain.GameAggregate;
 using Fiap.Domain.SeedWork;
 using System.Linq.Expressions;
 using Moq;

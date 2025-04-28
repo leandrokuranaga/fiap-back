@@ -2,8 +2,8 @@
 using Fiap.Application.Promotions.Services;
 using Fiap.Application.User.Services;
 using Fiap.Application.Users.Services;
-using Fiap.Domain.Game;
-using Fiap.Domain.Promotion;
+using Fiap.Domain.GameAggregate;
+using Fiap.Domain.PromotionAggregate;
 using Fiap.Domain.SeedWork;
 using Fiap.Domain.UserAggregate;
 using Fiap.Infra.Data;

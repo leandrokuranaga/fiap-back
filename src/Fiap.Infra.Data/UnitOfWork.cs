@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Fiap.Domain.SeedWork;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Fiap.Infra.Data

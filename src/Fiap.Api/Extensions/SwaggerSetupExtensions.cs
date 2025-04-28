@@ -57,9 +57,7 @@ namespace Fiap.Api.Extensions
                 c.ExampleFilters();
                 c.OperationFilter<SetApplicationJsonAsDefaultFilter>();
                 c.EnableAnnotations();
-
             });
-
             services.AddSwaggerExamplesFromAssemblyOf<CreatePromotionRequestExample>();
             services.AddSwaggerExamplesFromAssemblyOf<CreateGameRequestExample>();
 

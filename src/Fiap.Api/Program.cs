@@ -1,4 +1,5 @@
 using Fiap.Api.Extensions;
+using Fiap.Api.Middlewares;
 using Fiap.Infra.CrossCutting.IoC;
 using Fiap.Infra.Data;
 using Microsoft.EntityFrameworkCore;

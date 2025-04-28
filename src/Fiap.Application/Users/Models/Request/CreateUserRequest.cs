@@ -1,6 +1,4 @@
-﻿using Fiap.Application.Common;
-
-namespace Fiap.Application.Users.Models.Request
+﻿namespace Fiap.Application.Users.Models.Request
 {
     public record CreateUserRequest
     {
@@ -13,7 +11,7 @@ namespace Fiap.Application.Users.Models.Request
             return Domain.UserAggregate.User.CreateByPublic(
                 request.Name,
                 request.Email,
-                PasswordHasher.HashPassword(request.Password)
+                request.Password
             );
         }
     }

@@ -1,4 +1,4 @@
-using Fiap.Domain.Game;
+using Fiap.Domain.GameAggregate;
 using Fiap.Domain.SeedWork;
 using Fiap.Infra.Data.Repositories.Base;
 using Microsoft.EntityFrameworkCore;

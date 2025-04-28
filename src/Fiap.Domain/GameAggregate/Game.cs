@@ -1,9 +1,10 @@
 ﻿using Abp.Domain.Entities;
 using Fiap.Domain.UserAggregate.Entities; 
-using Fiap.Domain.Promotion;    
+using Fiap.Domain.PromotionAggregate;    
 using Fiap.Domain.SeedWork.Exceptions;
 
-namespace Fiap.Domain.Game
+
+namespace Fiap.Domain.GameAggregate
 {
     public class Game : Entity
     {
@@ -32,7 +33,7 @@ namespace Fiap.Domain.Game
         public double Price { get; set; }
         public int? PromotionId { get; set; }
 
-        public virtual Promotion.Promotion Promotion { get; set; }
+        public virtual Promotion Promotion { get; set; }
         public virtual ICollection<LibraryGame> Libraries { get; set; }
 
         public void AssignPromotion(int promotionId)
