@@ -1,5 +1,5 @@
 ﻿using Abp.Domain.Entities;
-using Fiap.Domain.Game;
+using Fiap.Domain.GameAggregate;
 
 namespace Fiap.Domain.UserAggregate.Entities
 {
@@ -23,7 +23,7 @@ namespace Fiap.Domain.UserAggregate.Entities
         public DateTime PurchaseDate { get; set; }
         public double PricePaid { get; set; }
 
-        public virtual Game.Game Game { get; set; }
+        public virtual Game Game { get; set; }
         public virtual User User { get; set; }
     }
 }

@@ -1,9 +1,8 @@
 ﻿using Fiap.Application.Promotions.Models.Request;
 using Fiap.Application.Promotions.Services;
-using Fiap.Domain.Game;
-using Fiap.Domain.Promotion;
+using Fiap.Domain.GameAggregate;
+using Fiap.Domain.PromotionAggregate;
 using Fiap.Domain.SeedWork;
-using Fiap.Infra.Data;
 using Moq;
 using static Fiap.Domain.SeedWork.NotificationModel;
 

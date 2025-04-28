@@ -1,5 +1,4 @@
 ﻿using Fiap.Domain.UserAggregate.ValueObjects;
-using Xunit;
 
 namespace Fiap.Tests._3._Domain_Layer_Tests
 {
@@ -9,7 +8,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         public void Constructor_GeneratesHashAndSalt_ForPlainPassword()
         {
             // Arrange
-            var plainTextPassword = "mySecurePassword";
+            var plainTextPassword = "mySecure@123Password";
 
             // Act
             var passwordVO = new Password(plainTextPassword);
@@ -23,7 +22,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         public void Challenge_ReturnsTrue_WhenPasswordIsCorrect()
         {
             // Arrange
-            var plainTextPassword = "123456";
+            var plainTextPassword = "123456@pass";
             var passwordVO = new Password(plainTextPassword);
 
             // Act
@@ -37,8 +36,8 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         public void Challenge_ReturnsFalse_WhenPasswordIsIncorrect()
         {
             // Arrange
-            var correctPassword = "correct123";
-            var wrongPassword = "wrong456";
+            var correctPassword = "correct123@";
+            var wrongPassword = "wrong456!";
             var passwordVO = new Password(correctPassword);
 
             // Act
@@ -52,7 +51,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         public void HashConsistency_WithSameInput_ProducesDifferentHashesDueToRandomSalt()
         {
             // Arrange
-            var passwordText = "repeated";
+            var passwordText = "repeated#4";
 
             // Act
             var p1 = new Password(passwordText);
@@ -66,7 +65,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         public void Constructor_FromHashAndSalt_CreatesDeterministicPassword()
         {
             // Arrange
-            var original = new Password("abc@123");
+            var original = new Password("abc@1231");
 
             // Act
             var clone = new Password(original.Hash, original.PasswordSalt);
@@ -80,7 +79,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         public void GetAtomicValues_UsedForValueEquality()
         {
             // Arrange
-            var p1 = new Password("same");
+            var p1 = new Password("same@12345");
             var p2 = new Password(p1.Hash, p1.PasswordSalt);
 
             // Act & Assert

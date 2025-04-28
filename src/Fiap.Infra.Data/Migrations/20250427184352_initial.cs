@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Fiap.Infra.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class password : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -116,8 +116,8 @@ namespace Fiap.Infra.Data.Migrations
                 columns: new[] { "Id", "Active", "Email", "Name", "TypeUser", "PasswordHash", "PasswordSalt" },
                 values: new object[,]
                 {
-                    { 1, true, "admin@gmail.com", "Admin", "Admin", "10000.6O0ksK7RcY+koP2vTclK0g==.Tu79I/VFmqjTUFuGlTKTOqpR2zovm2jPrEVn4sUYXXw=", "6O0ksK7RcY+koP2vTclK0g==" },
-                    { 2, true, "user@gmail.com", "User", "User", "10000.8WQ7yoG2Z4EyAwT9lHpOgg==.THjXUlDZ5dyMBgkDZpHZ6UD22O6GZwSR6s1FFgrTNU0=", "8WQ7yoG2Z4EyAwT9lHpOgg==" }
+                    { 1, true, "admin@gmail.com", "Admin", "Admin", "10000.LW59V9G+BlFV/Bb19uYa4g==.eYihrqMpMG7icxurO2Gz4Zf8XrqNxk+rWALXrqHmbgI=", "LW59V9G+BlFV/Bb19uYa4g==" },
+                    { 2, true, "user@gmail.com", "User", "User", "10000.V2BkMe/V+PQUC1g6VczN/g==.xAqE2zHO+O2FYokAs6Dn7DkHLaeVZ4xiJh7n8xF2rFg=", "V2BkMe/V+PQUC1g6VczN/g==" }
                 });
 
             migrationBuilder.InsertData(

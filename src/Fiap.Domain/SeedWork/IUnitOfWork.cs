@@ -1,4 +1,4 @@
-﻿namespace Fiap.Infra.Data
+﻿namespace Fiap.Domain.SeedWork
 {
     public interface IUnitOfWork
     {
