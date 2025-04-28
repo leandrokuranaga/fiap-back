@@ -1,4 +1,5 @@
-﻿using Fiap.Application.Auth.Models;
+﻿using Fiap.Application.Auth.Models.Request;
+using Fiap.Application.Auth.Models.Response;
 
 namespace Fiap.Application.Auth.Services
 {

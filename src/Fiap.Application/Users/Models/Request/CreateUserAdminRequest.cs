@@ -9,6 +9,7 @@ namespace Fiap.Application.Users.Models.Request
         public string Email { get; set; }
         public string Password { get; set; }
         public TypeUser TypeUser { get; set; }
+        public bool Active { get; private set; }
 
         public static explicit operator Domain.UserAggregate.User(CreateUserAdminRequest request)
         {
@@ -17,7 +18,7 @@ namespace Fiap.Application.Users.Models.Request
                 request.Email,
                 request.Password,
                 request.TypeUser,
-                true
+                request.Active
             );
         }
     }

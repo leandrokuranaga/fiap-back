@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Fiap.Application.Auth.Models
+namespace Fiap.Application.Auth.Models.Request
 {
     public record LoginRequest
     {

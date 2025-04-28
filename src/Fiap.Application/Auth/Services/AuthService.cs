@@ -1,4 +1,5 @@
-﻿using Fiap.Application.Auth.Models;
+﻿using Fiap.Application.Auth.Models.Request;
+using Fiap.Application.Auth.Models.Response;
 using Fiap.Application.Common;
 using Fiap.Domain.SeedWork;
 using Fiap.Domain.UserAggregate;
@@ -10,67 +11,58 @@ using System.Text;
 
 namespace Fiap.Application.Auth.Services
 {
-    public class AuthService : BaseService, IAuthService
+    public class AuthService(
+        IUserRepository userRepository,
+        INotification notification,
+        IConfiguration configuration
+        ) : BaseService(notification), IAuthService
     {
-        private readonly IUserRepository _userRepository;
-        private readonly INotification _notification;
-        private readonly IConfiguration _configuration;
+        public async Task<LoginResponse> LoginAsync(LoginRequest request) => await ExecuteAsync(async () =>
+    {
+        var login = new LoginResponse();
 
-        public AuthService(
-            IUserRepository userRepository,
-            INotification notification,
-            IConfiguration configuration
-        ) : base(notification)
+
+        var user = await userRepository.GetOneNoTracking(a => a.Email == request.Username);
+
+        if (user is null)
         {
-            _userRepository = userRepository;
-            _notification = notification;
-            _configuration = configuration;
+            notification.AddNotification("Login Failed", "Invalid username or password.", NotificationModel.ENotificationType.Unauthorized);
+            return login;
         }
 
-        public async Task<LoginResponse> LoginAsync(LoginRequest request)
+        if (!user.Active)
         {
-            var user = await _userRepository.GetOneNoTracking(a => a.Email == request.Username);
-
-            if (user is null)
-            {
-                _notification.AddNotification("Login Failed", "Invalid username or password.", NotificationModel.ENotificationType.Unauthorized);
-                return new LoginResponse { Success = false };
-            }
-
-            if (!user.Active)
-            {
-                _notification.AddNotification("Login Failed", "Your account is disabled. Please contact support.", NotificationModel.ENotificationType.Unauthorized);
-                return new LoginResponse { Success = false };
-            }
-            
-            bool validPassword = user.Password.Challenge(request.Password, user.Password.PasswordSalt);
-
-            if (!validPassword)
-            {
-                _notification.AddNotification("Login Failed", "Invalid username or password.", NotificationModel.ENotificationType.Unauthorized);
-                return new LoginResponse { Success = false };
-            }
-
-            var token = GenerateJwtToken(user); 
-
-            return new LoginResponse
-            {
-                Token = token,
-                Expiration = DateTime.UtcNow.AddHours(2),
-                Success = true
-            };
+            notification.AddNotification("Login Failed", "Your account is disabled. Please contact support.", NotificationModel.ENotificationType.Unauthorized);
+            return login;
         }
 
-    
+        bool validPassword = user.Password.Challenge(request.Password, user.Password.PasswordSalt);
+
+        if (!validPassword)
+        {
+            notification.AddNotification("Login Failed", "Invalid username or password.", NotificationModel.ENotificationType.Unauthorized);
+            return login;
+        }
+
+        var token = GenerateJwtToken(user);
+
+        return new LoginResponse
+        {
+            Token = token,
+            Expiration = DateTime.UtcNow.AddHours(2)
+        };
+    });
+
+
         private string GenerateJwtToken(Fiap.Domain.UserAggregate.User user)
         {
-            
-            var secretKey = _configuration["JwtSettings:SecretKey"];
+
+            var secretKey = configuration["JwtSettings:SecretKey"];
             var key = Encoding.ASCII.GetBytes(secretKey);
 
             var claims = new List<Claim>
             {
-                new Claim("id", user.Id.ToString()),   
+                new Claim("id", user.Id.ToString()),
                 new Claim("username", user.Email),
                 new(ClaimTypes.Role, user.TypeUser.ToString())
             };

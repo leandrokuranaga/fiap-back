@@ -1,4 +1,4 @@
-﻿using Fiap.Application.Auth.Models;
+﻿using Fiap.Application.Auth.Models.Request;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -16,9 +16,9 @@ namespace Fiap.Application.Validators.AuthValidators
               .NotEmpty()
               .WithMessage("Username is required.")
               .EmailAddress()
-              .WithMessage("Email must be a valid email address.")
+              .WithMessage("Username must be a valid email address.")
               .MaximumLength(100)
-              .WithMessage("Email must be less than or equal to 100 characters.");
+              .WithMessage("Username must be less than or equal to 100 characters.");
 
             RuleFor(x => x.Password)
                 .NotEmpty().WithMessage("Password is required.");

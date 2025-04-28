@@ -32,10 +32,10 @@ namespace Fiap.Api.Controllers
         }
 
         /// <summary>
-        /// Creates a new admin user.
+        /// Creates a new user (admin or regular user, active or not)
         /// </summary>
         /// <param name="request">The details of the admin user to create.</param>
-        /// <returns>The created admin user's information.</returns>
+        /// <returns>The new user created information.</returns>
         [HttpPost("create-admin")]
         public async Task<IActionResult> CreateAdminAsync([FromBody] CreateUserAdminRequest request)
         {

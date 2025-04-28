@@ -1,12 +1,12 @@
 ﻿using Fiap.Application.Common;
 using Fiap.Application.Auth.Services;
-using Fiap.Application.Auth.Models;
 using Fiap.Domain.SeedWork;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
+using Fiap.Application.Auth.Models.Response;
 
 namespace Fiap.Api.Controllers
 {
@@ -30,7 +30,7 @@ namespace Fiap.Api.Controllers
         [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> LoginAsync([FromBody] Application.Auth.Models.LoginRequest request)
+        public async Task<IActionResult> LoginAsync([FromBody] Application.Auth.Models.Request.LoginRequest request)
         {
             var result = await authService.LoginAsync(request);
             if (!result.Success)

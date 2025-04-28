@@ -67,7 +67,7 @@ namespace Fiap.Application.User.Services
 
                 request.Email = request.Email.Trim().ToLowerInvariant();
 
-                var exists = await userRepository.ExistAsync(u => u.Email == request.Email);
+                var exists = await userRepository.ExistAsync(u => u.Email == request.Email.ToLower());
                 if (exists)
                 {
                     _notification.AddNotification("Create User", "Email already registered", NotificationModel.ENotificationType.BusinessRules);
@@ -107,7 +107,7 @@ namespace Fiap.Application.User.Services
 
                 await userRepository.BeginTransactionAsync();
 
-                var exists = await userRepository.ExistAsync(u => u.Email == request.Email);
+                var exists = await userRepository.ExistAsync(u => u.Email == request.Email.ToLower());
                 if (exists)
                 {
                     _notification.AddNotification("Create User", "Email already registered", NotificationModel.ENotificationType.BusinessRules);
