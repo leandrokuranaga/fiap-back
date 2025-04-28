@@ -8,16 +8,8 @@ using static Fiap.Domain.SeedWork.NotificationModel;
 
 namespace Fiap.Application.Games.Services
 {
-    public class GamesService : BaseService, IGamesService
+    public class GamesService(INotification notification, IGameRepository gameRepository) : BaseService(notification), IGamesService
     {
-        private readonly IGameRepository _gameRepository;
-
-        public GamesService(INotification notification, IGameRepository gameRepository)
-            : base(notification)
-        {
-            _gameRepository = gameRepository;
-        }
-
         public async Task<GameResponse> CreateAsync(CreateGameRequest request)
         {
             var response = new GameResponse();
@@ -26,7 +18,9 @@ namespace Fiap.Application.Games.Services
             {
                 Validate(request, new CreateGameRequestValidator());
 
-                var exists = await _gameRepository.ExistAsync(g => g.Name.ToLower() == request.Name.ToLower());
+                var name = request.Name.ToLowerInvariant().Trim(); 
+
+                var exists = await gameRepository.ExistAsync(g => g.Name.ToLower() == name);
 
                 if (exists)
                 {
@@ -34,20 +28,20 @@ namespace Fiap.Application.Games.Services
                     return response;
                 }
 
-                await _gameRepository.BeginTransactionAsync();
+                await gameRepository.BeginTransactionAsync();
 
                 var game = (Game)request;
-                await _gameRepository.InsertOrUpdateAsync(game);
+                await gameRepository.InsertOrUpdateAsync(game);
 
-                await _gameRepository.SaveChangesAsync();
-                await _gameRepository.CommitAsync();
+                await gameRepository.SaveChangesAsync();
+                await gameRepository.CommitAsync();
 
                 response = (GameResponse)game;
                 return response;
             }
             catch (Exception ex)
             {
-                await _gameRepository.RollbackAsync(); 
+                await gameRepository.RollbackAsync(); 
                 _notification.AddNotification("Create Game", ex.Message, ENotificationType.NotFound);
                 return response;
             }
@@ -55,7 +49,7 @@ namespace Fiap.Application.Games.Services
 
         public Task<IEnumerable<GameResponse>> GetAllAsync() => ExecuteAsync(async () =>
         {
-            var games = await _gameRepository.GetAllAsync();
+            var games = await gameRepository.GetAllAsync();
             var responses = games.Select(game => (GameResponse)game);
             return responses;
         });
