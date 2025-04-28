@@ -1,4 +1,4 @@
-﻿namespace Fiap.Application.Utils
+﻿namespace Fiap.Domain.Utils
 {
     public static class Base64Utils
     {

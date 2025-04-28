@@ -1,4 +1,4 @@
-﻿using Fiap.Domain.Game;
+﻿using Fiap.Domain.GameAggregate;
 
 namespace Fiap.Infra.Data.MapEntities.Seeds
 {

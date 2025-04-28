@@ -50,20 +50,21 @@ namespace Fiap.Infra.Data.MapEntities
 
                 pw.WithOwner();
 
+                // senha F1ap@Senha
                 pw.HasData(
                     new
                     {
                         UserId = 1,
-                        Hash = "10000.6O0ksK7RcY+koP2vTclK0g==.Tu79I/VFmqjTUFuGlTKTOqpR2zovm2jPrEVn4sUYXXw=",
-                        PasswordSalt = "6O0ksK7RcY+koP2vTclK0g=="
+                        Hash = "10000.LW59V9G+BlFV/Bb19uYa4g==.eYihrqMpMG7icxurO2Gz4Zf8XrqNxk+rWALXrqHmbgI=",
+                        PasswordSalt = "LW59V9G+BlFV/Bb19uYa4g=="
                     },
                     new
                     {
                         UserId = 2,
-                        Hash = "10000.8WQ7yoG2Z4EyAwT9lHpOgg==.THjXUlDZ5dyMBgkDZpHZ6UD22O6GZwSR6s1FFgrTNU0=",
-                        PasswordSalt = "8WQ7yoG2Z4EyAwT9lHpOgg=="
+                        Hash = "10000.V2BkMe/V+PQUC1g6VczN/g==.xAqE2zHO+O2FYokAs6Dn7DkHLaeVZ4xiJh7n8xF2rFg=",
+                        PasswordSalt = "V2BkMe/V+PQUC1g6VczN/g=="
                     });
-            });
+                });
 
             builder.HasData(UserSeed.Users());
 

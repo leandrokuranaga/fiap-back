@@ -1,4 +1,4 @@
-﻿using Fiap.Domain.Game;
+﻿using Fiap.Domain.GameAggregate;
 using Fiap.Infra.Data.Repositories.Base;
 
 namespace Fiap.Infra.Data.Repositories
