@@ -1,25 +1,25 @@
-﻿using Fiap.Domain.PromotionAggregate;
+﻿using Fiap.Domain.Promotion;
 
 namespace Fiap.Infra.Data.MapEntities.Seeds
 {
     public static class PromotionSeed
     {
-        public static List<PromotionDomain> Promotions()
+        public static List<Promotion> Promotions()
         {
             return [
-                new PromotionDomain(1,
+                new Promotion(1,
                     DateTime.SpecifyKind(new DateTime(2025, 04, 01), DateTimeKind.Utc),
                     DateTime.SpecifyKind(new DateTime(2025, 05, 01), DateTimeKind.Utc))
                 {
                     Id = 1
                 },
-                new PromotionDomain(2,
+                new Promotion(2,
                     DateTime.SpecifyKind(new DateTime(2025, 06, 01), DateTimeKind.Utc),
                     DateTime.SpecifyKind(new DateTime(2025, 07, 01), DateTimeKind.Utc))
                 {
                     Id = 2
                 },
-                new PromotionDomain(3,
+                new Promotion(3,
                     DateTime.SpecifyKind(new DateTime(2025, 08, 01), DateTimeKind.Utc),
                     DateTime.SpecifyKind(new DateTime(2025, 09, 01), DateTimeKind.Utc))
                 {

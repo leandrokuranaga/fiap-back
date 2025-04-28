@@ -17,41 +17,41 @@ namespace Fiap.Api.Controllers
     {
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateUserRequest request) 
+        public async Task<IActionResult> CreateAsync([FromBody] CreateUserRequest request) 
         {
-            var result = await usersService.Create(request);
+            var result = await usersService.CreateAsync(request);
             return Response(BaseResponse<UserResponse>.Ok(result));
         }
 
 
         [HttpPatch("{id:int:min(1)}")]
-        public async Task<IActionResult> Update(int id, [FromBody] UpdateUserRequest request)
+        public async Task<IActionResult> UpdateAsync(int id, [FromBody] UpdateUserRequest request)
         {
-            var result = await usersService.Update(id, request);
+            var result = await usersService.UpdateAsync(id, request);
             return Response(BaseResponse<UserResponse>.Ok(result));
         }
 
 
         [HttpDelete("{id:int:min(1)}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
-            await usersService.Delete(id);
+            await usersService.DeleteAsync(id);
             return Response(BaseResponse<EmptyResultModel>.Ok(new EmptyResultModel()));
         }
 
        
         [HttpGet("{id:int:min(1)}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetAsync(int id)
         {
-            var result = await usersService.Get(id);
+            var result = await usersService.GetAsync(id);
             return Response(BaseResponse<UserResponse>.Ok(result));
         }
 
        
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAllAsync()
         {
-            var result = await usersService.GetAll();
+            var result = await usersService.GetAllAsync();
             return Response(BaseResponse<List<UserResponse>>.Ok(result));
         }
 

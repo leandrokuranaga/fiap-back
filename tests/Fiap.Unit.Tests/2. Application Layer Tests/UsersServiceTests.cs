@@ -2,7 +2,6 @@ using Fiap.Application.User.Services;
 using Fiap.Application.Users.Models.Request;
 using Fiap.Domain.SeedWork;
 using Fiap.Domain.UserAggregate;
-using Fiap.Domain.UsersAggregate;
 using Moq;
 using System.Linq.Expressions;
 
@@ -33,12 +32,12 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             };
 
             _mockUserRepository
-                .Setup(repo => repo.ExistAsync(It.IsAny<Expression<Func<UserDomain, bool>>>()))
+                .Setup(repo => repo.ExistAsync(It.IsAny<Expression<Func<User, bool>>>()))
                 .ReturnsAsync(false);
 
             _mockUserRepository
-                .Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<UserDomain>()))
-                .ReturnsAsync((UserDomain user) =>
+                .Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<User>()))
+                .ReturnsAsync((User user) =>
                 {
                     user.Id = 1;
                     return user;
@@ -46,7 +45,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _usersService.Create(request);
+            var result = await _usersService.CreateAsync(request);
             #endregion
 
             #region Assert
@@ -69,12 +68,12 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             };
 
             _mockUserRepository
-                .Setup(repo => repo.ExistAsync(It.IsAny<Expression<Func<UserDomain, bool>>>()))
+                .Setup(repo => repo.ExistAsync(It.IsAny<Expression<Func<User, bool>>>()))
                 .ReturnsAsync(true);
 
             _mockUserRepository
-              .Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<UserDomain>()))
-              .ReturnsAsync((UserDomain user) =>
+              .Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<User>()))
+              .ReturnsAsync((User user) =>
               {
                   user.Id = 1;
                   return user;
@@ -82,7 +81,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _usersService.Create(request);
+            var result = await _usersService.CreateAsync(request);
             #endregion
 
             #region Assert
@@ -102,7 +101,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
                 Email = "updated.email@example.com"
             };
 
-            var user = new UserDomain
+            var user = new User
             {
                 Id = userId,
                 Name = "Original Name",
@@ -114,12 +113,12 @@ namespace Fiap.Tests._2._Application_Layer_Tests
                 .ReturnsAsync(user);
 
             _mockUserRepository
-                .Setup(repo => repo.UpdateAsync(It.IsAny<UserDomain>()))
+                .Setup(repo => repo.UpdateAsync(It.IsAny<User>()))
                 .Returns(Task.CompletedTask);
             #endregion
 
             #region Act
-            var result = await _usersService.Update(userId, request);
+            var result = await _usersService.UpdateAsync(userId, request);
             #endregion
 
             #region Assert
@@ -142,11 +141,11 @@ namespace Fiap.Tests._2._Application_Layer_Tests
 
             _mockUserRepository
                 .Setup(repo => repo.GetByIdAsync(userId, It.IsAny<bool>()))
-                .ReturnsAsync((UserDomain)null);
+                .ReturnsAsync((User)null);
             #endregion
 
             #region Act
-            var result = await _usersService.Update(userId, request);
+            var result = await _usersService.UpdateAsync(userId, request);
             #endregion
 
             #region Assert
@@ -161,7 +160,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #region Arrange
             int userId = 1;
 
-            var user = new UserDomain
+            var user = new User
             {
                 Id = userId,
                 Name = "Bruno Moura",
@@ -173,12 +172,12 @@ namespace Fiap.Tests._2._Application_Layer_Tests
                 .ReturnsAsync(user);
 
             _mockUserRepository
-                .Setup(repo => repo.DeleteAsync(It.IsAny<UserDomain>()))
+                .Setup(repo => repo.DeleteAsync(It.IsAny<User>()))
                 .Returns(Task.CompletedTask);
             #endregion
 
             #region Act
-            var result = await _usersService.Delete(userId);
+            var result = await _usersService.DeleteAsync(userId);
             #endregion
 
             #region Assert
@@ -195,11 +194,11 @@ namespace Fiap.Tests._2._Application_Layer_Tests
 
             _mockUserRepository
                 .Setup(repo => repo.GetByIdAsync(userId, It.IsAny<bool>()))
-                .ReturnsAsync((UserDomain)null);
+                .ReturnsAsync((User)null);
             #endregion
 
             #region Act
-            var result = await _usersService.Delete(userId);
+            var result = await _usersService.DeleteAsync(userId);
             #endregion
 
             #region Assert
@@ -215,7 +214,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #region Arrange
             int userId = 1;
 
-            var user = new UserDomain
+            var user = new User
             {
                 Id = userId,
                 Name = "Bruno Moura",
@@ -228,7 +227,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _usersService.Get(userId);
+            var result = await _usersService.GetAsync(userId);
             #endregion
 
             #region Assert
@@ -246,11 +245,11 @@ namespace Fiap.Tests._2._Application_Layer_Tests
 
             _mockUserRepository
                 .Setup(repo => repo.GetByIdAsync(userId, It.IsAny<bool>()))
-                .ReturnsAsync((UserDomain)null);
+                .ReturnsAsync((User)null);
             #endregion
 
             #region Act
-            var result = await _usersService.Get(userId);
+            var result = await _usersService.GetAsync(userId);
             #endregion
 
             #region Assert
@@ -263,10 +262,10 @@ namespace Fiap.Tests._2._Application_Layer_Tests
         public async Task GetAll_ShouldReturnListOfUserResponses()
         {
             #region Arrange
-            var users = new List<UserDomain>
+            var users = new List<User>
             {
-                new UserDomain { Id = 1, Name = "Bruno Moura", Email = "bruno@example.com" },
-                new UserDomain { Id = 2, Name = "Jane Doe", Email = "jane.doe@example.com" }
+                new User { Id = 1, Name = "Bruno Moura", Email = "bruno@example.com" },
+                new User { Id = 2, Name = "Jane Doe", Email = "jane.doe@example.com" }
             };
 
             _mockUserRepository
@@ -275,7 +274,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _usersService.GetAll();
+            var result = await _usersService.GetAllAsync();
             #endregion
 
             #region Assert
@@ -297,12 +296,12 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             };
 
             _mockUserRepository
-                .Setup(repo => repo.ExistAsync(It.IsAny<Expression<Func<UserDomain, bool>>>()))
+                .Setup(repo => repo.ExistAsync(It.IsAny<Expression<Func<User, bool>>>()))
                 .ThrowsAsync(new Exception("Unexpected error"));
             #endregion
 
             #region Act
-            var result = await _usersService.Create(request);
+            var result = await _usersService.CreateAsync(request);
             #endregion
 
             #region Assert
@@ -327,7 +326,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _usersService.Update(userId, request);
+            var result = await _usersService.UpdateAsync(userId, request);
             #endregion
 
             #region Assert
@@ -347,7 +346,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _usersService.Get(userId);
+            var result = await _usersService.GetAsync(userId);
             #endregion
 
             #region Assert
@@ -365,13 +364,53 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _usersService.GetAll();
+            var result = await _usersService.GetAllAsync();
             #endregion
 
             #region Assert
             Assert.NotNull(result);
             Assert.Empty(result);
             _mockNotification.Verify(n => n.AddNotification("Get Users", "Unexpected error", NotificationModel.ENotificationType.InternalServerError), Times.Once);
+            #endregion
+        }
+
+        [Fact]
+        public async Task Delete_ShouldAddNotification_WhenExceptionIsThrown()
+        {
+            #region Arrange
+            int userId = 1;
+
+            var user = new User
+            {
+                Id = userId,
+                Name = "Bruno Moura",
+                Email = "bruno@example.com"
+            };
+
+            _mockUserRepository
+                .Setup(repo => repo.GetByIdAsync(userId, It.IsAny<bool>()))
+                .ReturnsAsync(user);
+
+            _mockUserRepository
+                .Setup(repo => repo.DeleteAsync(It.IsAny<User>()))
+                .ThrowsAsync(new Exception("Unexpected error"));
+
+            _mockUserRepository
+                .Setup(repo => repo.RollbackAsync())
+                .Returns(Task.CompletedTask);
+            #endregion
+
+            #region Act
+            var result = await _usersService.DeleteAsync(userId);
+            #endregion
+
+            #region Assert
+            Assert.NotNull(result);
+            Assert.False(result.Success);
+            _mockUserRepository.Verify(r => r.RollbackAsync(), Times.Once);
+            _mockNotification.Verify(n =>
+                n.AddNotification("Delete User", "Unexpected error", NotificationModel.ENotificationType.InternalServerError),
+                Times.Once);
             #endregion
         }
     }

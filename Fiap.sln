@@ -25,7 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.Infra.Data", "src\Fiap
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.Infra.CrossCutting.IoC", "src\Fiap.Infra.CrossCutting.IoC\Fiap.Infra.CrossCutting.IoC.csproj", "{C1EDF935-F69D-486E-A2ED-8CA6215686FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.Tests", "src\Fiap.Tests\Fiap.Tests.csproj", "{5ADEA337-C4D6-4AA5-9953-43E4D7709549}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.Unit.Tests", "tests\Fiap.Unit.Tests\Fiap.Unit.Tests.csproj", "{5ADEA337-C4D6-4AA5-9953-43E4D7709549}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

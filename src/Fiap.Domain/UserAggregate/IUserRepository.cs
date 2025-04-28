@@ -1,9 +1,10 @@
 ﻿using Fiap.Domain.SeedWork;
 using Fiap.Domain.UserAggregate;
+using Fiap.Infra.Data;
 
-namespace Fiap.Domain.UsersAggregate
+namespace Fiap.Domain.UserAggregate
 {
-    public interface IUserRepository : IBaseRepository<UserDomain>
+    public interface IUserRepository : IBaseRepository<User>, IUnitOfWork
     {
     }
 }

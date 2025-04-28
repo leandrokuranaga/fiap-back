@@ -27,8 +27,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Fiap.Api\Fiap.Api.csproj" />
-    <ProjectReference Include="..\Fiap.Domain\Fiap.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Fiap.Api\Fiap.Api.csproj" />
+    <ProjectReference Include="..\..\src\Fiap.Application\Fiap.Application.csproj" />
+    <ProjectReference Include="..\..\src\Fiap.Domain\Fiap.Domain.csproj" />
   </ItemGroup>
 
 </Project>

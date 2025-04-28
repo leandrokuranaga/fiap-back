@@ -1,4 +1,4 @@
-using Fiap.Domain.GameAggregate;
+using Fiap.Domain.Game; 
 
 namespace Fiap.Application.Games.Models.Response
 {
@@ -10,7 +10,7 @@ namespace Fiap.Application.Games.Models.Response
         public double Price { get; set; }
         public int? PromotionId { get; set; }
 
-        public static explicit operator GameResponse(GameDomain game)
+        public static explicit operator GameResponse(Game game)
         {
             return new GameResponse
             {

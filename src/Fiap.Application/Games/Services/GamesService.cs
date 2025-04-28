@@ -2,7 +2,7 @@
 using Fiap.Application.Games.Models.Request;
 using Fiap.Application.Games.Models.Response;
 using Fiap.Application.Validators.GamesValidators;
-using Fiap.Domain.GameAggregate;
+using Fiap.Domain.Game;
 using Fiap.Domain.SeedWork;
 using static Fiap.Domain.SeedWork.NotificationModel;
 
@@ -34,14 +34,20 @@ namespace Fiap.Application.Games.Services
                     return response;
                 }
 
-                var game = (GameDomain)request;
+                await _gameRepository.BeginTransactionAsync();
+
+                var game = (Game)request;
                 await _gameRepository.InsertOrUpdateAsync(game);
+
+                await _gameRepository.SaveChangesAsync();
+                await _gameRepository.CommitAsync();
 
                 response = (GameResponse)game;
                 return response;
             }
             catch (Exception ex)
             {
+                await _gameRepository.RollbackAsync(); 
                 _notification.AddNotification("Create Game", ex.Message, ENotificationType.NotFound);
                 return response;
             }

@@ -19,8 +19,8 @@ namespace Fiap.Application.Validators.PromotionsValidators
             When(x => x.ExpirationDate != null, () =>
             {
                 RuleFor(x => x.ExpirationDate.Value)
-                    .GreaterThan(DateTime.UtcNow)
-                    .WithMessage("Expiration date must be in the future.");
+                    .NotEqual(default(DateTime))
+                    .WithMessage("Expiration date must be a valid date.");
             });
 
             When(x => x.GameId != null, () =>

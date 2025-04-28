@@ -2,14 +2,15 @@
 using Fiap.Application.Promotions.Models.Request;
 using Fiap.Application.Promotions.Models.Response;
 using Fiap.Application.Validators.PromotionsValidators;
-using Fiap.Domain.GameAggregate;
-using Fiap.Domain.PromotionAggregate;
+using Fiap.Domain.Game;
+using Fiap.Domain.Promotion;
 using Fiap.Domain.SeedWork;
+using Fiap.Infra.Data;
 using static Fiap.Domain.SeedWork.NotificationModel;
 
 namespace Fiap.Application.Promotions.Services
 {
-    public class PromotionsService(INotification notification, IPromotionRepository promotionRepository, IGameRepository gameRepository) : BaseService(notification), IPromotionsService
+    public class PromotionsService(INotification notification, IPromotionRepository promotionRepository, IGameRepository gameRepository, IUnitOfWork unitOfWork) : BaseService(notification), IPromotionsService
     {
         public Task<PromotionResponse> CreateAsync(CreatePromotionRequest request) => ExecuteAsync(async () =>
         {
@@ -19,11 +20,20 @@ namespace Fiap.Application.Promotions.Services
             {
                 Validate(request, new CreatePromotionRequestValidator());
 
-                var promotion = (PromotionDomain)request;
+                var promotion = (Promotion)request;
+
+                promotion.ValidatePeriod();
+
+                await unitOfWork.BeginTransactionAsync();
 
                 await promotionRepository.InsertOrUpdateAsync(promotion);
+                await promotionRepository.SaveChangesAsync();
 
                 await CreatePromotion(request, promotion);
+
+                await gameRepository.SaveChangesAsync();
+
+                await unitOfWork.CommitAsync();
 
                 response = (PromotionResponse)promotion;
 
@@ -31,12 +41,13 @@ namespace Fiap.Application.Promotions.Services
             }
             catch (Exception ex)
             {
+                await unitOfWork.RollbackAsync();
                 notification.AddNotification("Not Found", ex.Message, NotificationModel.ENotificationType.NotFound);
                 return response;
             }
         });
 
-        private async Task CreatePromotion(CreatePromotionRequest request, PromotionDomain promotion)
+        private async Task CreatePromotion(CreatePromotionRequest request, Promotion promotion)
         {
 
             if (request.GameId != null && request.GameId.Count != 0)
@@ -46,7 +57,7 @@ namespace Fiap.Application.Promotions.Services
                     .Select(id => id.Value)
                     .ToList();
 
-                var games = new List<GameDomain>();
+                var games = new List<Game>();
 
                 foreach (var gameId in validIds)
                 {
@@ -58,8 +69,7 @@ namespace Fiap.Application.Promotions.Services
                     }
 
                     game.PromotionId = promotion.Id;
-                    games.Add(game);
-                    
+                    games.Add(game);                    
                 }
 
                 if (games.Count != 0)
@@ -86,10 +96,16 @@ namespace Fiap.Application.Promotions.Services
                 }
 
                 promotion.UpdateDiscount(request.Discount, request.ExpirationDate);
+                await unitOfWork.BeginTransactionAsync();
 
                 await promotionRepository.UpdateAsync(promotion);
+                await promotionRepository.SaveChangesAsync();
 
                 await UpdateGamesPromotion(request.GameId, promotion.Id);
+
+                await gameRepository.SaveChangesAsync();
+
+                await unitOfWork.CommitAsync();
 
                 response = (PromotionResponse)promotion;
 
@@ -97,12 +113,13 @@ namespace Fiap.Application.Promotions.Services
             }
             catch (Exception ex)
             {
+                await unitOfWork.RollbackAsync();
                 notification.AddNotification("Update Promotion", ex.Message, NotificationModel.ENotificationType.NotFound);
                 return response;
             }
         });
 
-        private async Task<List<GameDomain>> UpdateGamesPromotion(List<int?>? gameIds, int promotionId)
+        private async Task<List<Game>> UpdateGamesPromotion(List<int?>? gameIds, int promotionId)
         {
             var validIds = gameIds?
                 .Where(id => id.HasValue)
@@ -112,7 +129,7 @@ namespace Fiap.Application.Promotions.Services
             if (validIds == null || validIds.Count == 0)
                 return [];
 
-            var games = new List<GameDomain>();
+            var games = new List<Game>();
 
             foreach (var gameId in validIds)
             {

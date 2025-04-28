@@ -1,6 +1,6 @@
 ﻿using Fiap.Application.Common;
-using Fiap.Domain.SeedWork.Enums;
 using Fiap.Domain.UserAggregate;
+using Fiap.Domain.UserAggregate.Enums;
 
 namespace Fiap.Application.Users.Models.Request
 {

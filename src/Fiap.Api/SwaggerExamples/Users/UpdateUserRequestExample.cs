@@ -1,5 +1,5 @@
 ﻿using Fiap.Application.Users.Models.Request;
-using Fiap.Domain.SeedWork.Enums;
+using Fiap.Domain.UserAggregate.Enums;
 using Swashbuckle.AspNetCore.Filters;
 
 namespace Fiap.Api.SwaggerExamples.Users

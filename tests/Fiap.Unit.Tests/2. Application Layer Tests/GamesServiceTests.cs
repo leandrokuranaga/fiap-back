@@ -1,10 +1,11 @@
 using Fiap.Application.Games.Models.Request;
 using Fiap.Application.Games.Services;
-using Fiap.Domain.GameAggregate;
+using Fiap.Domain.Game;
 using Fiap.Domain.SeedWork;
+using System.Linq.Expressions;
 using Moq;
 
-namespace Fiap.Tests._2._Application_Layer_Tests
+namespace Fiap.Unit.Tests.Application_Layer_Tests
 {
     public class GamesServiceTests
     {
@@ -31,8 +32,8 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             };
 
             _mockGameRepository
-                .Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<GameDomain>()))
-                .ReturnsAsync((GameDomain game) =>
+                .Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<Game>()))
+                .ReturnsAsync((Game game) =>
                 {
                     game.Id = 1;
                     return game;
@@ -64,7 +65,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             };
 
             _mockGameRepository
-                .Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<GameDomain>()))
+                .Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<Game>()))
                 .ThrowsAsync(new Exception("Test exception"));
             #endregion
 
@@ -74,7 +75,10 @@ namespace Fiap.Tests._2._Application_Layer_Tests
 
             #region Assert
             Assert.NotNull(result);
-            _mockNotification.Verify(n => n.AddNotification(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NotificationModel.ENotificationType>()), Times.Once);
+            _mockNotification.Verify(
+                n => n.AddNotification(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NotificationModel.ENotificationType>()),
+                Times.Once
+            );
             #endregion
         }
 
@@ -82,10 +86,10 @@ namespace Fiap.Tests._2._Application_Layer_Tests
         public async Task GetAllAsync_ShouldReturnGames_WhenGamesExist()
         {
             #region Arrange
-            var games = new List<GameDomain>
+            var games = new List<Game>
             {
-                new GameDomain("Game 1", "Action", 59.90, null) { Id = 1 },
-                new GameDomain("Game 2", "Adventure", 49.90, null) { Id = 2 }
+                new Game("Game 1", "Action", 59.90, null) { Id = 1 },
+                new Game("Game 2", "Adventure", 49.90, null) { Id = 2 }
             };
 
             _mockGameRepository
@@ -109,7 +113,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
         public async Task GetAllAsync_ShouldReturnEmptyList_WhenNoGamesExist()
         {
             #region Arrange
-            var emptyGames = new List<GameDomain>();
+            var emptyGames = new List<Game>();
 
             _mockGameRepository
                 .Setup(repo => repo.GetAllAsync())
@@ -126,6 +130,38 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
         }
 
+        [Fact]
+        public async Task CreateGame_ShouldAddNotification_WhenGameAlreadyExists()
+        {
+            #region Arrange
+            var request = new CreateGameRequest
+            {
+                Name = "Existing Game",
+                Genre = "Action",
+                Price = 49.99
+            };
+
+            _mockGameRepository
+                .Setup(repo => repo.ExistAsync(It.IsAny<Expression<Func<Game, bool>>>()))
+                .ReturnsAsync(true); 
+            #endregion
+
+            #region Act
+            var result = await _gameService.CreateAsync(request);
+            #endregion
+
+            #region Assert
+            Assert.NotNull(result);
+            Assert.Equal(0, result.Id); 
+            _mockNotification.Verify(
+                n => n.AddNotification(
+                    "Create Game",
+                    $"The game '{request.Name}' has already been registered.",
+                    NotificationModel.ENotificationType.BusinessRules),
+                Times.Once
+            );
+            #endregion
+        }
 
     }
 }
