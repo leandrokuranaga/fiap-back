@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Tests._3._Domain_Layer_Tests
 {
-    [ExcludeFromCodeCoverage]
     public class PromotionTest
     {
         [Fact]

@@ -6,11 +6,9 @@ using Fiap.Application.Games.Services;
 using Fiap.Domain.SeedWork;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Tests._1._Api_Layer_Tests
 {
-    [ExcludeFromCodeCoverage]
     public class GamesControllerTests
     {
         readonly Mock<IGamesService> _gamesServiceMock;

@@ -8,7 +8,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Unit.Tests.Application_Layer_Tests
 {
-    [ExcludeFromCodeCoverage]
     public class GamesServiceTests
     {
         private readonly Mock<IGameRepository> _mockGameRepository;

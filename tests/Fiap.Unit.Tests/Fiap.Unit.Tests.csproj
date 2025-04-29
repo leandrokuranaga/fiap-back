@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <Compile Remove="4. Infra Layer Tests\**" />
+	<AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
     <EmbeddedResource Remove="4. Infra Layer Tests\**" />
     <None Remove="4. Infra Layer Tests\**" />
   </ItemGroup>

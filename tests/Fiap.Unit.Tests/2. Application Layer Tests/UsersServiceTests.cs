@@ -8,7 +8,6 @@ using System.Linq.Expressions;
 
 namespace Fiap.Tests._2._Application_Layer_Tests
 {
-    [ExcludeFromCodeCoverage]
     public class UsersServiceTests
     {
         private readonly Mock<IUserRepository> _mockUserRepository;

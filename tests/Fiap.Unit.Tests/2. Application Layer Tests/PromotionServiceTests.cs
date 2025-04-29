@@ -9,7 +9,6 @@ using static Fiap.Domain.SeedWork.NotificationModel;
 
 namespace Fiap.Tests._2._Application_Layer_Tests
 {
-    [ExcludeFromCodeCoverage]
     public class PromotionServiceTests
     {
         readonly Mock<IPromotionRepository> _mockPromotionRepositoryMock;
