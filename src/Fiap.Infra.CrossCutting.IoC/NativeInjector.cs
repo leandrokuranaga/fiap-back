@@ -1,4 +1,5 @@
-﻿using Fiap.Application.Auth.Services;
+﻿using Fiap.Application.Auth.Models;
+using Fiap.Application.Auth.Services;
 using Fiap.Application.Games.Services;
 using Fiap.Application.Promotions.Services;
 using Fiap.Application.User.Services;
@@ -9,8 +10,11 @@ using Fiap.Domain.SeedWork;
 using Fiap.Domain.UserAggregate;
 using Fiap.Infra.Data;
 using Fiap.Infra.Data.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Fiap.Infra.CrossCutting.IoC
 {
@@ -36,6 +40,30 @@ namespace Fiap.Infra.CrossCutting.IoC
             services.AddScoped<IAuthService, AuthService>();
 
             #endregion
+        }
+
+        public static void AddCustomAuthentication(this IServiceCollection services, IConfiguration configuration)
+        {
+            var jwtSettings = configuration["JwtSettings:SecretKey"];
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings))
+                };
+            });
+
+            services.AddAuthorization();
         }
 
     }

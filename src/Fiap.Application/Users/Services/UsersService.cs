@@ -91,9 +91,7 @@ namespace Fiap.Application.User.Services
                     _notification.AddNotification("Create User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
                 return response;
             }
-        });
-
-        
+        });        
 
         public Task<UserResponse> CreateAdminAsync(CreateUserAdminRequest request) => ExecuteAsync(async () =>
         {
@@ -103,11 +101,11 @@ namespace Fiap.Application.User.Services
             {
                 Validate(request, new CreateUserAdminRequestValidator());
 
-                request.Email = request.Email.Trim().ToLowerInvariant();
+                var email = request.Email.Trim().ToLowerInvariant();
 
                 await userRepository.BeginTransactionAsync();
 
-                var exists = await userRepository.ExistAsync(u => u.Email == request.Email.ToLower());
+                var exists = await userRepository.ExistAsync(u => u.Email.ToLower() == email);
                 if (exists)
                 {
                     _notification.AddNotification("Create User", "Email already registered", NotificationModel.ENotificationType.BusinessRules);
@@ -201,8 +199,6 @@ namespace Fiap.Application.User.Services
                 _notification.AddNotification("Delete User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
                 return BaseResponse<object>.Fail(_notification.NotificationModel);
             }
-        });
-
-        
+        });        
     }
 }
