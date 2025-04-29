@@ -1,5 +1,8 @@
-﻿namespace Fiap.Application.Common
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Fiap.Application.Common
 {
+    [ExcludeFromCodeCoverage]
     public class ValidationErrorResponse
     {
         public string Message { get; set; }

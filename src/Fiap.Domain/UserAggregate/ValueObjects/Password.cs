@@ -1,5 +1,6 @@
 ﻿using Abp.Domain.Values;
-using Fiap.Application.Utils;
+using Fiap.Domain.SeedWork.Exceptions;
+using Fiap.Domain.Utils;
 using System.Security.Cryptography;
 
 namespace Fiap.Domain.UserAggregate.ValueObjects
@@ -29,6 +30,8 @@ namespace Fiap.Domain.UserAggregate.ValueObjects
         {
             if (string.IsNullOrEmpty(text) || string.IsNullOrWhiteSpace(text))
                 text = Generate();
+
+            ValidatePasswordStrength(text);
 
             string password;
 
@@ -123,6 +126,21 @@ namespace Fiap.Domain.UserAggregate.ValueObjects
             var salt = new byte[size];
             rng.GetBytes(salt);
             return salt;
+        }
+
+        private void ValidatePasswordStrength(string password)
+        {
+            if (password.Length < 8 || password.Length > 100)
+                throw new BusinessRulesException("Password must be between 8 and 100 characters.");
+
+            if (!password.Any(char.IsLetter))
+                throw new BusinessRulesException("Password must contain at least one letter.");
+
+            if (!password.Any(char.IsDigit))
+                throw new BusinessRulesException("Password must contain at least one number.");
+
+            if (!password.Any(c => "!@#$%^&*(){}[];".Contains(c)))
+                throw new BusinessRulesException("Password must contain at least one special character.");
         }
 
         protected override IEnumerable<object> GetAtomicValues()

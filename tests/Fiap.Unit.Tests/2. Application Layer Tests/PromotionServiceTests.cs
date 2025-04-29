@@ -1,14 +1,15 @@
 ﻿using Fiap.Application.Promotions.Models.Request;
 using Fiap.Application.Promotions.Services;
-using Fiap.Domain.Game;
-using Fiap.Domain.Promotion;
+using Fiap.Domain.GameAggregate;
+using Fiap.Domain.PromotionAggregate;
 using Fiap.Domain.SeedWork;
-using Fiap.Infra.Data;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 using static Fiap.Domain.SeedWork.NotificationModel;
 
 namespace Fiap.Tests._2._Application_Layer_Tests
 {
+    [ExcludeFromCodeCoverage]
     public class PromotionServiceTests
     {
         readonly Mock<IPromotionRepository> _mockPromotionRepositoryMock;

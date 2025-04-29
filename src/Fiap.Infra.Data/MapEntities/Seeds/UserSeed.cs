@@ -1,6 +1,5 @@
 ﻿using Fiap.Domain.UserAggregate;
 using Fiap.Domain.UserAggregate.Enums;
-using Fiap.Domain.UserAggregate.ValueObjects;
 
 namespace Fiap.Infra.Data.MapEntities.Seeds
 {

@@ -1,9 +1,11 @@
 ﻿using Fiap.Domain.SeedWork;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
 namespace Fiap.Infra.Data.Repositories.Base
 {
+    [ExcludeFromCodeCoverage]
     public abstract class BaseRepository<TEntity>(Context context) : UnitOfWork(context), IBaseRepository<TEntity> where TEntity : class
     {
         protected DbSet<TEntity> dbSet = context.Set<TEntity>();

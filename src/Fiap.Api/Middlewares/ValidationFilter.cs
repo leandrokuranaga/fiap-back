@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Api.Middlewares
 {
+    [ExcludeFromCodeCoverage]
     public class ValidationFilter : IActionFilter
     {
         public void OnActionExecuting(ActionExecutingContext context)

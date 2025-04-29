@@ -4,8 +4,8 @@ using Fiap.Application.Games.Services;
 using Fiap.Application.Promotions.Services;
 using Fiap.Application.User.Services;
 using Fiap.Application.Users.Services;
-using Fiap.Domain.Game;
-using Fiap.Domain.Promotion;
+using Fiap.Domain.GameAggregate;
+using Fiap.Domain.PromotionAggregate;
 using Fiap.Domain.SeedWork;
 using Fiap.Domain.UserAggregate;
 using Fiap.Infra.Data;
@@ -14,10 +14,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Fiap.Infra.CrossCutting.IoC
 {
+    [ExcludeFromCodeCoverage]
     public static class NativeInjector
     {
         public static void AddLocalHttpClients(this IServiceCollection services, IConfiguration configuration) { }

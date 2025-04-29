@@ -1,11 +1,11 @@
 ﻿using Fiap.Domain.UserAggregate;
-using Fiap.Domain.UserAggregate.Entities;
 using Fiap.Domain.UserAggregate.Enums;
 using Fiap.Domain.UserAggregate.ValueObjects;
-using Xunit;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Tests._3._Domain_Layer_Tests
 {
+    [ExcludeFromCodeCoverage]
     public class UserDomainTest
     {
         [Fact]
@@ -14,7 +14,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
             #region Arrange
             var name = "Test User";
             var email = "testuser@gmail.com";
-            var password = "password123";
+            var password = "password@123";
             var typeUser = TypeUser.Admin;
             var active = true;
             #endregion
@@ -39,7 +39,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
             #region Arrange
             var name = "Admin User";
             var email = "admin@gmail.com";
-            var password = "adminpassword";
+            var password = "admin@1password";
             var typeUser = TypeUser.Admin;
             var active = true;
             #endregion
@@ -64,7 +64,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
             #region Arrange
             var name = "Public User";
             var email = "publicuser@gmail.com";
-            var password = "publicpassword";
+            var password = "public@1password";
             #endregion
 
             #region Act
@@ -85,10 +85,10 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         public void UserDomain_UpdatesPropertiesCorrectly()
         {
             #region Arrange
-            var user = new User("Old Name", "oldemail@gmail.com", "oldpassword", TypeUser.User, true);
+            var user = new User("Old Name", "oldemail@gmail.com", "old@123password", TypeUser.User, true);
             var newName = "New Name";
             var newEmail = "newemail@gmail.com";
-            var newPassword = "newpassword";
+            var newPassword = "new@123password";
             var newTypeUser = TypeUser.Admin;
             var newActive = false;
             #endregion

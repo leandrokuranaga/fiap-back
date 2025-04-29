@@ -30,10 +30,11 @@ jobs:
           BRANCH="${{ github.head_ref }}"
           echo "Branch: $BRANCH"
 
-          if [[ "$BRANCH" =~ ^release/([0-9]+)\.0\.0$ ]]; then
-            VERSION="${BASH_REMATCH[1]}.0.0"
+          if [[ "$BRANCH" =~ ^release/([0-9]+)\.([0-9]+)\.0$ ]]; then
+            VERSION="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.0"
             TYPE="release"
             MAJOR="${BASH_REMATCH[1]}"
+            MINOR="${BASH_REMATCH[2]}"
           elif [[ "$BRANCH" =~ ^hotfix/([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
             VERSION="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.${BASH_REMATCH[3]}"
             TYPE="hotfix"
@@ -41,7 +42,7 @@ jobs:
             MINOR="${BASH_REMATCH[2]}"
             PATCH="${BASH_REMATCH[3]}"
           else
-            echo "❌ Nome de branch inválido. Use 'release/X.0.0' ou 'hotfix/X.Y.Z'"
+            echo "❌ Nome de branch inválido. Use 'release/X.Y.0' ou 'hotfix/X.Y.Z'"
             exit 1
           fi
 
@@ -49,20 +50,31 @@ jobs:
           echo "type=$TYPE" >> $GITHUB_OUTPUT
           echo "major=$MAJOR" >> $GITHUB_OUTPUT
           echo "minor=$MINOR" >> $GITHUB_OUTPUT
+          if [[ ! -z "$PATCH" ]]; then
+            echo "patch=$PATCH" >> $GITHUB_OUTPUT
+          fi
 
-      - name: Validate sequencial release
+      - name: Validate sequential release (X.Y.0)
         if: steps.validate.outputs.type == 'release'
         run: |
-          LAST_MAJOR=$(echo "${{ steps.last_release.outputs.last_release }}" | sed 's/v//' | cut -d. -f1)
+          git fetch --tags
+
           CURRENT_MAJOR="${{ steps.validate.outputs.major }}"
-          EXPECTED=$((LAST_MAJOR + 1))
+          CURRENT_MINOR="${{ steps.validate.outputs.minor }}"
 
-          echo "Último major: $LAST_MAJOR"
+          echo "Procurando últimas tags release: v$CURRENT_MAJOR.*.0"
+
+          LAST_MINOR=$(git tag --list "v$CURRENT_MAJOR.*.0" | sed -E "s/v$CURRENT_MAJOR\.([0-9]+)\.0/\1/" | sort -n | tail -n 1)
+          LAST_MINOR=${LAST_MINOR:- -1}
+
+          EXPECTED=$((LAST_MINOR + 1))
+
+          echo "Último minor encontrado: $LAST_MINOR"
           echo "Esperado: $EXPECTED"
-          echo "Atual: $CURRENT_MAJOR"
+          echo "Atual: $CURRENT_MINOR"
 
-          if [ "$CURRENT_MAJOR" -ne "$EXPECTED" ]; then
-            echo "❌ Release inválida. Use 'release/${EXPECTED}.0.0'"
+          if [ "$CURRENT_MINOR" -ne "$EXPECTED" ]; then
+            echo "❌ Release inválida. O próximo minor permitido é $EXPECTED (ex: release/$CURRENT_MAJOR.$EXPECTED.0)"
             exit 1
           fi
 

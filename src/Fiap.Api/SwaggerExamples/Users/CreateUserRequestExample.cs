@@ -1,17 +1,22 @@
 ﻿using Fiap.Application.Users.Models.Request;
+using Fiap.Domain.UserAggregate.Enums;
 using Swashbuckle.AspNetCore.Filters;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Api.SwaggerExamples.Users
 {
-    public class CreateUserRequestExample : IExamplesProvider<CreateUserRequest>
+    [ExcludeFromCodeCoverage]
+    public class CreateUserAdminRequestExample : IExamplesProvider<CreateUserAdminRequest>
     {
-        public CreateUserRequest GetExamples()
+        public CreateUserAdminRequest GetExamples()
         {
-            return new CreateUserRequest
+            return new CreateUserAdminRequest
             {
                 Name = "John Doe",
                 Email = "john.doe@hotmail.com",
-                Password = "Password123!"
+                Password = "Password123!",
+                TypeUser = TypeUser.Admin,
+                Active = true
             };
         }
     }

@@ -1,9 +1,10 @@
-﻿using Fiap.Domain.Game;
-using Fiap.Domain.Promotion;
+﻿using Fiap.Domain.GameAggregate;
+using Fiap.Domain.PromotionAggregate;
 using Fiap.Domain.UserAggregate;
 using Fiap.Domain.UserAggregate.Entities;
 using Fiap.Infra.Data.MapEntities;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Infra.Data
 {

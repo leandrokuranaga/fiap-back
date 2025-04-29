@@ -1,5 +1,8 @@
-﻿namespace Fiap.Domain.SeedWork
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Fiap.Domain.SeedWork
 {
+    [ExcludeFromCodeCoverage]
     public class NotificationModel
     {
         public Guid NotificationId { get; private set; } = Guid.NewGuid();

@@ -1,4 +1,4 @@
-﻿using Fiap.Domain.Promotion;
+﻿using Fiap.Domain.PromotionAggregate;
 
 namespace Fiap.Infra.Data.MapEntities.Seeds
 {

@@ -55,7 +55,7 @@ jobs:
           echo "major=$MAJOR" >> $GITHUB_OUTPUT
           echo "minor=$MINOR" >> $GITHUB_OUTPUT
 
-      - name: Validate sequencial release
+      - name: Validate sequential release
         if: steps.validate.outputs.type == 'release'
         run: |
           LAST_MAJOR=$(echo "${{ steps.last_release.outputs.last_release }}" | sed 's/v//' | cut -d. -f1)

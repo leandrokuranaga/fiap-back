@@ -65,7 +65,7 @@ namespace Fiap.Application.User.Services
             {
                 Validate(request, new CreateUserRequestValidator());
 
-                request.Email = request.Email.Trim().ToLowerInvariant();
+                var email = request.Email.Trim().ToLowerInvariant();
 
                 var exists = await userRepository.ExistAsync(u => u.Email == request.Email.ToLower());
                 if (exists)
@@ -103,8 +103,6 @@ namespace Fiap.Application.User.Services
 
                 var email = request.Email.Trim().ToLowerInvariant();
 
-                await userRepository.BeginTransactionAsync();
-
                 var exists = await userRepository.ExistAsync(u => u.Email.ToLower() == email);
                 if (exists)
                 {
@@ -112,7 +110,8 @@ namespace Fiap.Application.User.Services
                     return new UserResponse();
                 }
 
-                var user = (Domain.UserAggregate.User)request;               
+                var user = (Domain.UserAggregate.User)request;
+                await userRepository.BeginTransactionAsync();
 
                 await userRepository.InsertOrUpdateAsync(user);
                 await userRepository.SaveChangesAsync();
@@ -150,6 +149,8 @@ namespace Fiap.Application.User.Services
                 }
 
                 UpdateUserProperties(user, request);
+                await userRepository.BeginTransactionAsync();
+
 
                 await userRepository.UpdateAsync(user);
                 await userRepository.SaveChangesAsync();
@@ -187,6 +188,8 @@ namespace Fiap.Application.User.Services
                     _notification.AddNotification("Delete User", "User Not found", NotificationModel.ENotificationType.NotFound);
                     return BaseResponse<object>.Fail(_notification.NotificationModel);
                 }
+
+                await userRepository.BeginTransactionAsync();
 
                 await userRepository.DeleteAsync(user);
                 await userRepository.SaveChangesAsync();

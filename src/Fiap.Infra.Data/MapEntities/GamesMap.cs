@@ -1,4 +1,4 @@
-﻿using Fiap.Domain.Game;
+﻿using Fiap.Domain.GameAggregate;
 using Fiap.Infra.Data.MapEntities.Seeds;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

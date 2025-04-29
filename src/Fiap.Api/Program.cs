@@ -1,7 +1,9 @@
 using Fiap.Api.Extensions;
+using Fiap.Api.Middlewares;
 using Fiap.Infra.CrossCutting.IoC;
 using Fiap.Infra.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<Context>(options =>
     options.UseNpgsql(connectionString));
+
 
 builder.Services.AddLocalHttpClients(builder.Configuration);
 builder.Services.AddLocalServices(builder.Configuration);
@@ -60,3 +63,6 @@ app.MapHealthChecks("/health");
 
 
 app.Run();
+
+[ExcludeFromCodeCoverage]
+public partial class Program { }

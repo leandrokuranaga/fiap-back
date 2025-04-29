@@ -1,10 +1,13 @@
 ﻿using Fiap.Api.SwaggerExamples.Promotions;
+using Fiap.Api.SwaggerExamples.Games;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Reflection;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Api.Extensions
 {
+    [ExcludeFromCodeCoverage]
     public static class SwaggerSetupExtensions
     {
         public static void AddSwaggerDocumentation(this IServiceCollection services)
@@ -56,10 +59,10 @@ namespace Fiap.Api.Extensions
                 c.ExampleFilters();
                 c.OperationFilter<SetApplicationJsonAsDefaultFilter>();
                 c.EnableAnnotations();
-
             });
-
             services.AddSwaggerExamplesFromAssemblyOf<CreatePromotionRequestExample>();
+            services.AddSwaggerExamplesFromAssemblyOf<CreateGameRequestExample>();
+
         }
         public static void UseSwaggerDocumentation(this IApplicationBuilder app)
         {

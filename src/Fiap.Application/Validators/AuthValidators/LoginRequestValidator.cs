@@ -1,8 +1,10 @@
 ﻿using Fiap.Application.Auth.Models.Request;
 using FluentValidation;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Application.Validators.AuthValidators
 {
+    [ExcludeFromCodeCoverage]
     public class LoginRequestValidator : AbstractValidator<LoginRequest>
     {
         public LoginRequestValidator()

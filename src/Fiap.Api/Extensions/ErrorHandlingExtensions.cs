@@ -1,7 +1,9 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 
 namespace Fiap.Api.Extensions
 {
+    [ExcludeFromCodeCoverage]
     public static class ErrorHandlingExtensions
     {
         public static void UseCustomStatusCodePages(this IApplicationBuilder app)

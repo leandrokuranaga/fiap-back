@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using Fiap.Infra.Data.MapEntities.Seeds;
-using Fiap.Domain.Promotion;
+using Fiap.Domain.PromotionAggregate;
 
 namespace Fiap.Infra.Data.MapEntities
 {

@@ -1,8 +1,10 @@
 ﻿using Fiap.Api.Middlewares;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Api.Extensions
 {
+    [ExcludeFromCodeCoverage]
     public static class MvcConfigExtensions
     {
         public static void AddCustomMvc(this IServiceCollection services)
