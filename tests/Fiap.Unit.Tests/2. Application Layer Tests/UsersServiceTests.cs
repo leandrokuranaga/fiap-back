@@ -2,6 +2,7 @@ using Fiap.Application.User.Services;
 using Fiap.Application.Users.Models.Request;
 using Fiap.Domain.SeedWork;
 using Fiap.Domain.UserAggregate;
+using Fiap.Domain.UserAggregate.Enums;
 using Moq;
 using System.Linq.Expressions;
 
@@ -412,6 +413,99 @@ namespace Fiap.Tests._2._Application_Layer_Tests
                 n.AddNotification("Delete User", "Unexpected error", NotificationModel.ENotificationType.InternalServerError),
                 Times.Once);
             #endregion
+        }
+
+        [Fact]
+        public async Task CreateAdminAsync_ShouldReturnUserResponse_WhenValidRequest()
+        {
+            // Arrange
+            var request = new CreateUserAdminRequest
+            {
+                Name = "Admin User",
+                Email = "admin@example.com",
+                Password = "Secure@123",
+                Active = true,
+                TypeUser = TypeUser.Admin
+            };
+
+            _mockUserRepository
+                .Setup(repo => repo.ExistAsync(It.IsAny<Expression<Func<User, bool>>>()))
+                .ReturnsAsync(false);
+
+            _mockUserRepository
+                .Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<User>()))
+                .ReturnsAsync((User user) =>
+                {
+                    user.Id = 1;
+                    return user;
+                });
+
+            // Act
+            var result = await _usersService.CreateAdminAsync(request);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(1, result.UserId);
+            Assert.Equal(request.Email.ToLower(), result.Email.ToLower());
+            Assert.Equal(request.Name, result.Name);
+        }
+
+        [Fact]
+        public async Task CreateAdminAsync_ShouldAddNotification_WhenEmailAlreadyExists()
+        {
+            // Arrange
+            var request = new CreateUserAdminRequest
+            {
+                Name = "Admin User",
+                Email = "admin@example.com",
+                Password = "Secure@123",
+                Active = true,
+                TypeUser = TypeUser.Admin
+            };
+
+            _mockUserRepository
+                .Setup(repo => repo.ExistAsync(It.IsAny<Expression<Func<User, bool>>>()))
+                .ReturnsAsync(true);
+
+            // Act
+            var result = await _usersService.CreateAdminAsync(request);
+
+            // Assert
+            Assert.NotNull(result);
+            _mockNotification.Verify(n =>
+                n.AddNotification("Create User", "Email already registered", NotificationModel.ENotificationType.BusinessRules),
+                Times.Once);
+        }
+
+        [Fact]
+        public async Task CreateAdminAsync_ShouldAddNotification_WhenExceptionIsThrown()
+        {
+            // Arrange
+            var request = new CreateUserAdminRequest
+            {
+                Name = "Admin User",
+                Email = "admin@example.com",
+                Password = "Secure@123",
+                Active = true,
+                TypeUser = TypeUser.Admin
+            };
+
+            _mockUserRepository
+                .Setup(repo => repo.ExistAsync(It.IsAny<Expression<Func<User, bool>>>()))
+                .ThrowsAsync(new Exception("Unexpected error"));
+
+            _mockUserRepository
+                .Setup(repo => repo.RollbackAsync())
+                .Returns(Task.CompletedTask);
+
+            // Act
+            var result = await _usersService.CreateAdminAsync(request);
+
+            // Assert
+            Assert.NotNull(result);
+            _mockNotification.Verify(n =>
+                n.AddNotification("Create User", "Unexpected error", NotificationModel.ENotificationType.InternalServerError),
+                Times.Once);
         }
     }
 }
