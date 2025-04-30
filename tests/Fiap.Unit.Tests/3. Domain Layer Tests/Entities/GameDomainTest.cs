@@ -2,7 +2,6 @@
 using Fiap.Domain.PromotionAggregate;
 using Fiap.Domain.UserAggregate.Entities;
 using Fiap.Domain.SeedWork.Exceptions;
-using Xunit;
 
 namespace Fiap.Tests._3._Domain_Layer_Tests
 {

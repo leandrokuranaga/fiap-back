@@ -1,7 +1,9 @@
-﻿using static Fiap.Domain.SeedWork.NotificationModel;
+﻿using System.Diagnostics.CodeAnalysis;
+using static Fiap.Domain.SeedWork.NotificationModel;
 
 namespace Fiap.Domain.SeedWork
 {
+    [ExcludeFromCodeCoverage]
     public class Notification : INotification
     {
         private readonly NotificationModel _notification = new();

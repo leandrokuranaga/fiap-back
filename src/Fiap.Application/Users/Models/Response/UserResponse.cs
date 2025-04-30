@@ -1,7 +1,9 @@
 ﻿using Fiap.Domain.UserAggregate.Enums;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Application.Users.Models.Response
 {
+    [ExcludeFromCodeCoverage]
     public record UserResponse
     {
         public int UserId { get; set; }

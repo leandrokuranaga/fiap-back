@@ -67,6 +67,42 @@ namespace Fiap.Application.User.Services
 
                 var email = request.Email.Trim().ToLowerInvariant();
 
+                var exists = await userRepository.ExistAsync(u => u.Email == request.Email.ToLower());
+                if (exists)
+                {
+                    _notification.AddNotification("Create User", "Email already registered", NotificationModel.ENotificationType.BusinessRules);
+                    return new UserResponse();
+                }
+
+                var user = (Domain.UserAggregate.User)request;
+
+                await userRepository.InsertOrUpdateAsync(user);
+                await userRepository.SaveChangesAsync();
+
+                response = (UserResponse)user;
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                await userRepository.RollbackAsync();
+
+                if (!_notification.HasNotification)
+                    _notification.AddNotification("Create User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
+                return response;
+            }
+        });        
+
+        public Task<UserResponse> CreateAdminAsync(CreateUserAdminRequest request) => ExecuteAsync(async () =>
+        {
+            var response = new UserResponse();
+
+            try
+            {
+                Validate(request, new CreateUserAdminRequestValidator());
+
+                var email = request.Email.Trim().ToLowerInvariant();
+
                 var exists = await userRepository.ExistAsync(u => u.Email.ToLower() == email);
                 if (exists)
                 {
@@ -79,6 +115,8 @@ namespace Fiap.Application.User.Services
 
                 await userRepository.InsertOrUpdateAsync(user);
                 await userRepository.SaveChangesAsync();
+
+                await userRepository.CommitAsync();
 
                 response = (UserResponse)user;
 
@@ -164,6 +202,6 @@ namespace Fiap.Application.User.Services
                 _notification.AddNotification("Delete User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
                 return BaseResponse<object>.Fail(_notification.NotificationModel);
             }
-        });
+        });        
     }
 }

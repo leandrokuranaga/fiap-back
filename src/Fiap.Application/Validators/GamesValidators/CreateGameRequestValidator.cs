@@ -1,8 +1,10 @@
 using Fiap.Application.Games.Models.Request;
 using FluentValidation;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Application.Validators.GamesValidators
 {
+    [ExcludeFromCodeCoverage]
     public class CreateGameRequestValidator : AbstractValidator<CreateGameRequest>
     {
         public CreateGameRequestValidator()

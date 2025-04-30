@@ -1,5 +1,8 @@
-﻿namespace Fiap.Api.Extensions
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Fiap.Api.Extensions
 {
+    [ExcludeFromCodeCoverage]
     public static class CorsExtensions
     {
         public static void AddGlobalCorsPolicy(this IServiceCollection services)

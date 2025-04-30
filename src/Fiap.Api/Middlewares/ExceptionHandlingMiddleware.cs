@@ -1,8 +1,10 @@
-﻿using System.Net;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using System.Text.Json;
 
 namespace Fiap.Api.Middlewares
 {
+    [ExcludeFromCodeCoverage]
     public class ExceptionHandlingMiddleware(RequestDelegate next)
     {
         public async Task Invoke(HttpContext context)

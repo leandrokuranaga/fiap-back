@@ -1,5 +1,6 @@
 ﻿using Fiap.Domain.PromotionAggregate;
 using Fiap.Domain.SeedWork.Exceptions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Tests._3._Domain_Layer_Tests
 {

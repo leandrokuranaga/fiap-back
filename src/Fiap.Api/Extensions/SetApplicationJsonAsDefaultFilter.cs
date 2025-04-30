@@ -1,8 +1,10 @@
 ﻿using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Api.Extensions
 {
+    [ExcludeFromCodeCoverage]
     public class SetApplicationJsonAsDefaultFilter : IOperationFilter
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)

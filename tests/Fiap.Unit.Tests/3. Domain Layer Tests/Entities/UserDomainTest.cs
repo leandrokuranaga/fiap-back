@@ -1,6 +1,7 @@
 ﻿using Fiap.Domain.UserAggregate;
 using Fiap.Domain.UserAggregate.Enums;
 using Fiap.Domain.UserAggregate.ValueObjects;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Tests._3._Domain_Layer_Tests
 {

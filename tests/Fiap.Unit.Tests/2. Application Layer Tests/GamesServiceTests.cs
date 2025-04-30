@@ -4,6 +4,7 @@ using Fiap.Domain.GameAggregate;
 using Fiap.Domain.SeedWork;
 using System.Linq.Expressions;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Unit.Tests.Application_Layer_Tests
 {

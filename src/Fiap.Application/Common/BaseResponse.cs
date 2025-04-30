@@ -9,10 +9,12 @@ namespace Fiap.Application.Common
         public NotificationModel? Error { get; set; }
 
         public static BaseResponse<T> Ok(T data) =>
-            new BaseResponse<T> { Success = true, Data = data };
+            new()
+            { Success = true, Data = data };
 
         public static BaseResponse<T> Fail(NotificationModel error) =>
-            new BaseResponse<T> { Success = false, Error = error };
+            new()
+            { Success = false, Error = error };
     }
 }
 

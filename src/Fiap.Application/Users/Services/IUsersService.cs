@@ -9,6 +9,7 @@ namespace Fiap.Application.Users.Services
         Task<List<UserResponse>> GetAllAsync();
         Task<UserResponse> GetAsync(int userId);
         Task<UserResponse> CreateAsync(CreateUserRequest request);
+        Task<UserResponse> CreateAdminAsync(CreateUserAdminRequest request);
         Task<UserResponse> UpdateAsync(int id, UpdateUserRequest request);
         Task<BaseResponse<object>> DeleteAsync(int id);     
     }

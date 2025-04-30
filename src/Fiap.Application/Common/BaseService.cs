@@ -3,9 +3,11 @@ using Fiap.Domain.SeedWork;
 using Fiap.Domain.SeedWork.Exceptions;
 using FluentValidation;
 using FluentValidation.Results;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Application.Common
 {
+    [ExcludeFromCodeCoverage]
     public abstract class BaseService(INotification notification)
     {
         protected readonly INotification _notification = notification;

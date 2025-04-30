@@ -3,9 +3,11 @@ using Fiap.Api.SwaggerExamples.Games;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Reflection;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Api.Extensions
 {
+    [ExcludeFromCodeCoverage]
     public static class SwaggerSetupExtensions
     {
         public static void AddSwaggerDocumentation(this IServiceCollection services)

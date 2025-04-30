@@ -1,8 +1,10 @@
 using Fiap.Application.Games.Models.Request;
 using Swashbuckle.AspNetCore.Filters;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Api.SwaggerExamples.Games
 {
+    [ExcludeFromCodeCoverage]
     public class CreateGameRequestExample : IExamplesProvider<CreateGameRequest>
     {
         public CreateGameRequest GetExamples()

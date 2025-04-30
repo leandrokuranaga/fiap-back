@@ -1,5 +1,8 @@
-﻿namespace Fiap.Domain.SeedWork
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Fiap.Domain.SeedWork
 {
+    [ExcludeFromCodeCoverage]
     public class NotificationModel
     {
         public Guid NotificationId { get; private set; } = Guid.NewGuid();
@@ -34,7 +37,9 @@
             InternalServerError = 1,
             BusinessRules = 2,
             NotFound = 3,
-            BadRequestError = 4
+            BadRequestError = 4,
+            Unauthorized = 5
+
         }
     }
 }

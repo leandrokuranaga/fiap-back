@@ -1,8 +1,10 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 
 namespace Fiap.Domain.SeedWork.Exceptions
 {
     [Serializable]
+    [ExcludeFromCodeCoverage]
     public class BusinessRulesException : Exception
     {
         public BusinessRulesException()

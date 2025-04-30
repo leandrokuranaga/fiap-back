@@ -1,5 +1,8 @@
-﻿namespace Fiap.Application.Promotions.Models.Request
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Fiap.Application.Promotions.Models.Request
 {
+    [ExcludeFromCodeCoverage]
     public record UpdatePromotionRequest
     {
         public double? Discount { get; set; }

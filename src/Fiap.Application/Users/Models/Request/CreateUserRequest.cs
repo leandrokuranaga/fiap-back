@@ -1,5 +1,8 @@
-﻿namespace Fiap.Application.Users.Models.Request
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Fiap.Application.Users.Models.Request
 {
+    [ExcludeFromCodeCoverage]
     public record CreateUserRequest
     {
         public string Name { get; set; }

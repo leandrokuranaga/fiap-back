@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Api.Extensions
 {
+    [ExcludeFromCodeCoverage]
+
     public static class ApiVersioningExtensions
     {
         public static IServiceCollection AddApiVersioningConfiguration(this IServiceCollection services)

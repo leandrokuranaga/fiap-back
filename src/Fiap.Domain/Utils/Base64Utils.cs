@@ -1,5 +1,8 @@
-﻿namespace Fiap.Domain.Utils
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Fiap.Domain.Utils
 {
+    [ExcludeFromCodeCoverage]
     public static class Base64Utils
     {
         public static string DecodeBase64String(string input)

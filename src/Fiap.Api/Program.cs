@@ -3,8 +3,7 @@ using Fiap.Api.Middlewares;
 using Fiap.Infra.CrossCutting.IoC;
 using Fiap.Infra.Data;
 using Microsoft.EntityFrameworkCore;
-using Fiap.Infra.Data.Repositories; 
-
+using System.Diagnostics.CodeAnalysis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,7 +33,10 @@ builder.Services.AddGlobalCorsPolicy();
 
 builder.Services.AddApiVersioningConfiguration();
 
+builder.Services.AddCustomAuthentication(builder.Configuration);
+
 builder.Services.AddSwaggerDocumentation();
+
 
 var app = builder.Build();
 
@@ -53,6 +55,7 @@ app.UseHttpsRedirection();
 
 app.UseCors("AllowAllOrigins");
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
@@ -60,3 +63,6 @@ app.MapHealthChecks("/health");
 
 
 app.Run();
+
+[ExcludeFromCodeCoverage]
+public partial class Program { }
