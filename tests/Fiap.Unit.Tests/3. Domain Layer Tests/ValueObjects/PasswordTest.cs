@@ -1,4 +1,5 @@
-﻿using Fiap.Domain.UserAggregate.ValueObjects;
+﻿using Fiap.Domain.SeedWork.Exceptions;
+using Fiap.Domain.UserAggregate.ValueObjects;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Tests._3._Domain_Layer_Tests
@@ -86,6 +87,41 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
             // Act & Assert
             Assert.Equal(p1.Hash, p2.Hash);
             Assert.Equal(p1.PasswordSalt, p2.PasswordSalt);
+        }
+
+        [Fact]
+        public void Constructor_WithNull_GeneratesRandomPassword()
+        {
+            // Act
+            var password = new Password(null);
+
+            // Assert
+            Assert.False(string.IsNullOrWhiteSpace(password.Hash));
+            Assert.False(string.IsNullOrWhiteSpace(password.PasswordSalt));
+        }
+
+        [Fact]
+        public void Constructor_ShouldThrow_WhenPasswordTooShort()
+        {
+            // Arrange
+            var weak = "aA1!";
+
+            // Act & Assert
+            Assert.Throws<BusinessRulesException>(() => new Password(weak));
+        }
+
+        [Fact]
+        public void Challenge_ReturnsFalse_WhenHashFormatIsInvalid()
+        {
+            // Arrange
+            var brokenHash = "invalid.format";
+            var password = new Password(brokenHash, "anySalt");
+
+            // Act
+            var result = password.Challenge("anyPassword", "anySalt");
+
+            // Assert
+            Assert.False(result);
         }
     }
 }

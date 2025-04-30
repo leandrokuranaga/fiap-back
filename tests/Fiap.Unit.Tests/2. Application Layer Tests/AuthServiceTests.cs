@@ -24,38 +24,40 @@ namespace Fiap.Unit.Tests._2._Application_Layer_Tests
             _notificationMock = new Mock<INotification>();
             _configMock = new Mock<IConfiguration>();
 
-            _configMock.Setup(c => c["JwtSettings:SecretKey"]).Returns("MySuperSecretKey1234567890");
+            _configMock.Setup(c => c["JwtSettings:SecretKey"]).Returns("5037baaf-7201-4b9c-b4dc-6c51306b18fa");
 
             _authService = new AuthService(_userRepoMock.Object, _notificationMock.Object, _configMock.Object);
         }
 
-        //[Fact]
-        //public async Task LoginAsync_ShouldReturnToken_WhenCredentialsAreValid()
-        //{
-        //    // Arrange
-        //    var request = new LoginRequest { Username = "user@test.com", Password = "123456" };
+        [Fact]
+        public async Task LoginAsync_ShouldReturnToken_WhenCredentialsAreValid()
+        {
+            // Arrange
+            var plainPassword = "Teste@teste12334";
 
-        //    var user = new User("User Name", "user@test.com", "invalidHash@1salt", TypeUser.Admin, true)
-        //    {
-        //        Id = 1
-        //    };
+            var user = new User("User Name", "user@test.com", plainPassword, TypeUser.Admin, true)
+            {
+                Id = 1,
+                Password = new Password(plainPassword)
+            };
 
-        //    var userRepo = _userRepoMock;
-        //    _userRepoMock
-        //        .Setup(r => r.GetOneNoTracking(It.IsAny<Expression<Func<User, bool>>>()))
-        //        .ReturnsAsync(user);
+            _userRepoMock
+                .Setup(r => r.GetOneNoTracking(It.IsAny<Expression<Func<User, bool>>>()))
+                .ReturnsAsync(user);
 
-        //    typeof(Password)
-        //        .GetMethod("Challenge")!
-        //        .Invoke(user.Password, [request.Password, user.Password.PasswordSalt]);
+            var request = new LoginRequest
+            {
+                Username = "user@test.com",
+                Password = plainPassword
+            };
 
-        //    // Act
-        //    var result = await _authService.LoginAsync(request);
+            // Act
+            var result = await _authService.LoginAsync(request);
 
-        //    // Assert
-        //    Assert.False(string.IsNullOrEmpty(result.Token));
-        //    Assert.True(result.Expiration > DateTime.UtcNow);
-        //}
+            // Assert
+            Assert.False(string.IsNullOrEmpty(result.Token));
+            Assert.True(result.Expiration > DateTime.UtcNow);
+        }
 
         [Fact]
         public async Task LoginAsync_ShouldAddNotification_WhenUserNotFound()
