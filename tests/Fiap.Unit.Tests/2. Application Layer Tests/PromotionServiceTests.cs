@@ -4,7 +4,6 @@ using Fiap.Domain.GameAggregate;
 using Fiap.Domain.PromotionAggregate;
 using Fiap.Domain.SeedWork;
 using Moq;
-using System.Diagnostics.CodeAnalysis;
 using static Fiap.Domain.SeedWork.NotificationModel;
 
 namespace Fiap.Tests._2._Application_Layer_Tests

@@ -1,7 +1,9 @@
 ﻿using Fiap.Domain.PromotionAggregate;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Application.Promotions.Models.Request
 {
+    [ExcludeFromCodeCoverage]
     public record CreatePromotionRequest
     {
         public double Discount { get; set; }

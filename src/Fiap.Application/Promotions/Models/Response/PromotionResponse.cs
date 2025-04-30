@@ -1,7 +1,9 @@
 ﻿using Fiap.Domain.PromotionAggregate;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Application.Promotions.Models.Response
 {
+    [ExcludeFromCodeCoverage]
     public record PromotionResponse
     {
         public int PromotionId { get; set; }

@@ -3,7 +3,6 @@ using Fiap.Application.Users.Models.Request;
 using Fiap.Domain.SeedWork;
 using Fiap.Domain.UserAggregate;
 using Moq;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
 namespace Fiap.Tests._2._Application_Layer_Tests

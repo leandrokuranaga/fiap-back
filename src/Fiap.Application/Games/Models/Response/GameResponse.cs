@@ -1,7 +1,9 @@
-using Fiap.Domain.GameAggregate; 
+using Fiap.Domain.GameAggregate;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Application.Games.Models.Response
 {
+    [ExcludeFromCodeCoverage]
     public record GameResponse
     {
         public int Id { get; set; }

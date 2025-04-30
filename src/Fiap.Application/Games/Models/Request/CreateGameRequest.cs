@@ -1,8 +1,9 @@
 using Fiap.Domain.GameAggregate;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Application.Games.Models.Request
-
 {
+    [ExcludeFromCodeCoverage]
     public record CreateGameRequest
     {
         public string Name { get; set; }
