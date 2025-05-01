@@ -4,6 +4,7 @@ using Fiap.Domain.Common.ValueObjects;
 using Fiap.Domain.GameAggregate;
 using Fiap.Domain.PromotionAggregate;
 using Fiap.Domain.SeedWork;
+using Fiap.Domain.SeedWork.Exceptions;
 using Moq;
 using static Fiap.Domain.SeedWork.NotificationModel;
 
@@ -352,32 +353,6 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             _mockNotification.Verify(n =>
                 n.AddNotification(It.Is<string>(s => s.Contains("Game with ID")), "Not Found", NotificationModel.ENotificationType.NotFound),
                 Times.Exactly(3));
-            #endregion
-        }
-
-        [Fact]
-        public async Task CreatePromotion_ShouldThrowException_WhenGameHasInvalidCurrency()
-        {
-            #region Arrange
-            var request = new CreatePromotionRequest
-            {
-                Discount = 20,
-                ExpirationDate = DateTime.UtcNow.AddDays(10),
-                GameId = new List<int?> { 1 }
-            };
-
-            var game = new Game
-            {
-                Id = 1,
-                Name = "Invalid Currency Game",
-                Genre = "Action",
-                Price = new Money(49.99, "INVALID")
-            };
-
-            _mockGameRepositoryMock
-                .Setup(repo => repo.GetByIdAsync(1, It.IsAny<bool>()))
-                .ReturnsAsync(game);
-
             #endregion
         }
     }
