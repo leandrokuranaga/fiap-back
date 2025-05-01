@@ -18,7 +18,7 @@ namespace Fiap.Application.Users.Models.Response
             {
                 UserId = user.Id,
                 Name = user.Name,
-                Email = user.Email,
+                Email = user.Email.Address,
                 Type = user.TypeUser,
                 Active = user.Active
             };

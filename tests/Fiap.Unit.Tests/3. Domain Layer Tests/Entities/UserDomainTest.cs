@@ -24,7 +24,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
 
             #region Assert
             Assert.Equal(name, user.Name);
-            Assert.Equal(email.Trim().ToLowerInvariant(), user.Email);
+            Assert.Equal(email.Trim().ToLowerInvariant(), user.Email.Address);
             Assert.True(user.Password.Challenge(password, user.Password.PasswordSalt));
             Assert.Equal(typeUser, user.TypeUser);
             Assert.True(user.Active);
@@ -49,7 +49,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
 
             #region Assert
             Assert.Equal(name, user.Name);
-            Assert.Equal(email.Trim().ToLowerInvariant(), user.Email);
+            Assert.Equal(email.Trim().ToLowerInvariant(), user.Email.Address);
             Assert.True(user.Password.Challenge(password, user.Password.PasswordSalt));
             Assert.Equal(typeUser, user.TypeUser);
             Assert.True(user.Active);
@@ -72,7 +72,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
 
             #region Assert
             Assert.Equal(name, user.Name);
-            Assert.Equal(email.Trim().ToLowerInvariant(), user.Email);
+            Assert.Equal(email.Trim().ToLowerInvariant(), user.Email.Address);
             Assert.True(user.Password.Challenge(password, user.Password.PasswordSalt));
             Assert.Equal(TypeUser.User, user.TypeUser);
             Assert.True(user.Active);
@@ -94,7 +94,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
 
             #region Act
             user.Name = newName;
-            user.Email = newEmail;
+            user.Email = new Email(newEmail);
             user.Password = new Password(newPassword);
             user.TypeUser = newTypeUser;
             user.Active = newActive;
@@ -102,7 +102,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
 
             #region Assert
             Assert.Equal(newName, user.Name);
-            Assert.Equal(newEmail, user.Email);
+            Assert.Equal(newEmail, user.Email.Address);
             Assert.True(user.Password.Challenge(newPassword, user.Password.PasswordSalt));
             Assert.Equal(newTypeUser, user.TypeUser);
             Assert.False(user.Active);

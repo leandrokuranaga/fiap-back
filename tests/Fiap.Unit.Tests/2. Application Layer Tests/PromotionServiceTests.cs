@@ -1,6 +1,7 @@
 ﻿using Fiap.Application.Promotions.Models.Request;
 using Fiap.Application.Promotions.Services;
 using Fiap.Domain.GameAggregate;
+using Fiap.Domain.GameAggregate.ValueObjects;
 using Fiap.Domain.PromotionAggregate;
 using Fiap.Domain.SeedWork;
 using Moq;
@@ -179,8 +180,8 @@ namespace Fiap.Tests._2._Application_Layer_Tests
                 Id = promotionId
             };
 
-            var game1 = new Game() { Id = 101, Name = "Game 1", Genre = "Action", Price = 59.90 };
-            var game2 = new Game() { Id = 102, Name = "Game 2", Genre = "Adventure", Price = 49.90 };
+            var game1 = new Game() { Id = 101, Name = "Game 1", Genre = new Genre("Action"), Price = 59.90 };
+            var game2 = new Game() { Id = 102, Name = "Game 2", Genre = new Genre("Adventure"), Price = 49.90 };
 
             _mockPromotionRepositoryMock.Setup(repo => repo.GetByIdAsync(promotionId, It.IsAny<bool>()))
                 .ReturnsAsync(promotion);
@@ -263,8 +264,8 @@ namespace Fiap.Tests._2._Application_Layer_Tests
                 Id = promotionId
             };
 
-            var game1 = new Game() { Id = 101, Name = "Game 1", Genre = "Action", Price = 59.90 };
-            var game2 = new Game() { Id = 102, Name = "Game 2", Genre = "Adventure", Price = 49.90 };
+            var game1 = new Game() { Id = 101, Name = "Game 1", Genre = new Genre("Action"), Price = 59.90 };
+            var game2 = new Game() { Id = 102, Name = "Game 2", Genre = new Genre("Adventure"), Price = 49.90 };
 
             _mockPromotionRepositoryMock
                 .Setup(repo => repo.GetByIdAsync(promotionId, It.IsAny<bool>()))

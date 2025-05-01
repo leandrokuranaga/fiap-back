@@ -2,11 +2,12 @@
 using Fiap.Domain.UserAggregate.Entities; 
 using Fiap.Domain.PromotionAggregate;    
 using Fiap.Domain.SeedWork.Exceptions;
-
+using IAggregateRoot = Fiap.Domain.SeedWork.IAggregateRoot;
+using Fiap.Domain.GameAggregate.ValueObjects;
 
 namespace Fiap.Domain.GameAggregate
 {
-    public class Game : Entity
+    public class Game : Entity, IAggregateRoot
     {
         public Game(int id, string name, string genre, double price, int? promotionId)
             : this(name, genre, price, promotionId)
@@ -17,19 +18,17 @@ namespace Fiap.Domain.GameAggregate
         public Game(string name, string genre, double price, int? promotionId)
         {
             ValidateName(name);
-            ValidateGenre(genre);
-            ValidatePrice(price);
 
             Name = name;
-            Genre = genre;
-            Price = price;
+            Genre = new(genre);
+            Price = new Price(price).Value;
             PromotionId = promotionId;
         }
 
         public Game() { }
 
         public string Name { get; set; }
-        public string Genre { get; set; }
+        public Genre Genre { get; set; }
         public double Price { get; set; }
         public int? PromotionId { get; set; }
 
@@ -41,25 +40,10 @@ namespace Fiap.Domain.GameAggregate
             PromotionId = promotionId;
         }
 
-        private void ValidatePrice(double price)
-        {
-            if (double.IsNaN(price))
-                throw new BusinessRulesException("The price of the game cannot be NaN.");
-
-            if (price < 0)
-                throw new BusinessRulesException("The price of the game must be greater than or equal to 0.");
-        }
-
         private void ValidateName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new BusinessRulesException("The name of the game is required.");
-        }
-
-        private void ValidateGenre(string genre)
-        {
-            if (string.IsNullOrWhiteSpace(genre))
-                throw new BusinessRulesException("The genre of the game is required.");
-        }
+        }     
     }
 }

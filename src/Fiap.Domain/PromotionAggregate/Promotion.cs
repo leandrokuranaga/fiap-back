@@ -1,10 +1,11 @@
 ﻿using Abp.Domain.Entities;
 using Fiap.Domain.GameAggregate;
 using Fiap.Domain.SeedWork.Exceptions;
+using IAggregateRoot = Fiap.Domain.SeedWork.IAggregateRoot;
 
 namespace Fiap.Domain.PromotionAggregate
 {
-    public class Promotion : Entity
+    public class Promotion : Entity, IAggregateRoot
     {
         public Promotion()
         {

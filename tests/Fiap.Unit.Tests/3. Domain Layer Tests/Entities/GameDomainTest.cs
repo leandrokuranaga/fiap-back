@@ -27,7 +27,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
             var game = new Game("Game X", "Action", 49.99, null);
 
             Assert.Equal("Game X", game.Name);
-            Assert.Equal("Action", game.Genre);
+            Assert.Equal("Action", game.Genre.Name);
             Assert.Equal(49.99, game.Price);
             Assert.Null(game.PromotionId);
         }
@@ -39,7 +39,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
 
             Assert.Equal(10, game.Id);
             Assert.Equal("Game With ID", game.Name);
-            Assert.Equal("RPG", game.Genre);
+            Assert.Equal("RPG", game.Genre.Name);
             Assert.Equal(59.99, game.Price);
             Assert.Equal(5, game.PromotionId);
         }
@@ -173,7 +173,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
             var game = new Game(new string('A', 1000), new string('B', 500), 59.99, null);
 
             Assert.Equal(1000, game.Name.Length);
-            Assert.Equal(500, game.Genre.Length);
+            Assert.Equal(500, game.Genre.Name.Length);
         }
 
         [Fact]
