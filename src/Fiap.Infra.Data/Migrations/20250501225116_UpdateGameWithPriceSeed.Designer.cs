@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Fiap.Infra.Data.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20250427184352_initial")]
-    partial class initial
+    [Migration("20250501225116_UpdateGameWithPriceSeed")]
+    partial class UpdateGameWithPriceSeed
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -43,9 +43,6 @@ namespace Fiap.Infra.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("double precision");
-
                     b.Property<int?>("PromotionId")
                         .HasColumnType("integer");
 
@@ -65,64 +62,49 @@ namespace Fiap.Infra.Data.Migrations
                         {
                             Id = 1,
                             Genre = "Action RPG",
-                            Name = "The Legend of Zelda: Breath of the Wild",
-                            Price = 299.0,
-                            PromotionId = 1
+                            Name = "The Legend of Zelda: Breath of the Wild"
                         },
                         new
                         {
                             Id = 2,
                             Genre = "Action RPG",
-                            Name = "The Witcher 3: Wild Hunt",
-                            Price = 39.990000000000002,
-                            PromotionId = 1
+                            Name = "The Witcher 3: Wild Hunt"
                         },
                         new
                         {
                             Id = 3,
                             Genre = "Action-adventure",
-                            Name = "Red Dead Redemption 2",
-                            Price = 49.990000000000002,
-                            PromotionId = 3
+                            Name = "Red Dead Redemption 2"
                         },
                         new
                         {
                             Id = 4,
                             Genre = "Action RPG",
-                            Name = "Dark Souls III",
-                            Price = 29.989999999999998,
-                            PromotionId = 2
+                            Name = "Dark Souls III"
                         },
                         new
                         {
                             Id = 5,
                             Genre = "Action-adventure",
-                            Name = "God of War",
-                            Price = 39.990000000000002,
-                            PromotionId = 2
+                            Name = "God of War"
                         },
                         new
                         {
                             Id = 6,
                             Genre = "Sandbox",
-                            Name = "Minecraft",
-                            Price = 26.949999999999999,
-                            PromotionId = 1
+                            Name = "Minecraft"
                         },
                         new
                         {
                             Id = 7,
                             Genre = "First-person shooter",
-                            Name = "Overwatch",
-                            Price = 39.990000000000002,
-                            PromotionId = 3
+                            Name = "Overwatch"
                         },
                         new
                         {
                             Id = 8,
                             Genre = "Action-adventure",
-                            Name = "The Last of Us Part II",
-                            Price = 49.990000000000002
+                            Name = "The Last of Us Part II"
                         });
                 });
 
@@ -249,11 +231,6 @@ namespace Fiap.Infra.Data.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(true);
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -265,10 +242,6 @@ namespace Fiap.Infra.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Email")
-                        .IsUnique()
-                        .HasDatabaseName("IX_Users_Email");
-
                     b.ToTable("Users", (string)null);
 
                     b.HasData(
@@ -276,7 +249,6 @@ namespace Fiap.Infra.Data.Migrations
                         {
                             Id = 1,
                             Active = true,
-                            Email = "admin@gmail.com",
                             Name = "Admin",
                             TypeUser = "Admin"
                         },
@@ -284,7 +256,6 @@ namespace Fiap.Infra.Data.Migrations
                         {
                             Id = 2,
                             Active = true,
-                            Email = "user@gmail.com",
                             Name = "User",
                             TypeUser = "User"
                         });
@@ -295,6 +266,82 @@ namespace Fiap.Infra.Data.Migrations
                     b.HasOne("Fiap.Domain.PromotionAggregate.Promotion", "Promotion")
                         .WithMany("Games")
                         .HasForeignKey("PromotionId");
+
+                    b.OwnsOne("Fiap.Domain.Common.ValueObjects.Money", "Price", b1 =>
+                        {
+                            b1.Property<int>("GameId")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(3)
+                                .HasColumnType("character varying(3)")
+                                .HasColumnName("PriceCurrency");
+
+                            b1.Property<double>("Value")
+                                .HasColumnType("double precision")
+                                .HasColumnName("Price");
+
+                            b1.HasKey("GameId");
+
+                            b1.ToTable("Games");
+
+                            b1.WithOwner()
+                                .HasForeignKey("GameId");
+
+                            b1.HasData(
+                                new
+                                {
+                                    GameId = 1,
+                                    Currency = "USD",
+                                    Value = 299.0
+                                },
+                                new
+                                {
+                                    GameId = 2,
+                                    Currency = "BRL",
+                                    Value = 39.990000000000002
+                                },
+                                new
+                                {
+                                    GameId = 3,
+                                    Currency = "BRL",
+                                    Value = 49.990000000000002
+                                },
+                                new
+                                {
+                                    GameId = 4,
+                                    Currency = "BRL",
+                                    Value = 29.989999999999998
+                                },
+                                new
+                                {
+                                    GameId = 5,
+                                    Currency = "BRL",
+                                    Value = 39.990000000000002
+                                },
+                                new
+                                {
+                                    GameId = 6,
+                                    Currency = "BRL",
+                                    Value = 26.949999999999999
+                                },
+                                new
+                                {
+                                    GameId = 7,
+                                    Currency = "BRL",
+                                    Value = 39.990000000000002
+                                },
+                                new
+                                {
+                                    GameId = 8,
+                                    Currency = "BRL",
+                                    Value = 49.990000000000002
+                                });
+                        });
+
+                    b.Navigation("Price")
+                        .IsRequired();
 
                     b.Navigation("Promotion");
                 });
@@ -320,6 +367,41 @@ namespace Fiap.Infra.Data.Migrations
 
             modelBuilder.Entity("Fiap.Domain.UserAggregate.User", b =>
                 {
+                    b.OwnsOne("Fiap.Domain.UserAggregate.ValueObjects.Email", "Email", b1 =>
+                        {
+                            b1.Property<int>("UserId")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Address")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)")
+                                .HasColumnName("Email");
+
+                            b1.HasKey("UserId");
+
+                            b1.HasIndex("Address")
+                                .IsUnique()
+                                .HasDatabaseName("IX_Users_Email");
+
+                            b1.ToTable("Users");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+
+                            b1.HasData(
+                                new
+                                {
+                                    UserId = 1,
+                                    Address = "admin@domain.com"
+                                },
+                                new
+                                {
+                                    UserId = 2,
+                                    Address = "user@domain.com"
+                                });
+                        });
+
                     b.OwnsOne("Fiap.Domain.UserAggregate.ValueObjects.Password", "Password", b1 =>
                         {
                             b1.Property<int>("UserId")
@@ -356,6 +438,9 @@ namespace Fiap.Infra.Data.Migrations
                                     PasswordSalt = "V2BkMe/V+PQUC1g6VczN/g=="
                                 });
                         });
+
+                    b.Navigation("Email")
+                        .IsRequired();
 
                     b.Navigation("Password")
                         .IsRequired();

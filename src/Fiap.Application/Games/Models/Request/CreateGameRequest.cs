@@ -17,7 +17,7 @@ namespace Fiap.Application.Games.Models.Request
             return new Game(
                 name: c.Name,
                 genre: c.Genre,
-                price: new Money(c.Price, "BRL"),
+                price: c.Price,
                 promotionId: c.PromotionId
             );
         }

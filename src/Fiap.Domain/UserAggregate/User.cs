@@ -16,7 +16,7 @@ namespace Fiap.Domain.UserAggregate
         public User(string name, string email, string password, TypeUser typeUser, bool active)
         {
             Name = name;
-            Email = new Email(email.Trim().ToLowerInvariant());
+            Email = new Email(email);
             Password = new Password(password);
             TypeUser = typeUser;
             Active = active;

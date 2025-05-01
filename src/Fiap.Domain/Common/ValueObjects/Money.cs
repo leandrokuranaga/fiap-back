@@ -12,16 +12,13 @@ namespace Fiap.Domain.Common.ValueObjects
         {
             "USD", "EUR", "BRL", "JPY", "GBP" 
         };
-        public Money(double value, string currency)
+        public Money(double value, string currency = "BRL")
         {
             if (double.IsNaN(value))
                 throw new BusinessRulesException("The price cannot be NaN.");
 
             if (value < 0)
                 throw new BusinessRulesException("The price must be greater than or equal to 0.");
-
-            if (string.IsNullOrWhiteSpace(currency))
-                throw new BusinessRulesException("Currency is required.");
 
         if (!IsValidCurrency(currency))
                 throw new BusinessRulesException($"Invalid currency: {currency}. Supported currencies are: {string.Join(", ", ValidCurrencies)}");

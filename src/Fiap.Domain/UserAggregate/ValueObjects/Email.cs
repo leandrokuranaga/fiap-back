@@ -13,6 +13,8 @@ namespace Fiap.Domain.UserAggregate.ValueObjects
             if (string.IsNullOrWhiteSpace(address))
                 throw new BusinessRulesException("Email address cannot be empty.");
 
+            address = address.Trim().ToLowerInvariant();
+
             if (address.Length > 100)
                 throw new BusinessRulesException("Email must be less than or equal to 100 characters.");
 

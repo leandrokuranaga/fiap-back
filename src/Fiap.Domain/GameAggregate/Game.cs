@@ -9,20 +9,20 @@ namespace Fiap.Domain.GameAggregate
 {
     public class Game : Entity, IAggregateRoot
     {
-        public Game(int id, string name, string genre, Money price, int? promotionId)
+        public Game(int id, string name, string genre, double price, int? promotionId, string currency = "BRL")
             : this(name, genre, price, promotionId)
         {
             Id = id;
         }
 
-        public Game(string name, string genre, Money price, int? promotionId, string currency = "BRL")
+        public Game(string name, string genre, double price, int? promotionId, string currency = "BRL")
         {
             ValidateName(name);
             ValidateGenre(genre);
 
             Name = name;
             Genre = genre;
-            Price = price;
+            Price = new Money(price, currency);
             PromotionId = promotionId;
         }
 

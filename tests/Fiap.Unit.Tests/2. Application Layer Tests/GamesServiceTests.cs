@@ -91,8 +91,8 @@ namespace Fiap.Unit.Tests.Application_Layer_Tests
             #region Arrange
             var games = new List<Game>
             {
-                new Game("Game 1", "Action", new Money(59.90,"BRL"), null) { Id = 1 },
-                new Game("Game 2", "Adventure", new Money(49.90,"BRL"), null) { Id = 2 }
+                new Game("Game 1", "Action", 59.90, null) { Id = 1 },
+                new Game("Game 2", "Adventure", 49.90, null) { Id = 2 }
             };
 
             _mockGameRepository

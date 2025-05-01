@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Fiap.Infra.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class UpdateGameWithPriceSeed : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -56,6 +56,7 @@ namespace Fiap.Infra.Data.Migrations
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Genre = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Price = table.Column<double>(type: "double precision", nullable: false),
+                    PriceCurrency = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: false),
                     PromotionId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
@@ -98,8 +99,18 @@ namespace Fiap.Infra.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Games",
-                columns: new[] { "Id", "Genre", "Name", "Price", "PromotionId" },
-                values: new object[] { 8, "Action-adventure", "The Last of Us Part II", 49.990000000000002, null });
+                columns: new[] { "Id", "PriceCurrency", "Price", "Genre", "Name", "PromotionId" },
+                values: new object[,]
+                {
+                    { 1, "USD", 299.0, "Action RPG", "The Legend of Zelda: Breath of the Wild", null },
+                    { 2, "BRL", 39.990000000000002, "Action RPG", "The Witcher 3: Wild Hunt", null },
+                    { 3, "BRL", 49.990000000000002, "Action-adventure", "Red Dead Redemption 2", null },
+                    { 4, "BRL", 29.989999999999998, "Action RPG", "Dark Souls III", null },
+                    { 5, "BRL", 39.990000000000002, "Action-adventure", "God of War", null },
+                    { 6, "BRL", 26.949999999999999, "Sandbox", "Minecraft", null },
+                    { 7, "BRL", 39.990000000000002, "First-person shooter", "Overwatch", null },
+                    { 8, "BRL", 49.990000000000002, "Action-adventure", "The Last of Us Part II", null }
+                });
 
             migrationBuilder.InsertData(
                 table: "Promotions",
@@ -113,25 +124,11 @@ namespace Fiap.Infra.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Active", "Email", "Name", "TypeUser", "PasswordHash", "PasswordSalt" },
+                columns: new[] { "Id", "Active", "Name", "TypeUser", "Email", "PasswordHash", "PasswordSalt" },
                 values: new object[,]
                 {
-                    { 1, true, "admin@gmail.com", "Admin", "Admin", "10000.LW59V9G+BlFV/Bb19uYa4g==.eYihrqMpMG7icxurO2Gz4Zf8XrqNxk+rWALXrqHmbgI=", "LW59V9G+BlFV/Bb19uYa4g==" },
-                    { 2, true, "user@gmail.com", "User", "User", "10000.V2BkMe/V+PQUC1g6VczN/g==.xAqE2zHO+O2FYokAs6Dn7DkHLaeVZ4xiJh7n8xF2rFg=", "V2BkMe/V+PQUC1g6VczN/g==" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Games",
-                columns: new[] { "Id", "Genre", "Name", "Price", "PromotionId" },
-                values: new object[,]
-                {
-                    { 1, "Action RPG", "The Legend of Zelda: Breath of the Wild", 299.0, 1 },
-                    { 2, "Action RPG", "The Witcher 3: Wild Hunt", 39.990000000000002, 1 },
-                    { 3, "Action-adventure", "Red Dead Redemption 2", 49.990000000000002, 3 },
-                    { 4, "Action RPG", "Dark Souls III", 29.989999999999998, 2 },
-                    { 5, "Action-adventure", "God of War", 39.990000000000002, 2 },
-                    { 6, "Sandbox", "Minecraft", 26.949999999999999, 1 },
-                    { 7, "First-person shooter", "Overwatch", 39.990000000000002, 3 }
+                    { 1, true, "Admin", "Admin", "admin@domain.com", "10000.LW59V9G+BlFV/Bb19uYa4g==.eYihrqMpMG7icxurO2Gz4Zf8XrqNxk+rWALXrqHmbgI=", "LW59V9G+BlFV/Bb19uYa4g==" },
+                    { 2, true, "User", "User", "user@domain.com", "10000.V2BkMe/V+PQUC1g6VczN/g==.xAqE2zHO+O2FYokAs6Dn7DkHLaeVZ4xiJh7n8xF2rFg=", "V2BkMe/V+PQUC1g6VczN/g==" }
                 });
 
             migrationBuilder.InsertData(
