@@ -2,6 +2,7 @@
 using Fiap.Domain.PromotionAggregate;
 using Fiap.Domain.UserAggregate.Entities;
 using Fiap.Domain.SeedWork.Exceptions;
+using Fiap.Domain.Common.ValueObjects;
 
 namespace Fiap.Tests._3._Domain_Layer_Tests
 {
@@ -15,7 +16,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
             Assert.NotNull(game);
             Assert.Null(game.Name);
             Assert.Null(game.Genre);
-            Assert.Equal(0, game.Price);
+            Assert.Equal(null, game.Price);
             Assert.Null(game.PromotionId);
             Assert.Null(game.Promotion);
             Assert.Null(game.Libraries);
@@ -24,23 +25,25 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         [Fact]
         public void Constructor_WithBasicParameters_ShouldSetProperties()
         {
-            var game = new Game("Game X", "Action", 49.99, null);
+            var game = new Game("Game X", "Action", new Money(49.99, "BRL"), null);
 
             Assert.Equal("Game X", game.Name);
             Assert.Equal("Action", game.Genre);
-            Assert.Equal(49.99, game.Price);
+            Assert.Equal(new Money(49.99, "BRL").Value, game.Price.Value);
+            Assert.Equal(new Money(49.99, "BRL").Currency, game.Price.Currency);
             Assert.Null(game.PromotionId);
         }
 
         [Fact]
         public void Constructor_WithId_ShouldSetAllProperties()
         {
-            var game = new Game(10, "Game With ID", "RPG", 59.99, 5);
+            var game = new Game(10, "Game With ID", "RPG", new Money(59.99, "BRL"), 5);
 
             Assert.Equal(10, game.Id);
             Assert.Equal("Game With ID", game.Name);
             Assert.Equal("RPG", game.Genre);
-            Assert.Equal(59.99, game.Price);
+            Assert.Equal(new Money(59.99, "BRL").Value, game.Price.Value);
+            Assert.Equal(new Money(59.99, "BRL").Currency, game.Price.Currency);
             Assert.Equal(5, game.PromotionId);
         }
 
@@ -50,7 +53,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         public void Constructor_ShouldThrowException_WhenPriceIsNegative(double price)
         {
             var ex = Assert.Throws<BusinessRulesException>(() =>
-                new Game("Game", "Action", price, null));
+                new Game("Game", "Action", new Money(price, "BRL"), null));
 
             Assert.Equal("The price must be greater than or equal to 0.", ex.Message);
         }
@@ -58,9 +61,9 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         [Fact]
         public void Constructor_ShouldAllow_WhenPriceIsZero()
         {
-            var game = new Game("Free Game", "Indie", 0, null);
+            var game = new Game("Free Game", "Indie", new Money(0, "BRL"), null);
 
-            Assert.Equal(0, game.Price);
+            Assert.Equal(0, game.Price.Value);
         }
 
         [Theory]
@@ -70,7 +73,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         public void Constructor_ShouldThrowException_WhenNameIsInvalid(string name)
         {
             var ex = Assert.Throws<BusinessRulesException>(() =>
-                new Game(name, "Action", 49.99, null));
+                new Game(name, "Action", new Money(49.99, "BRL"), null));
 
             Assert.Equal("The name of the game is required.", ex.Message);
         }
@@ -82,7 +85,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         public void Constructor_ShouldThrowException_WhenGenreIsInvalid(string genre)
         {
             var ex = Assert.Throws<BusinessRulesException>(() =>
-                new Game("Game", genre, 49.99, null));
+                new Game("Game", genre, new Money(49.99, "BRL"), null));
 
             Assert.Equal("The genre of the game is required.", ex.Message);
         }
@@ -90,7 +93,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         [Fact]
         public void AssignPromotion_ShouldSetPromotionId()
         {
-            var game = new Game("Game", "Puzzle", 19.99, null);
+            var game = new Game("Game", "Puzzle", new Money(19.99, "BRL"), null);
             game.AssignPromotion(5);
 
             Assert.Equal(5, game.PromotionId);
@@ -155,22 +158,22 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         [Fact]
         public void Constructor_ShouldHandle_MaxDoublePrice()
         {
-            var game = new Game("Expensive Game", "AAA", double.MaxValue, null);
+            var game = new Game("Expensive Game", "AAA", new Money(double.MaxValue, "BRL"), null);
 
-            Assert.Equal(double.MaxValue, game.Price);
+            Assert.Equal(double.MaxValue, game.Price.Value);
         }
 
         [Fact]
         public void Constructor_ShouldThrow_WhenPriceIsNaN()
         {
             Assert.Throws<BusinessRulesException>(() =>
-                new Game("Invalid Game", "Bug", double.NaN, null));
+                new Game("Invalid Game", "Bug", new Money(double.NaN, "BRL"), null));
         }
 
         [Fact]
         public void Constructor_ShouldHandle_LongStrings()
         {
-            var game = new Game(new string('A', 1000), new string('B', 500), 59.99, null);
+            var game = new Game(new string('A', 1000), new string('B', 500), new Money(59.99, "BRL"), null);
 
             Assert.Equal(1000, game.Name.Length);
             Assert.Equal(500, game.Genre.Length);
@@ -180,22 +183,22 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         public void ValidatePrice_ShouldThrow_ForInvalidValues()
         {
             Assert.Throws<BusinessRulesException>(() =>
-                new Game("Game", "Action", double.NaN, null));
+                new Game("Game", "Action", new Money(double.NaN, "BRL"), null));
 
             Assert.Throws<BusinessRulesException>(() =>
-                new Game("Game", "Action", -1, null));
+                new Game("Game", "Action", new Money(-1, "BRL"), null));
         }
 
         [Fact]
         public void ValidatePrice_ShouldPass_ForValidValues()
         {
-            var game1 = new Game("Game1", "Action", 0, null);
-            var game2 = new Game("Game2", "Action", 10.5, null);
-            var game3 = new Game("Game3", "Action", double.MaxValue, null);
+            var game1 = new Game("Game1", "Action", new Money(0, "BRL"), null);
+            var game2 = new Game("Game2", "Action", new Money(10.5, "BRL"), null);
+            var game3 = new Game("Game3", "Action", new Money(double.MaxValue, "BRL"), null);
 
-            Assert.Equal(0, game1.Price);
-            Assert.Equal(10.5, game2.Price);
-            Assert.Equal(double.MaxValue, game3.Price);
+            Assert.Equal(0, game1.Price.Value);
+            Assert.Equal(10.5, game2.Price.Value);
+            Assert.Equal(double.MaxValue, game3.Price.Value);
         }
 
         [Fact]
@@ -247,6 +250,74 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
             game.Promotion = promo2;
 
             Assert.Equal(20, game.Promotion.Discount);
+        }
+
+        [Fact]
+        public void CreateGame_ShouldSetPriceWithCurrency()
+        {
+            // Arrange
+            var name = "Test Game";
+            var genre = "Action";
+            var price = new Money(99.99, "USD");
+            var promotionId = (int?)null;
+
+            // Act
+            var game = new Game(name, genre, price, promotionId);
+
+            // Assert
+            Assert.Equal(name, game.Name);
+            Assert.Equal(genre, game.Genre);
+            Assert.Equal(price.Value, game.Price.Value);
+            Assert.Equal(price.Currency, game.Price.Currency);
+        }
+
+        [Fact]
+        public void Constructor_ShouldThrowException_WhenCurrencyIsInvalid()
+        {
+            var ex = Assert.Throws<BusinessRulesException>(() =>
+                new Game("Game", "Action", new Money(49.99, "INVALID"), null));
+
+            Assert.Equal("Invalid currency: INVALID. Supported currencies are: USD, EUR, BRL, JPY, GBP", ex.Message);
+        }
+
+        [Fact]
+        public void Constructor_ShouldAllow_WhenCurrencyIsValid()
+        {
+            var game = new Game("Game", "Action", new Money(49.99, "USD"), null);
+
+            Assert.Equal(49.99, game.Price.Value);
+            Assert.Equal("USD", game.Price.Currency);
+        }
+
+        [Fact]
+        public void Constructor_ShouldThrowException_WhenCurrencyIsNullOrEmpty()
+        {
+            var ex1 = Assert.Throws<BusinessRulesException>(() =>
+                new Game("Game", "Action", new Money(49.99, null), null));
+            Assert.Equal("Currency is required.", ex1.Message);
+
+            var ex2 = Assert.Throws<BusinessRulesException>(() =>
+                new Game("Game", "Action", new Money(49.99, ""), null));
+            Assert.Equal("Currency is required.", ex2.Message);
+        }
+
+        [Fact]
+        public void CreateGame_ShouldSetPriceWithValidCurrency()
+        {
+            // Arrange
+            var name = "Test Game";
+            var genre = "Action";
+            var price = new Money(99.99, "EUR");
+            var promotionId = (int?)null;
+
+            // Act
+            var game = new Game(name, genre, price, promotionId);
+
+            // Assert
+            Assert.Equal(name, game.Name);
+            Assert.Equal(genre, game.Genre);
+            Assert.Equal(price.Value, game.Price.Value);
+            Assert.Equal(price.Currency, game.Price.Currency);
         }
     }
 }

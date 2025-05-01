@@ -23,11 +23,16 @@ namespace Fiap.Domain.Common.ValueObjects
             if (string.IsNullOrWhiteSpace(currency))
                 throw new BusinessRulesException("Currency is required.");
 
-            if (!ValidCurrencies.Contains(currency.ToUpperInvariant()))
+        if (!IsValidCurrency(currency))
                 throw new BusinessRulesException($"Invalid currency: {currency}. Supported currencies are: {string.Join(", ", ValidCurrencies)}");
 
             Value = value;
             Currency = currency.ToUpperInvariant();
+        }
+
+        public static bool IsValidCurrency(string currency)
+        {
+            return ValidCurrencies.Contains(currency.ToUpperInvariant());
         }
 
         protected override IEnumerable<object> GetAtomicValues()

@@ -5,6 +5,8 @@ using Fiap.Domain.SeedWork;
 using System.Linq.Expressions;
 using Moq;
 using System.Diagnostics.CodeAnalysis;
+using Fiap.Domain.Common.ValueObjects;
+using Fiap.Domain.SeedWork.Exceptions;
 
 namespace Fiap.Unit.Tests.Application_Layer_Tests
 {
@@ -89,8 +91,8 @@ namespace Fiap.Unit.Tests.Application_Layer_Tests
             #region Arrange
             var games = new List<Game>
             {
-                new Game("Game 1", "Action", 59.90, null) { Id = 1 },
-                new Game("Game 2", "Adventure", 49.90, null) { Id = 2 }
+                new Game("Game 1", "Action", new Money(59.90,"BRL"), null) { Id = 1 },
+                new Game("Game 2", "Adventure", new Money(49.90,"BRL"), null) { Id = 2 }
             };
 
             _mockGameRepository
@@ -144,7 +146,7 @@ namespace Fiap.Unit.Tests.Application_Layer_Tests
 
             _mockGameRepository
                 .Setup(repo => repo.ExistAsync(It.IsAny<Expression<Func<Game, bool>>>()))
-                .ReturnsAsync(true); 
+                .ReturnsAsync(true);
             #endregion
 
             #region Act
@@ -153,7 +155,7 @@ namespace Fiap.Unit.Tests.Application_Layer_Tests
 
             #region Assert
             Assert.NotNull(result);
-            Assert.Equal(0, result.Id); 
+            Assert.Equal(0, result.Id);
             _mockNotification.Verify(
                 n => n.AddNotification(
                     "Create Game",
@@ -164,5 +166,22 @@ namespace Fiap.Unit.Tests.Application_Layer_Tests
             #endregion
         }
 
+        [Fact]
+        public async Task CreateGame_ShouldThrowException_WhenCurrencyIsInvalid()
+        {
+            #region Arrange
+            var request = new CreateGameRequest
+            {
+                Name = "Invalid Currency Game",
+                Genre = "Action",
+                Price = 49.99
+            };
+
+            _mockGameRepository
+                .Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<Game>()))
+                .ThrowsAsync(new BusinessRulesException("Invalid currency: INVALID. Supported currencies are: USD, EUR, BRL, JPY, GBP"));
+
+            #endregion
+        }
     }
 }

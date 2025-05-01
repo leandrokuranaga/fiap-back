@@ -1,3 +1,4 @@
+using Fiap.Domain.Common.ValueObjects;
 using Fiap.Domain.GameAggregate;
 using System.Diagnostics.CodeAnalysis;
 
@@ -16,7 +17,7 @@ namespace Fiap.Application.Games.Models.Request
             return new Game(
                 name: c.Name,
                 genre: c.Genre,
-                price: c.Price,
+                price: new Money(c.Price, "BRL"),
                 promotionId: c.PromotionId
             );
         }
