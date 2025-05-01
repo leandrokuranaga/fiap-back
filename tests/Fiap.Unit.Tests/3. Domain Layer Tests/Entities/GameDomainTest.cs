@@ -27,7 +27,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
             var game = new Game("Game X", "Action", 49.99, null);
 
             Assert.Equal("Game X", game.Name);
-            Assert.Equal("Action", game.Genre.Name);
+            Assert.Equal("Action", game.Genre);
             Assert.Equal(49.99, game.Price);
             Assert.Null(game.PromotionId);
         }
@@ -39,7 +39,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
 
             Assert.Equal(10, game.Id);
             Assert.Equal("Game With ID", game.Name);
-            Assert.Equal("RPG", game.Genre.Name);
+            Assert.Equal("RPG", game.Genre);
             Assert.Equal(59.99, game.Price);
             Assert.Equal(5, game.PromotionId);
         }
@@ -52,7 +52,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
             var ex = Assert.Throws<BusinessRulesException>(() =>
                 new Game("Game", "Action", price, null));
 
-            Assert.Equal("The price of the game must be greater than or equal to 0.", ex.Message);
+            Assert.Equal("The price must be greater than or equal to 0.", ex.Message);
         }
 
         [Fact]
@@ -99,7 +99,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         [Fact]
         public void Promotion_Property_ShouldWorkCorrectly()
         {
-            var promotion = new Promotion(20, DateTime.Now, DateTime.Now.AddDays(7));
+            var promotion = new Promotion(20, DateTime.UtcNow, DateTime.UtcNow.AddDays(7));
             var game = new Game { Promotion = promotion };
 
             Assert.NotNull(game.Promotion);
@@ -173,7 +173,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
             var game = new Game(new string('A', 1000), new string('B', 500), 59.99, null);
 
             Assert.Equal(1000, game.Name.Length);
-            Assert.Equal(500, game.Genre.Name.Length);
+            Assert.Equal(500, game.Genre.Length);
         }
 
         [Fact]
@@ -215,8 +215,8 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         public void Promotion_ShouldUpdateCorrectly_WhenReassigned()
         {
             var game = new Game();
-            var promotion1 = new Promotion(10, DateTime.Now, DateTime.Now.AddDays(1));
-            var promotion2 = new Promotion(20, DateTime.Now, DateTime.Now.AddDays(2));
+            var promotion1 = new Promotion(10, DateTime.UtcNow, DateTime.UtcNow.AddDays(1));
+            var promotion2 = new Promotion(20, DateTime.UtcNow, DateTime.UtcNow.AddDays(2));
 
             game.Promotion = promotion1;
             game.Promotion = promotion2;
@@ -240,8 +240,8 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         public void Promotion_Setter_ShouldHandleReassignment()
         {
             var game = new Game();
-            var promo1 = new Promotion(10, DateTime.Now, DateTime.Now.AddDays(1));
-            var promo2 = new Promotion(20, DateTime.Now, DateTime.Now.AddDays(2));
+            var promo1 = new Promotion(10, DateTime.UtcNow, DateTime.UtcNow.AddDays(1));
+            var promo2 = new Promotion(20, DateTime.UtcNow, DateTime.UtcNow.AddDays(2));
 
             game.Promotion = promo1;
             game.Promotion = promo2;

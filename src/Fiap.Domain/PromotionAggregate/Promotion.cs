@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Entities;
+using Fiap.Domain.Common.ValueObjects;
 using Fiap.Domain.GameAggregate;
 using Fiap.Domain.SeedWork.Exceptions;
 using IAggregateRoot = Fiap.Domain.SeedWork.IAggregateRoot;
@@ -14,8 +15,8 @@ namespace Fiap.Domain.PromotionAggregate
         public Promotion(double discount, DateTime startDate, DateTime endDate)
         {
             Discount = discount;
-            StartDate = startDate;
-            EndDate = endDate;
+            StartDate = new UtcDate(startDate).Value;
+            EndDate = new UtcDate(endDate).Value;
         }
 
         public double Discount { get; set; }

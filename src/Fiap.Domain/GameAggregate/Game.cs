@@ -3,7 +3,7 @@ using Fiap.Domain.UserAggregate.Entities;
 using Fiap.Domain.PromotionAggregate;    
 using Fiap.Domain.SeedWork.Exceptions;
 using IAggregateRoot = Fiap.Domain.SeedWork.IAggregateRoot;
-using Fiap.Domain.GameAggregate.ValueObjects;
+using Fiap.Domain.Common.ValueObjects;
 
 namespace Fiap.Domain.GameAggregate
 {
@@ -18,17 +18,18 @@ namespace Fiap.Domain.GameAggregate
         public Game(string name, string genre, double price, int? promotionId)
         {
             ValidateName(name);
+            ValidateGenre(genre);
 
             Name = name;
-            Genre = new(genre);
-            Price = new Price(price).Value;
+            Genre = genre;
+            Price = new Money(price, "BRL").Value;
             PromotionId = promotionId;
         }
 
         public Game() { }
 
         public string Name { get; set; }
-        public Genre Genre { get; set; }
+        public string Genre { get; set; }
         public double Price { get; set; }
         public int? PromotionId { get; set; }
 
@@ -44,6 +45,11 @@ namespace Fiap.Domain.GameAggregate
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new BusinessRulesException("The name of the game is required.");
-        }     
+        }
+        private void ValidateGenre(string genre)
+        {
+            if (string.IsNullOrWhiteSpace(genre))
+                throw new BusinessRulesException("The genre of the game is required.");
+        }
     }
 }
