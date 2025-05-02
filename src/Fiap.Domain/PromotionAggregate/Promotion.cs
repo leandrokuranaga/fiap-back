@@ -15,13 +15,13 @@ namespace Fiap.Domain.PromotionAggregate
         public Promotion(double discount, DateTime startDate, DateTime endDate)
         {
             Discount = discount;
-            StartDate = new UtcDate(startDate).Value;
-            EndDate = new UtcDate(endDate).Value;
+            StartDate = new UtcDate(startDate);
+            EndDate = new UtcDate(endDate);
         }
 
         public double Discount { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public UtcDate StartDate { get; set; }
+        public UtcDate EndDate { get; set; }
 
         public virtual ICollection<Game> Games { get; set; } = [];
         public void UpdateDiscount(double? discount, DateTime? endDate)
@@ -30,12 +30,12 @@ namespace Fiap.Domain.PromotionAggregate
                 Discount = discount.Value;
 
             if (endDate.HasValue)
-                EndDate = endDate.Value;
+                EndDate = new UtcDate(endDate.Value);
         }
 
         public void ValidatePeriod()
         {
-            if (EndDate <= StartDate)
+            if (EndDate <= StartDate.Value)
                 throw new BusinessRulesException("Promotion end date cannot be earlier than the start date.");
         }
 
