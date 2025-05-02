@@ -13,14 +13,12 @@ namespace Fiap.Infra.Data.MapEntities.Seeds
                 new() {
                     Id = 1,
                     Name = "Admin",
-                 //   Email = new Email("admin@gmail.com"),
                     TypeUser = TypeUser.Admin,
                     Active = true
                 },
                 new() {
                     Id = 2,
                     Name = "User",
-                 //   Email = new Email("user@gmail.com"),
                     TypeUser = TypeUser.User,
                     Active = true
                 }
