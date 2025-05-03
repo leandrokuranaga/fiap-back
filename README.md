@@ -17,18 +17,6 @@ O **FCG** é uma aplicação backend em **.NET 8**, com o objetivo de simular um
 
 ---
 
-## 👥 Grupo
-
-| Nome                     | E-mail                                |
-|--------------------------|----------------------------------------|
-| Vinicius Brito Chantres  | viniciuschantres@gmail.com            |
-| Leandro da Silva Kuranaga | le.s.kuranaga@hotmail.com           |
-| Bruno dos Santos Moura   | brunobsm88@gmail.com                 |
-| Brayan Fernandes Julio   | brayan.fernandesjulio@gmail.com      |
-| Rafael Nunes dos Santos  | devrafaelnunes@gmail.com             |
-
----
-
 ## 📈 Status do Projeto
 
 - 🚧 Em desenvolvimento
@@ -54,13 +42,13 @@ O **FCG** é uma aplicação backend em **.NET 8**, com o objetivo de simular um
 ### 🧱 Camadas da Arquitetura
 
 ```
-─ `Fiap.Api` – Exposição da API (Controllers, Swagger)
-─ `Fiap.Application` – Casos de uso, DTOs, validadores
-─ `Fiap.Domain` – Entidades, agregados, interfaces de repositório
-─ `Fiap.Infra.Data` – EF Core (DbContext, Seeds, Migrations)
-─ `Fiap.Infra.CrossCutting.IoC` – Injeção de dependência
-─ `Fiap.Infra.CrossCutting.Http` – Integrações externas (HttpClient)
-─ `Fiap.Tests` – Testes organizados por camada
+─ `Fiap.Api`						//Exposição da API (Controllers, Swagger)
+─ `Fiap.Application`				// Casos de uso, DTOs, validadores
+─ `Fiap.Domain`						// Entidades, agregados, interfaces de repositório
+─ `Fiap.Infra.Data`					// EF Core (DbContext, Seeds, Migrations)
+─ `Fiap.Infra.CrossCutting.IoC`		// Injeção de dependência
+─ `Fiap.Infra.CrossCutting.Http`	// Integrações externas (HttpClient)
+─ `Fiap.Tests`						// Testes organizados por camada
 ```
 
 ---
@@ -84,13 +72,13 @@ O **FCG** é uma aplicação backend em **.NET 8**, com o objetivo de simular um
 ## 🗃️ Estrutura de Pastas
 
 ```plaintext
-├── Fiap.Api
-├── Fiap.Application
-├── Fiap.Domain
-├── Fiap.Infra.Data
-├── Fiap.Infra.CrossCutting.IoC
-├── Fiap.Infra.CrossCutting.Http
-├── Fiap.Tests
+├── Fiap.Api                     // Camada de exposição (Controllers, Swagger)
+├── Fiap.Application             // Casos de uso, DTOs, validadores
+├── Fiap.Domain                  // Entidades, agregados, repositórios
+├── Fiap.Infra.Data              // Mapeamentos EF, contexto, seeds, migrations
+├── Fiap.Infra.CrossCutting.IoC  // Injeção de dependência, integrações, helpers
+├── Fiap.Infra.CrossCutting.Http // BaseHttpClient, integrações externas (HttpClient)
+├── Fiap.Tests                   // Testes organizados por camada
 ```
 
 ---
@@ -114,6 +102,17 @@ O **FCG** é uma aplicação backend em **.NET 8**, com o objetivo de simular um
 
 Além das tabelas principais utilizadas na lógica de negócio, o sistema também possui a tabela `__EFMigrationsHistory`, gerenciada automaticamente pelo Entity Framework Core.
 
+### 📄 Tabela de Migrations
+
+| Tabela                 | Descrição                                               |
+|------------------------|-----------------------------------------------------------|
+| `__EFMigrationsHistory` | Controla o histórico de migrations aplicadas no banco de dados |
+
+#### Exemplo:
+| MigrationId              | ProductVersion |
+|--------------------------|----------------|
+| 20250406185714_initial   | 9.0.3          |
+
 ### 📌 Semente Inicial (EF Core `HasData()`)
 
 O projeto utiliza **`HasData()` com EF Core** para inserir dados iniciais automaticamente ao aplicar as migrations. Isso facilita testes e demonstrações, evitando a necessidade de popular o banco manualmente.
@@ -124,8 +123,6 @@ Inclui:
 - Jogos (8 títulos)
 - Promoções (3)
 - Bibliotecas de jogos por usuário
-
----
 
 #### Dados incluídos:
 - **Usuários:**
@@ -147,27 +144,6 @@ Inclui:
 ## 🗺️ Diagrama Relacional
 
 ![Diagrama Relacional](https://github.com/leandrokuranaga/fiap-back/blob/3e65794e05bfc659739fcb9538e0f1f90ed79517/Diagrama%20Relacional%20FCG.png)
-
----
-
-### 📄 Tabela de Migrations
-
-| Tabela                 | Descrição                                               |
-|------------------------|-----------------------------------------------------------|
-| `__EFMigrationsHistory` | Controla o histórico de migrations aplicadas no banco de dados |
-
-#### Exemplo:
-| MigrationId              | ProductVersion |
-|--------------------------|----------------|
-| 20250406185714_initial   | 9.0.3          |
-
-O projeto possui as seguintes tabelas principais:
-
-- `Users`
-- `Games`
-- `Promotion`
-- `Library`
-- `LibraryGames`
 
 ---
 
@@ -199,7 +175,7 @@ Este projeto depende de **Docker** para executar seus serviços (API, banco de d
 
 ---
 
-## ▶️ Subir todos os serviços
+## 🐳 Subindo os serviços com Docker
 
 ```bash
 docker compose up -d --build
@@ -207,7 +183,7 @@ docker compose up -d --build
 
 Acesse a API: [http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html)
 
-## ▶️ Subir serviços específicos
+## 🎯 Subir serviços específicos:
 
 ```bash
 docker compose up -d db sonarqube
