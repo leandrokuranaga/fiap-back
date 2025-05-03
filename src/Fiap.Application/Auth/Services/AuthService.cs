@@ -23,7 +23,7 @@ namespace Fiap.Application.Auth.Services
 
             var username = request.Username.Trim().ToLowerInvariant();
 
-            var user = await userRepository.GetOneNoTracking(a => a.Email.ToLower() == username);
+            var user = await userRepository.GetOneNoTracking(a => a.Email.Address.ToLower() == username);
 
             if (user is null)
             {
@@ -63,7 +63,7 @@ namespace Fiap.Application.Auth.Services
             var claims = new List<Claim>
             {
                 new("id", user.Id.ToString()),
-                new("username", user.Email),
+                new("username", user.Email.Address),
                 new(ClaimTypes.Role, user.TypeUser.ToString())
             };
 

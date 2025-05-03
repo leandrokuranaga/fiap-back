@@ -1,3 +1,4 @@
+using Fiap.Domain.Common.ValueObjects;
 using Fiap.Domain.GameAggregate;
 using System.Diagnostics.CodeAnalysis;
 

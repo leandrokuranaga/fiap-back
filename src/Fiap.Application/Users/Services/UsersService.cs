@@ -67,7 +67,7 @@ namespace Fiap.Application.User.Services
 
                 var email = request.Email.Trim().ToLowerInvariant();
 
-                var exists = await userRepository.ExistAsync(u => u.Email == request.Email.ToLower());
+                var exists = await userRepository.ExistAsync(u => u.Email.Address == request.Email.ToLower());
                 if (exists)
                 {
                     _notification.AddNotification("Create User", "Email already registered", NotificationModel.ENotificationType.BusinessRules);
@@ -107,7 +107,7 @@ namespace Fiap.Application.User.Services
 
                 var email = request.Email.Trim().ToLowerInvariant();
 
-                var exists = await userRepository.ExistAsync(u => u.Email.ToLower() == email);
+                var exists = await userRepository.ExistAsync(u => u.Email.Address.ToLower() == email);
                 if (exists)
                 {
                     _notification.AddNotification("Create User", "Email already registered", NotificationModel.ENotificationType.BusinessRules);
@@ -174,7 +174,7 @@ namespace Fiap.Application.User.Services
         private void UpdateUserProperties(Domain.UserAggregate.User user, UpdateUserRequest request)
         {
             user.Name = request.Name ?? user.Name;
-            user.Email = request.Email ?? user.Email;
+            user.Email = new Email(request.Email ?? user.Email.Address);
             user.TypeUser = request.Type.HasValue ? request.Type.Value : user.TypeUser;
             user.Active = request.Active ?? user.Active;
 

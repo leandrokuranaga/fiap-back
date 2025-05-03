@@ -1,4 +1,6 @@
-﻿using Fiap.Domain.GameAggregate;
+﻿using Fiap.Domain.Common.ValueObjects;
+using Fiap.Domain.GameAggregate;
+using Microsoft.EntityFrameworkCore;
 
 namespace Fiap.Infra.Data.MapEntities.Seeds
 {
@@ -7,16 +9,15 @@ namespace Fiap.Infra.Data.MapEntities.Seeds
         public static List<Game> Game()
         {
             return [
-                new Game(1, "The Legend of Zelda: Breath of the Wild", "Action RPG", 299.00, 1),
-                new Game(2, "The Witcher 3: Wild Hunt", "Action RPG", 39.99, 1),
-                new Game(3, "Red Dead Redemption 2", "Action-adventure", 49.99, 3),
-                new Game(4, "Dark Souls III", "Action RPG", 29.99, 2),
-                new Game(5, "God of War", "Action-adventure", 39.99, 2),
-                new Game(6, "Minecraft", "Sandbox", 26.95, 1),
-                new Game(7, "Overwatch", "First-person shooter", 39.99, 3),
-                new Game(8, "The Last of Us Part II", "Action-adventure", 49.99, null),
+                    new Game { Id = 1, Name = "The Legend of Zelda: Breath of the Wild", Genre = "Action RPG" },
+                    new Game { Id = 2, Name = "The Witcher 3: Wild Hunt", Genre = "Action RPG" },
+                    new Game { Id = 3, Name = "Red Dead Redemption 2", Genre = "Action-adventure"},
+                    new Game { Id = 4, Name = "Dark Souls III", Genre = "Action RPG" },
+                    new Game { Id = 5, Name = "God of War", Genre = "Action-adventure" },
+                    new Game { Id = 6, Name = "Minecraft", Genre = "Sandbox" },
+                    new Game { Id = 7, Name = "Overwatch", Genre = "First-person shooter" },
+                    new Game { Id = 8, Name = "The Last of Us Part II", Genre = "Action-adventure" }
             ];
         }
-
     }
 }

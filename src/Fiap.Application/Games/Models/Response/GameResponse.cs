@@ -19,7 +19,7 @@ namespace Fiap.Application.Games.Models.Response
                 Id = game.Id,
                 Name = game.Name,
                 Genre = game.Genre,
-                Price = game.Price,
+                Price = game.Price.Value,
                 PromotionId = game.PromotionId
             };
         }

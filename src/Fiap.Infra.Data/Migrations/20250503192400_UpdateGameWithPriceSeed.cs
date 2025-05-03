@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Fiap.Infra.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class UpdateGameWithPriceSeed : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,7 +20,8 @@ namespace Fiap.Infra.Data.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Discount = table.Column<double>(type: "double precision", nullable: false),
+                    DiscountValue = table.Column<double>(type: "double precision", nullable: false),
+                    DiscountCurrency = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: false),
                     StartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
@@ -56,6 +57,7 @@ namespace Fiap.Infra.Data.Migrations
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Genre = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Price = table.Column<double>(type: "double precision", nullable: false),
+                    PriceCurrency = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: false),
                     PromotionId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
@@ -77,7 +79,8 @@ namespace Fiap.Infra.Data.Migrations
                     GameId = table.Column<int>(type: "integer", nullable: false),
                     UserId = table.Column<int>(type: "integer", nullable: false),
                     PurchaseDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    PricePaid = table.Column<double>(type: "double precision", nullable: false)
+                    PricePaid = table.Column<double>(type: "double precision", nullable: false),
+                    PriceCurrency = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -98,51 +101,47 @@ namespace Fiap.Infra.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Games",
-                columns: new[] { "Id", "Genre", "Name", "Price", "PromotionId" },
-                values: new object[] { 8, "Action-adventure", "The Last of Us Part II", 49.990000000000002, null });
+                columns: new[] { "Id", "Genre", "Name", "PromotionId", "PriceCurrency", "Price" },
+                values: new object[,]
+                {
+                    { 1, "Action RPG", "The Legend of Zelda: Breath of the Wild", null, "USD", 299.0 },
+                    { 2, "Action RPG", "The Witcher 3: Wild Hunt", null, "BRL", 39.990000000000002 },
+                    { 3, "Action-adventure", "Red Dead Redemption 2", null, "BRL", 49.990000000000002 },
+                    { 4, "Action RPG", "Dark Souls III", null, "BRL", 29.989999999999998 },
+                    { 5, "Action-adventure", "God of War", null, "BRL", 39.990000000000002 },
+                    { 6, "Sandbox", "Minecraft", null, "BRL", 26.949999999999999 },
+                    { 7, "First-person shooter", "Overwatch", null, "BRL", 39.990000000000002 },
+                    { 8, "Action-adventure", "The Last of Us Part II", null, "BRL", 49.990000000000002 }
+                });
 
             migrationBuilder.InsertData(
                 table: "Promotions",
-                columns: new[] { "Id", "Discount", "EndDate", "StartDate" },
+                columns: new[] { "Id", "EndDate", "StartDate", "DiscountCurrency", "DiscountValue" },
                 values: new object[,]
                 {
-                    { 1, 1.0, new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2025, 4, 1, 0, 0, 0, 0, DateTimeKind.Utc) },
-                    { 2, 2.0, new DateTime(2025, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2025, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc) },
-                    { 3, 3.0, new DateTime(2025, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Utc) }
+                    { 1, new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2025, 4, 1, 0, 0, 0, 0, DateTimeKind.Utc), "USD", 10.15 },
+                    { 2, new DateTime(2025, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2025, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc), "USD", 15.98 },
+                    { 3, new DateTime(2025, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Utc), "USD", 20.969999999999999 }
                 });
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Active", "Email", "Name", "TypeUser", "PasswordHash", "PasswordSalt" },
+                columns: new[] { "Id", "Active", "Name", "TypeUser", "Email", "PasswordHash", "PasswordSalt" },
                 values: new object[,]
                 {
-                    { 1, true, "admin@gmail.com", "Admin", "Admin", "10000.LW59V9G+BlFV/Bb19uYa4g==.eYihrqMpMG7icxurO2Gz4Zf8XrqNxk+rWALXrqHmbgI=", "LW59V9G+BlFV/Bb19uYa4g==" },
-                    { 2, true, "user@gmail.com", "User", "User", "10000.V2BkMe/V+PQUC1g6VczN/g==.xAqE2zHO+O2FYokAs6Dn7DkHLaeVZ4xiJh7n8xF2rFg=", "V2BkMe/V+PQUC1g6VczN/g==" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Games",
-                columns: new[] { "Id", "Genre", "Name", "Price", "PromotionId" },
-                values: new object[,]
-                {
-                    { 1, "Action RPG", "The Legend of Zelda: Breath of the Wild", 299.0, 1 },
-                    { 2, "Action RPG", "The Witcher 3: Wild Hunt", 39.990000000000002, 1 },
-                    { 3, "Action-adventure", "Red Dead Redemption 2", 49.990000000000002, 3 },
-                    { 4, "Action RPG", "Dark Souls III", 29.989999999999998, 2 },
-                    { 5, "Action-adventure", "God of War", 39.990000000000002, 2 },
-                    { 6, "Sandbox", "Minecraft", 26.949999999999999, 1 },
-                    { 7, "First-person shooter", "Overwatch", 39.990000000000002, 3 }
+                    { 1, true, "Admin", "Admin", "admin@domain.com", "10000.LW59V9G+BlFV/Bb19uYa4g==.eYihrqMpMG7icxurO2Gz4Zf8XrqNxk+rWALXrqHmbgI=", "LW59V9G+BlFV/Bb19uYa4g==" },
+                    { 2, true, "User", "User", "user@domain.com", "10000.V2BkMe/V+PQUC1g6VczN/g==.xAqE2zHO+O2FYokAs6Dn7DkHLaeVZ4xiJh7n8xF2rFg=", "V2BkMe/V+PQUC1g6VczN/g==" }
                 });
 
             migrationBuilder.InsertData(
                 table: "LibraryGames",
-                columns: new[] { "Id", "GameId", "PricePaid", "PurchaseDate", "UserId" },
+                columns: new[] { "Id", "GameId", "PurchaseDate", "UserId", "PriceCurrency", "PricePaid" },
                 values: new object[,]
                 {
-                    { 1, 1, 200.0, new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc), 1 },
-                    { 2, 2, 50.0, new DateTime(2022, 3, 9, 0, 0, 0, 0, DateTimeKind.Utc), 1 },
-                    { 3, 3, 199.0, new DateTime(2020, 11, 22, 0, 0, 0, 0, DateTimeKind.Utc), 1 },
-                    { 4, 4, 60.0, new DateTime(2019, 5, 3, 0, 0, 0, 0, DateTimeKind.Utc), 1 }
+                    { 1, 1, new DateTime(2025, 4, 1, 0, 0, 0, 0, DateTimeKind.Utc), 1, "USD", 10.0 },
+                    { 2, 2, new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), 2, "USD", 15.0 },
+                    { 3, 3, new DateTime(2025, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc), 1, "USD", 20.0 },
+                    { 4, 4, new DateTime(2025, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc), 2, "USD", 28.989999999999998 }
                 });
 
             migrationBuilder.CreateIndex(

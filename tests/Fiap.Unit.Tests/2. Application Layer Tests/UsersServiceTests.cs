@@ -3,6 +3,7 @@ using Fiap.Application.Users.Models.Request;
 using Fiap.Domain.SeedWork;
 using Fiap.Domain.UserAggregate;
 using Fiap.Domain.UserAggregate.Enums;
+using Fiap.Domain.UserAggregate.ValueObjects;
 using Moq;
 using System.Linq.Expressions;
 
@@ -106,7 +107,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             {
                 Id = userId,
                 Name = "Original Name",
-                Email = "original.email@example.com"
+                Email = new Email("original.email@example.com")
             };
 
             _mockUserRepository
@@ -165,7 +166,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             {
                 Id = userId,
                 Name = "Bruno Moura",
-                Email = "bruno@example.com"
+                Email = new Email("bruno@example.com")
             };
 
             _mockUserRepository
@@ -219,7 +220,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             {
                 Id = userId,
                 Name = "Bruno Moura",
-                Email = "bruno@example.com"
+                Email = new Email("bruno@example.com")
             };
 
             _mockUserRepository
@@ -234,7 +235,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #region Assert
             Assert.NotNull(result);
             Assert.Equal(user.Name, result.Name);
-            Assert.Equal(user.Email, result.Email);
+            Assert.Equal(user.Email.Address, result.Email);
             #endregion
         }
 
@@ -265,8 +266,8 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #region Arrange
             var users = new List<User>
             {
-                new User { Id = 1, Name = "Bruno Moura", Email = "bruno@example.com" },
-                new User { Id = 2, Name = "Jane Doe", Email = "jane.doe@example.com" }
+                new User { Id = 1, Name = "Bruno Moura", Email = new Email("bruno@example.com") },
+                new User { Id = 2, Name = "Jane Doe", Email = new Email("jane.doe@example.com") }
             };
 
             _mockUserRepository
@@ -385,7 +386,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             {
                 Id = userId,
                 Name = "Bruno Moura",
-                Email = "bruno@example.com"
+                Email = new Email("bruno@example.com")
             };
 
             _mockUserRepository

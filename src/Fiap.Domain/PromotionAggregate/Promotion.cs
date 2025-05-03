@@ -1,10 +1,12 @@
 ﻿using Abp.Domain.Entities;
+using Fiap.Domain.Common.ValueObjects;
 using Fiap.Domain.GameAggregate;
 using Fiap.Domain.SeedWork.Exceptions;
+using IAggregateRoot = Fiap.Domain.SeedWork.IAggregateRoot;
 
 namespace Fiap.Domain.PromotionAggregate
 {
-    public class Promotion : Entity
+    public class Promotion : Entity, IAggregateRoot
     {
         public Promotion()
         {
@@ -12,28 +14,28 @@ namespace Fiap.Domain.PromotionAggregate
 
         public Promotion(double discount, DateTime startDate, DateTime endDate)
         {
-            Discount = discount;
-            StartDate = startDate;
-            EndDate = endDate;
+            Discount = new Money(discount);
+            StartDate = new UtcDate(startDate);
+            EndDate = new UtcDate(endDate);
         }
 
-        public double Discount { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public Money Discount { get; set; }
+        public UtcDate StartDate { get; set; }
+        public UtcDate EndDate { get; set; }
 
         public virtual ICollection<Game> Games { get; set; } = [];
         public void UpdateDiscount(double? discount, DateTime? endDate)
         {
             if (discount.HasValue)
-                Discount = discount.Value;
+                Discount = new Money(discount.Value);
 
             if (endDate.HasValue)
-                EndDate = endDate.Value;
+                EndDate = new UtcDate(endDate.Value);
         }
 
         public void ValidatePeriod()
         {
-            if (EndDate <= StartDate)
+            if (EndDate <= StartDate.Value)
                 throw new BusinessRulesException("Promotion end date cannot be earlier than the start date.");
         }
 
@@ -43,7 +45,7 @@ namespace Fiap.Domain.PromotionAggregate
 
         public double GetDiscountedPrice(double originalPrice)
         {
-            return originalPrice * (1 - Discount / 100);
+            return originalPrice * (1 - Discount.Value / 100);
         }
     }
 }
