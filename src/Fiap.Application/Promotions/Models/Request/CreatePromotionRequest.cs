@@ -15,7 +15,7 @@ namespace Fiap.Application.Promotions.Models.Request
         {
             return new Promotion
             {
-                Discount = c.Discount,
+                Discount = new Money(c.Discount),
                 EndDate = new UtcDate(c.ExpirationDate),
                 StartDate = new UtcDate(DateTime.UtcNow),
             };

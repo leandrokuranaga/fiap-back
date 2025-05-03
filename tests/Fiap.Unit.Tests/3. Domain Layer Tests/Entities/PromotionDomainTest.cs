@@ -20,7 +20,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
             #endregion
 
             #region Assert
-            Assert.Equal(discount, promotion.Discount);
+            Assert.Equal(discount, promotion.Discount.Value);
             Assert.Equal(startDate, promotion.StartDate);
             Assert.Equal(endDate, promotion.EndDate);
             #endregion
@@ -103,7 +103,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
             #endregion
 
             #region Assert
-            Assert.Equal(newDiscount, promotion.Discount);
+            Assert.Equal(newDiscount, promotion.Discount.Value);
             Assert.Equal(newEndDate, promotion.EndDate);
             #endregion
         }

@@ -14,12 +14,12 @@ namespace Fiap.Domain.PromotionAggregate
 
         public Promotion(double discount, DateTime startDate, DateTime endDate)
         {
-            Discount = discount;
+            Discount = new Money(discount);
             StartDate = new UtcDate(startDate);
             EndDate = new UtcDate(endDate);
         }
 
-        public double Discount { get; set; }
+        public Money Discount { get; set; }
         public UtcDate StartDate { get; set; }
         public UtcDate EndDate { get; set; }
 
@@ -27,7 +27,7 @@ namespace Fiap.Domain.PromotionAggregate
         public void UpdateDiscount(double? discount, DateTime? endDate)
         {
             if (discount.HasValue)
-                Discount = discount.Value;
+                Discount = new Money(discount.Value);
 
             if (endDate.HasValue)
                 EndDate = new UtcDate(endDate.Value);
@@ -45,7 +45,7 @@ namespace Fiap.Domain.PromotionAggregate
 
         public double GetDiscountedPrice(double originalPrice)
         {
-            return originalPrice * (1 - Discount / 100);
+            return originalPrice * (1 - Discount.Value / 100);
         }
     }
 }

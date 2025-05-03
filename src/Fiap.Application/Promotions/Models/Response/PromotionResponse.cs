@@ -1,4 +1,5 @@
-﻿using Fiap.Domain.PromotionAggregate;
+﻿using Fiap.Domain.Common.ValueObjects;
+using Fiap.Domain.PromotionAggregate;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Application.Promotions.Models.Response
@@ -17,7 +18,7 @@ namespace Fiap.Application.Promotions.Models.Response
             return new PromotionResponse
             {
                 PromotionId = promotion.Id,
-                Discount = promotion.Discount,
+                Discount = promotion.Discount.Value,
                 StartDate = promotion.StartDate,
                 EndDate = promotion.EndDate
             };

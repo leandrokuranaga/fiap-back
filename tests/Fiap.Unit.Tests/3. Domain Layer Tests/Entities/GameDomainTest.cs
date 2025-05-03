@@ -105,7 +105,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
             var game = new Game { Promotion = promotion };
 
             Assert.NotNull(game.Promotion);
-            Assert.Equal(20, game.Promotion.Discount);
+            Assert.Equal(20, game.Promotion.Discount.Value);
         }
 
         [Fact]
@@ -223,7 +223,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
             game.Promotion = promotion1;
             game.Promotion = promotion2;
 
-            Assert.Equal(20, game.Promotion.Discount);
+            Assert.Equal(20, game.Promotion.Discount.Value);
         }
 
         [Fact]
@@ -248,7 +248,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
             game.Promotion = promo1;
             game.Promotion = promo2;
 
-            Assert.Equal(20, game.Promotion.Discount);
+            Assert.Equal(20, game.Promotion.Discount.Value);
         }
 
         [Fact]
