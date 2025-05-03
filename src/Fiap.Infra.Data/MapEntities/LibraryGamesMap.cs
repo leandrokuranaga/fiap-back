@@ -1,4 +1,5 @@
-﻿using Fiap.Domain.UserAggregate.Entities;
+﻿using Fiap.Domain.Common.ValueObjects;
+using Fiap.Domain.UserAggregate.Entities;
 using Fiap.Infra.Data.MapEntities.Seeds;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -19,9 +20,31 @@ namespace Fiap.Infra.Data.MapEntities
             builder.HasIndex(x => x.UserId)
                    .HasDatabaseName("IX_LibraryGames_UserId");
 
-            builder.Property(x => x.PurchaseDate).IsRequired();
+            builder.Property(x => x.PurchaseDate)
+                   .HasConversion(
+                       v => v.Value,
+                       v => new UtcDate(v) 
+                   )
+                   .IsRequired();
 
-            builder.Property(x => x.PricePaid).IsRequired();
+            builder.OwnsOne(x => x.PricePaid, price =>
+            {
+                price.Property(p => p.Value)
+                     .HasColumnName("PricePaid")
+                     .IsRequired();
+
+                price.Property(p => p.Currency)
+                     .HasColumnName("PriceCurrency")
+                     .IsRequired()
+                     .HasMaxLength(3);
+
+                price.HasData(
+                    new { LibraryGameId = 1, Value = 10.00, Currency = "USD" },
+                    new { LibraryGameId = 2, Value = 15.00, Currency = "USD" },
+                    new { LibraryGameId = 3, Value = 20.00, Currency = "USD" },
+                    new { LibraryGameId = 4, Value = 28.99, Currency = "USD" }
+                );
+            });
 
             builder.HasOne(x => x.Game)
                    .WithMany(x => x.Libraries)

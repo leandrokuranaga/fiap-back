@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Fiap.Infra.Data.MapEntities.Seeds;
 using Fiap.Domain.PromotionAggregate;
+using Fiap.Domain.Common.ValueObjects;
 
 namespace Fiap.Infra.Data.MapEntities
 {
@@ -13,9 +14,35 @@ namespace Fiap.Infra.Data.MapEntities
 
             builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.Discount).IsRequired();
-            builder.Property(x => x.StartDate).IsRequired();
-            builder.Property(x => x.EndDate).IsRequired();
+            builder.OwnsOne(p => p.Discount, discount =>
+            {
+                discount.Property(d => d.Value)
+                        .HasColumnName("DiscountValue")
+                        .IsRequired();
+
+                discount.Property(d => d.Currency)
+                        .HasColumnName("DiscountCurrency")
+                        .IsRequired()
+                        .HasMaxLength(3);
+
+                discount.HasData(
+                    new { PromotionId = 1, Value = 10.15, Currency = "USD" },
+                    new { PromotionId = 2, Value = 15.98, Currency = "USD" },
+                    new { PromotionId = 3, Value = 20.97, Currency = "USD" }
+                );
+            });
+
+            builder.Property(p => p.StartDate)
+                   .HasConversion(
+                       v => v.Value,
+                       v => new UtcDate(v))
+                   .IsRequired();
+
+            builder.Property(p => p.EndDate)
+                   .HasConversion(
+                       v => v.Value,
+                       v => new UtcDate(v))
+                   .IsRequired();
 
             builder.HasData(PromotionSeed.Promotions());
         }

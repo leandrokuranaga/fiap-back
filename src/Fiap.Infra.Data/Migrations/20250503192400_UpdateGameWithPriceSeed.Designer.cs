@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Fiap.Infra.Data.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20250501225116_UpdateGameWithPriceSeed")]
+    [Migration("20250503192400_UpdateGameWithPriceSeed")]
     partial class UpdateGameWithPriceSeed
     {
         /// <inheritdoc />
@@ -116,9 +116,6 @@ namespace Fiap.Infra.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<double>("Discount")
-                        .HasColumnType("double precision");
-
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -133,21 +130,18 @@ namespace Fiap.Infra.Data.Migrations
                         new
                         {
                             Id = 1,
-                            Discount = 1.0,
                             EndDate = new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             StartDate = new DateTime(2025, 4, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 2,
-                            Discount = 2.0,
                             EndDate = new DateTime(2025, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             StartDate = new DateTime(2025, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 3,
-                            Discount = 3.0,
                             EndDate = new DateTime(2025, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             StartDate = new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         });
@@ -163,9 +157,6 @@ namespace Fiap.Infra.Data.Migrations
 
                     b.Property<int>("GameId")
                         .HasColumnType("integer");
-
-                    b.Property<double>("PricePaid")
-                        .HasColumnType("double precision");
 
                     b.Property<DateTime>("PurchaseDate")
                         .HasColumnType("timestamp with time zone");
@@ -188,33 +179,29 @@ namespace Fiap.Infra.Data.Migrations
                         {
                             Id = 1,
                             GameId = 1,
-                            PricePaid = 200.0,
-                            PurchaseDate = new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            PurchaseDate = new DateTime(2025, 4, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             UserId = 1
                         },
                         new
                         {
                             Id = 2,
                             GameId = 2,
-                            PricePaid = 50.0,
-                            PurchaseDate = new DateTime(2022, 3, 9, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UserId = 1
+                            PurchaseDate = new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = 2
                         },
                         new
                         {
                             Id = 3,
                             GameId = 3,
-                            PricePaid = 199.0,
-                            PurchaseDate = new DateTime(2020, 11, 22, 0, 0, 0, 0, DateTimeKind.Utc),
+                            PurchaseDate = new DateTime(2025, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             UserId = 1
                         },
                         new
                         {
                             Id = 4,
                             GameId = 4,
-                            PricePaid = 60.0,
-                            PurchaseDate = new DateTime(2019, 5, 3, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UserId = 1
+                            PurchaseDate = new DateTime(2025, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = 2
                         });
                 });
 
@@ -346,6 +333,55 @@ namespace Fiap.Infra.Data.Migrations
                     b.Navigation("Promotion");
                 });
 
+            modelBuilder.Entity("Fiap.Domain.PromotionAggregate.Promotion", b =>
+                {
+                    b.OwnsOne("Fiap.Domain.Common.ValueObjects.Money", "Discount", b1 =>
+                        {
+                            b1.Property<int>("PromotionId")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(3)
+                                .HasColumnType("character varying(3)")
+                                .HasColumnName("DiscountCurrency");
+
+                            b1.Property<double>("Value")
+                                .HasColumnType("double precision")
+                                .HasColumnName("DiscountValue");
+
+                            b1.HasKey("PromotionId");
+
+                            b1.ToTable("Promotions");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PromotionId");
+
+                            b1.HasData(
+                                new
+                                {
+                                    PromotionId = 1,
+                                    Currency = "USD",
+                                    Value = 10.15
+                                },
+                                new
+                                {
+                                    PromotionId = 2,
+                                    Currency = "USD",
+                                    Value = 15.98
+                                },
+                                new
+                                {
+                                    PromotionId = 3,
+                                    Currency = "USD",
+                                    Value = 20.969999999999999
+                                });
+                        });
+
+                    b.Navigation("Discount")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Fiap.Domain.UserAggregate.Entities.LibraryGame", b =>
                 {
                     b.HasOne("Fiap.Domain.GameAggregate.Game", "Game")
@@ -360,7 +396,59 @@ namespace Fiap.Infra.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.OwnsOne("Fiap.Domain.Common.ValueObjects.Money", "PricePaid", b1 =>
+                        {
+                            b1.Property<int>("LibraryGameId")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(3)
+                                .HasColumnType("character varying(3)")
+                                .HasColumnName("PriceCurrency");
+
+                            b1.Property<double>("Value")
+                                .HasColumnType("double precision")
+                                .HasColumnName("PricePaid");
+
+                            b1.HasKey("LibraryGameId");
+
+                            b1.ToTable("LibraryGames");
+
+                            b1.WithOwner()
+                                .HasForeignKey("LibraryGameId");
+
+                            b1.HasData(
+                                new
+                                {
+                                    LibraryGameId = 1,
+                                    Currency = "USD",
+                                    Value = 10.0
+                                },
+                                new
+                                {
+                                    LibraryGameId = 2,
+                                    Currency = "USD",
+                                    Value = 15.0
+                                },
+                                new
+                                {
+                                    LibraryGameId = 3,
+                                    Currency = "USD",
+                                    Value = 20.0
+                                },
+                                new
+                                {
+                                    LibraryGameId = 4,
+                                    Currency = "USD",
+                                    Value = 28.989999999999998
+                                });
+                        });
+
                     b.Navigation("Game");
+
+                    b.Navigation("PricePaid")
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
