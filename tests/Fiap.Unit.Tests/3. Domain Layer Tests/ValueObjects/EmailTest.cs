@@ -83,19 +83,5 @@ namespace Fiap.Unit.Tests._3._Domain_Layer_Tests.ValueObjects
             // Assert
             Assert.Equal("test.user@domain.com", email.Address);
         }
-
-        //[Fact]
-        //public void GetAtomicValues_ShouldReturnAddress()
-        //{
-        //    // Arrange
-        //    var email = new Email("user@domain.com");
-
-        //    // Act
-        //    var atomicValues = email.GetAtomicValues().ToList();
-
-        //    // Assert
-        //    Assert.Single(atomicValues);
-        //    Assert.Contains("user@domain.com", atomicValues);
-        //}
     }
 }
