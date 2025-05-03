@@ -2,25 +2,48 @@
 
 Repositório do projeto **FIAP Cloud Games (FCG)** desenvolvido para o **Tech Challenge da FIAP - Fase 1**.
 
-> 📍 Acesse a Wiki do projeto: [https://github.com/leandrokuranaga/fiap-back/wiki](https://github.com/leandrokuranaga/fiap-back/wiki)
+> 📍 Acesse a [📘 Wiki do projeto](https://github.com/leandrokuranaga/fiap-back/wiki)
 
 ---
 
 ## 📦 Sobre o Projeto
 
-O FCG é uma aplicação backend desenvolvida em **.NET 8**, com o objetivo de simular uma plataforma de venda e gerenciamento de jogos digitais. Essa versão representa a primeira entrega do projeto, com foco em autenticação de usuários, registro de jogos, promoções e controle de bibliotecas pessoais.
+O **FCG** é uma aplicação backend em **.NET 8**, com o objetivo de simular uma plataforma de venda e gerenciamento de jogos digitais. Esta é a **primeira entrega**, focada em:
+
+- Autenticação de usuários  
+- Registro de jogos  
+- Promoções  
+- Controle da biblioteca pessoal
 
 ---
 
-## 🔧 Tecnologias e Padrões Utilizados
+## 👥 Grupo
+
+| Nome                     | E-mail                                |
+|--------------------------|----------------------------------------|
+| Vinicius Brito Chantres  | viniciuschantres@gmail.com            |
+| Leandro da Silva Kuranaga | le.s.kuranaga@hotmail.com           |
+| Bruno dos Santos Moura   | brunobsm88@gmail.com                 |
+| Brayan Fernandes Julio   | brayan.fernandesjulio@gmail.com      |
+| Rafael Nunes dos Santos  | devrafaelnunes@gmail.com             |
+
+---
+
+## 📈 Status do Projeto
+
+- 🚧 Em desenvolvimento
+
+---
+
+## 🔧 Tecnologias Utilizadas
 
 - **.NET 8 / C#**
 - **PostgreSQL**
 - **EF Core + Migrations**
-- **Swagger** para documentação
-- **DDD (Domain-Driven Design)**
-- **TDD (Test-Driven Development)** com camadas de teste separadas
-- **Repository Pattern** e **Unit of Work**
+- **Swagger** (documentação)
+- **Domain-Driven Design (DDD)**
+- **Test-Driven Development (TDD)** com camadas de teste separadas
+- **Repository Pattern + Unit of Work**
 - **Camadas organizadas**:
   - API Layer
   - Application Layer
@@ -28,24 +51,104 @@ O FCG é uma aplicação backend desenvolvida em **.NET 8**, com o objetivo de s
   - Infra Layer
   - Tests Layer
 
----
-
-## 🗂️ Estrutura de Pastas
+### 🧱 Camadas da Arquitetura
 
 ```
-├── Fiap.Api                 // Camada de exposição (controllers, Swagger)
-├── Fiap.Application         // Casos de uso, DTOs, validadores
-├── Fiap.Domain              // Entidades, agregados, repositórios
-├── Fiap.Infra.Data          // Mapeamentos EF, contexto, seeds, migrations
-├── Fiap.Infra.CrossCutting  // IoC, integrações, helpers
-├── Fiap.Tests               // Testes organizados por camada
+─ `Fiap.Api` – Exposição da API (Controllers, Swagger)
+─ `Fiap.Application` – Casos de uso, DTOs, validadores
+─ `Fiap.Domain` – Entidades, agregados, interfaces de repositório
+─ `Fiap.Infra.Data` – EF Core (DbContext, Seeds, Migrations)
+─ `Fiap.Infra.CrossCutting.IoC` – Injeção de dependência
+─ `Fiap.Infra.CrossCutting.Http` – Integrações externas (HttpClient)
+─ `Fiap.Tests` – Testes organizados por camada
 ```
 
 ---
+
+## 🛠️ Pré-requisitos
+
+- Docker + Docker Compose  
+- .NET SDK 8.0  
+- PostgreSQL (caso não use o Docker)
+
+---
+
+## 📚 Links Úteis
+
+- [📘 .NET 8](https://learn.microsoft.com/en-us/dotnet/)
+- [📘 EF Core](https://learn.microsoft.com/en-us/ef/core/)
+- [📘 Docker](https://docs.docker.com/)
+
+---
+
+## 🗃️ Estrutura de Pastas
+
+```plaintext
+├── Fiap.Api
+├── Fiap.Application
+├── Fiap.Domain
+├── Fiap.Infra.Data
+├── Fiap.Infra.CrossCutting.IoC
+├── Fiap.Infra.CrossCutting.Http
+├── Fiap.Tests
+```
+
+---
+
+## 🧠 Banco de Dados
+
+### Tabelas principais
+
+- `Users`
+- `Games`
+- `Promotions`
+- `LibraryGames`
+
+### 🔗 Relacionamentos
+
+- `Users` → `LibraryGames`: 1:N (um usuário tem uma biblioteca) 
+- `LibraryGames` → `Games`: N:1 (uma biblioteca contém vários jogos, com informações como data e preço de compra) 
+- `Games` → `Promotions`: N:1 (um jogo pode estar em uma promoção) - (opcional)
 
 ## 🧠 Relacionamento das Tabelas
 
 Além das tabelas principais utilizadas na lógica de negócio, o sistema também possui a tabela `__EFMigrationsHistory`, gerenciada automaticamente pelo Entity Framework Core.
+
+### 📌 Semente Inicial (EF Core `HasData()`)
+
+O projeto utiliza **`HasData()` com EF Core** para inserir dados iniciais automaticamente ao aplicar as migrations. Isso facilita testes e demonstrações, evitando a necessidade de popular o banco manualmente.
+
+Inclui:
+
+- Usuários padrão (Admin, User)
+- Jogos (8 títulos)
+- Promoções (3)
+- Bibliotecas de jogos por usuário
+
+---
+
+#### Dados incluídos:
+- **Usuários:**
+  - `Admin` (admin@gmail.com)
+  - `User` (user@gmail.com)
+- **Bibliotecas:**
+  - Uma biblioteca associada a cada usuário
+- **Jogos:**
+  - 8 títulos inseridos com nome, gênero e preço
+- **Promoções:**
+  - 3 promoções com datas de início e fim
+- **LibraryGames:**
+  - Jogos comprados por usuários com preço pago e data de compra
+
+---
+
+---
+
+## 🗺️ Diagrama Relacional
+
+![Diagrama Relacional](https://github.com/leandrokuranaga/fiap-back/blob/3e65794e05bfc659739fcb9538e0f1f90ed79517/Diagrama%20Relacional%20FCG.png)
+
+---
 
 ### 📄 Tabela de Migrations
 
@@ -66,55 +169,29 @@ O projeto possui as seguintes tabelas principais:
 - `Library`
 - `LibraryGames`
 
-### 🔗 Relacionamentos:
-- `Users` ↔️ `Library` → 1:1 (um usuário tem uma biblioteca)
-- `Library` ↔️ `LibraryGames` ↔️ `Games` → N:N (uma biblioteca contém vários jogos, com informações como data e preço de compra)
-- `Games` ↔️ `Promotion` → N:1 (um jogo pode estar em uma promoção)
-
-### 📌 Semente Inicial:
-
-O projeto utiliza **`HasData()` com EF Core** para inserir dados iniciais automaticamente ao aplicar as migrations. Isso facilita testes e demonstrações, evitando a necessidade de popular o banco manualmente.
-
-#### Dados incluídos:
-- **Usuários:**
-  - `Admin` (admin@gmail.com)
-  - `User` (user@gmail.com)
-- **Bibliotecas:**
-  - Uma biblioteca associada a cada usuário
-- **Jogos:**
-  - 8 títulos inseridos com nome, gênero e preço
-- **Promoções:**
-  - 3 promoções com datas de início e fim
-- **LibraryGames:**
-  - Jogos comprados por usuários com preço pago e data de compra
-
----
-
-## 🗺️ Diagrama Relacional
-
-![image](https://github.com/user-attachments/assets/5b06b48a-6b68-4ae9-a1e5-d1a5b24be042)
-
 ---
 
 ## 🚀 Deploy Final
 
-A entrega final do projeto será feita via **Release no GitHub**, publicada a partir da **branch `dev`**.
+A entrega será feita via **GitHub Releases**, publicada a partir da **branch `dev`**.
 
 ---
 
-## 👥 Grupo
+## 👥 Equipe
 
-| Nome                     | E-mail                                |
-|--------------------------|----------------------------------------|
-| Vinicius Brito Chantres  | viniciuschantres@gmail.com            |
-| Leandro da Silva Kuranaga | le.s.kuranaga@hotmail.com           |
-| Bruno dos Santos Moura   | brunobsm88@gmail.com                 |
-| Brayan Fernandes Julio   | brayan.fernandesjulio@gmail.com      |
-| Rafael Nunes dos Santos  | devrafaelnunes@gmail.com             |
+| Nome                      | E-mail                               |
+|---------------------------|---------------------------------------|
+| Vinicius Brito Chantres   | viniciuschantres@gmail.com           |
+| Leandro da Silva Kuranaga | le.s.kuranaga@hotmail.com            |
+| Bruno dos Santos Moura    | brunobsm88@gmail.com                 |
+| Brayan Fernandes Julio    | brayan.fernandesjulio@gmail.com      |
+| Rafael Nunes dos Santos   | devrafaelnunes@gmail.com             |
 
 ---
 
-> Para mais detalhes sobre PRs e contribuições, acesse o arquivo [📄 Guia de Contribuição](./Contributing%20Guide.md).
+> Para mais detalhes sobre PRs e contribuições, acesse [📄 Guia de Contribuição](../../wiki/Guia-de-Contribuição)
+
+---
 
 # 🧪 Guia para rodar o projeto com Docker e SonarQube
 
@@ -122,20 +199,19 @@ Este projeto depende de **Docker** para executar seus serviços (API, banco de d
 
 ---
 
-## 🐳 Subindo os serviços com Docker
-
-### 🔁 Subir todos os serviços:
+## ▶️ Subir todos os serviços
 
 ```bash
 docker compose up -d --build
 ```
 
-http://localhost:8080/swagger/index.html endereço da api
+Acesse a API: [http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html)
 
-### 🎯 Subir serviços específicos:
+## ▶️ Subir serviços específicos
 
 ```bash
 docker compose up -d db sonarqube
+docker compose up -d app
 ```
 
 Você também pode iniciar um serviço por vez:
@@ -150,34 +226,29 @@ docker compose up -d sonarqube   # SonarQube
 
 ## 🔐 Configuração do SonarQube
 
-1. Acesse: [http://localhost:9000](http://localhost:9000)
-2. Faça login com:
-   - **Usuário:** `admin`
+1. Acesse: [http://localhost:9000](http://localhost:9000)  
+2. Login:  
+  - **Usuário:** `admin`
    - **Senha:** `admin`
-3. Altere a senha quando solicitado.
-4. Vá em **My Account > Security**
-5. Gere um token de autenticação
-6. No arquivo `.env-dev`, adicione:
+3. Altere a senha, gere um token em **My Account > Security**
+4. No arquivo `.env-dev`, adicione:
 
 ```env
 SONAR_TOKEN=seu_token_gerado
 ```
 
-7. Após isso, renomeie o arquivo:
+5. Renomeie o arquivo:
 
 ```bash
 mv .env-dev .env
 ```
 
----
+## ▶️ Análise com SonarQube
 
-## ▶️ Rodando a análise com SonarQube
-
-Para executar a análise de código:
-
-1. Dê dois cliques no arquivo `sonar-analyze.bat`
-2. Acesse o painel do Sonar em [http://localhost:9000](http://localhost:9000)
+1. Execute `sonar-analyze.bat`
+2. Veja os resultados em [http://localhost:9000](http://localhost:9000)
 3. Vá até a seção "Projetos" para visualizar os resultados da análise
+
 
 ---
 
@@ -195,4 +266,68 @@ Essas variáveis são usadas pelo Docker para inicializar o banco e pela aplica�
 
 ---
 
+# 🖥️ Execução Manual (sem Docker)
 
+### 1. Clonar o projeto
+
+```bash
+git clone https://github.com/leandrokuranaga/fiap-back.git
+cd fiap-back
+```
+
+### 2. Restaurar pacotes
+
+```bash
+dotnet restore
+```
+
+### 3. Configurar o banco (`appsettings.json`)
+
+```json
+"ConnectionStrings": {
+  "DefaultConnection": "Server=localhost;Database=Meu_Banco_;User Id=seu_banco;Password=sua_senha;"
+}
+```
+
+### 4. Aplicar migrations
+
+```bash
+dotnet ef database update
+```
+
+### 5. Rodar a aplicação
+
+```bash
+dotnet run --project ./src/Fiap.Api
+```
+
+---
+
+## 📡 Exemplos de Requisições
+
+### 🔐 Login
+
+**POST** `/api/auth/login`
+
+```json
+{
+  "email": "admin@domain.com",
+  "password": "admin123"
+}
+```
+
+### 🎮 Criar Jogo
+
+**POST** `/api/games`
+
+```json
+{
+  "name": "The Witcher 3",
+  "genre": "RPG",
+  "price": 99.90
+}
+```
+
+### 📋 Listar Jogos
+
+**GET** `/api/games`
