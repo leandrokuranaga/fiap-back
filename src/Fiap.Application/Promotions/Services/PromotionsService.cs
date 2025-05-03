@@ -140,8 +140,7 @@ namespace Fiap.Application.Promotions.Services
                 }
 
                 game.AssignPromotion(promotionId);
-                games.Add(game);
-                
+                games.Add(game);                
             }
 
             if (games.Count > 0)

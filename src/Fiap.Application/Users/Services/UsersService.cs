@@ -76,8 +76,12 @@ namespace Fiap.Application.User.Services
 
                 var user = (Domain.UserAggregate.User)request;
 
+                await userRepository.BeginTransactionAsync();   
+
                 await userRepository.InsertOrUpdateAsync(user);
                 await userRepository.SaveChangesAsync();
+
+                await userRepository.CommitAsync(); 
 
                 response = (UserResponse)user;
 
@@ -154,6 +158,7 @@ namespace Fiap.Application.User.Services
 
                 await userRepository.UpdateAsync(user);
                 await userRepository.SaveChangesAsync();
+                await userRepository.CommitAsync();
 
                 return (UserResponse)user;
             }
@@ -193,6 +198,7 @@ namespace Fiap.Application.User.Services
 
                 await userRepository.DeleteAsync(user);
                 await userRepository.SaveChangesAsync();
+                await userRepository.CommitAsync();
 
                 return BaseResponse<object>.Ok(null);
             }
