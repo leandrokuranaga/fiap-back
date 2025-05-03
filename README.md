@@ -41,14 +41,14 @@ O **FCG** é uma aplicação backend em **.NET 8**, com o objetivo de simular um
 
 ### 🧱 Camadas da Arquitetura
 
-```
-─ `Fiap.Api`						//Exposição da API (Controllers, Swagger)
-─ `Fiap.Application`				// Casos de uso, DTOs, validadores
-─ `Fiap.Domain`						// Entidades, agregados, interfaces de repositório
-─ `Fiap.Infra.Data`					// EF Core (DbContext, Seeds, Migrations)
-─ `Fiap.Infra.CrossCutting.IoC`		// Injeção de dependência
-─ `Fiap.Infra.CrossCutting.Http`	// Integrações externas (HttpClient)
-─ `Fiap.Tests`						// Testes organizados por camada
+```plaintext
+─ Fiap.Api						// Exposição da API (Controllers, Swagger)
+─ Fiap.Application				// Casos de uso, DTOs, validadores
+─ Fiap.Domain					// Entidades, agregados, interfaces de repositório
+─ Fiap.Infra.Data				// EF Core (DbContext, Seeds, Migrations)
+─ Fiap.Infra.CrossCutting.IoC	// Injeção de dependência
+─ Fiap.Infra.CrossCutting.Http	// Integrações externas (HttpClient)
+─ Fiap.Tests					// Testes organizados por camada
 ```
 
 ---
