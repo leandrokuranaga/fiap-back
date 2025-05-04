@@ -1,9 +1,10 @@
 ﻿using Fiap.Application.Promotions.Models.Request;
 using Fiap.Application.Promotions.Services;
-using Fiap.Domain.Game;
-using Fiap.Domain.Promotion;
+using Fiap.Domain.Common.ValueObjects;
+using Fiap.Domain.GameAggregate;
+using Fiap.Domain.PromotionAggregate;
 using Fiap.Domain.SeedWork;
-using Fiap.Infra.Data;
+using Fiap.Domain.SeedWork.Exceptions;
 using Moq;
 using static Fiap.Domain.SeedWork.NotificationModel;
 
@@ -41,7 +42,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
 
             _mockPromotionRepositoryMock
                 .Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<Promotion>()))
-                .ReturnsAsync((Promotion p) => 
+                .ReturnsAsync((Promotion p) =>
                 {
                     p.Id = 1;
                     return p;
@@ -180,8 +181,8 @@ namespace Fiap.Tests._2._Application_Layer_Tests
                 Id = promotionId
             };
 
-            var game1 = new Game() { Id = 101, Name = "Game 1", Genre = "Action", Price = 59.90 };
-            var game2 = new Game() { Id = 102, Name = "Game 2", Genre = "Adventure", Price = 49.90 };
+            var game1 = new Game() { Id = 101, Name = "Game 1", Genre = "Action", Price = new Money(59.90, "BRL") };
+            var game2 = new Game() { Id = 102, Name = "Game 2", Genre = "Adventure", Price = new Money(49.90, "BRL") };
 
             _mockPromotionRepositoryMock.Setup(repo => repo.GetByIdAsync(promotionId, It.IsAny<bool>()))
                 .ReturnsAsync(promotion);
@@ -213,7 +214,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
 
             _mockGameRepositoryMock.Verify(repo => repo.UpdateRangeAsync(It.Is<IEnumerable<Game>>(games =>
                 games.Any(g => g.Id == 101 && g.PromotionId == promotionId) &&
-                games.Any(g => g.Id == 102 && g.PromotionId == promotionId) 
+                games.Any(g => g.Id == 102 && g.PromotionId == promotionId)
             )), Times.Once);
             #endregion
         }
@@ -264,8 +265,8 @@ namespace Fiap.Tests._2._Application_Layer_Tests
                 Id = promotionId
             };
 
-            var game1 = new Game() { Id = 101, Name = "Game 1", Genre = "Action", Price = 59.90 };
-            var game2 = new Game() { Id = 102, Name = "Game 2", Genre = "Adventure", Price = 49.90 };
+            var game1 = new Game() { Id = 101, Name = "Game 1", Genre = "Action", Price = new Money(59.90, "BRL") };
+            var game2 = new Game() { Id = 102, Name = "Game 2", Genre = "Adventure", Price = new Money(49.90, "BRL") };
 
             _mockPromotionRepositoryMock
                 .Setup(repo => repo.GetByIdAsync(promotionId, It.IsAny<bool>()))
@@ -329,7 +330,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
                 .Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<Promotion>()))
                 .ReturnsAsync((Promotion p) =>
                 {
-                    p.Id = 99; 
+                    p.Id = 99;
                     return p;
                 });
 
@@ -354,6 +355,5 @@ namespace Fiap.Tests._2._Application_Layer_Tests
                 Times.Exactly(3));
             #endregion
         }
-
     }
 }

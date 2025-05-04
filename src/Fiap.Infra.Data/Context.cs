@@ -1,9 +1,10 @@
-﻿using Fiap.Domain.Game;
-using Fiap.Domain.Promotion;
+﻿using Fiap.Domain.GameAggregate;
+using Fiap.Domain.PromotionAggregate;
 using Fiap.Domain.UserAggregate;
 using Fiap.Domain.UserAggregate.Entities;
 using Fiap.Infra.Data.MapEntities;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Infra.Data
 {
@@ -24,7 +25,7 @@ namespace Fiap.Infra.Data
             modelBuilder.ApplyConfiguration(new UsersMap());
             modelBuilder.ApplyConfiguration(new PromotionsMap());
             modelBuilder.ApplyConfiguration(new GamesMap());
-            modelBuilder.ApplyConfiguration(new LibraryGameMap());
+            modelBuilder.ApplyConfiguration(new LibraryGamesMap());
         }
     }
 }

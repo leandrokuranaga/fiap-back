@@ -1,7 +1,8 @@
-﻿using Fiap.Application.Common;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Application.Users.Models.Request
 {
+    [ExcludeFromCodeCoverage]
     public record CreateUserRequest
     {
         public string Name { get; set; }
@@ -13,7 +14,7 @@ namespace Fiap.Application.Users.Models.Request
             return Domain.UserAggregate.User.CreateByPublic(
                 request.Name,
                 request.Email,
-                PasswordHasher.HashPassword(request.Password)
+                request.Password
             );
         }
     }

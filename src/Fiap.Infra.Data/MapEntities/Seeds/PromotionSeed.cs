@@ -1,4 +1,5 @@
-﻿using Fiap.Domain.Promotion;
+﻿using Fiap.Domain.Common.ValueObjects;
+using Fiap.Domain.PromotionAggregate;
 
 namespace Fiap.Infra.Data.MapEntities.Seeds
 {
@@ -6,27 +7,27 @@ namespace Fiap.Infra.Data.MapEntities.Seeds
     {
         public static List<Promotion> Promotions()
         {
-            return [
-                new Promotion(1,
-                    DateTime.SpecifyKind(new DateTime(2025, 04, 01), DateTimeKind.Utc),
-                    DateTime.SpecifyKind(new DateTime(2025, 05, 01), DateTimeKind.Utc))
+            return new List<Promotion>
+            {
+                new Promotion
                 {
-                    Id = 1
+                    Id = 1,
+                    StartDate = new UtcDate(DateTime.SpecifyKind(new DateTime(2025, 04, 01), DateTimeKind.Utc)),
+                    EndDate = new UtcDate(DateTime.SpecifyKind(new DateTime(2025, 05, 01), DateTimeKind.Utc)),
                 },
-                new Promotion(2,
-                    DateTime.SpecifyKind(new DateTime(2025, 06, 01), DateTimeKind.Utc),
-                    DateTime.SpecifyKind(new DateTime(2025, 07, 01), DateTimeKind.Utc))
+                new Promotion
                 {
-                    Id = 2
+                    Id = 2,
+                    StartDate = new UtcDate(DateTime.SpecifyKind(new DateTime(2025, 06, 01), DateTimeKind.Utc)),
+                    EndDate = new UtcDate(DateTime.SpecifyKind(new DateTime(2025, 07, 01), DateTimeKind.Utc)),
                 },
-                new Promotion(3,
-                    DateTime.SpecifyKind(new DateTime(2025, 08, 01), DateTimeKind.Utc),
-                    DateTime.SpecifyKind(new DateTime(2025, 09, 01), DateTimeKind.Utc))
+                new Promotion
                 {
-                    Id = 3
+                    Id = 3,
+                    StartDate = new UtcDate(DateTime.SpecifyKind(new DateTime(2025, 08, 01), DateTimeKind.Utc)),
+                    EndDate = new UtcDate(DateTime.SpecifyKind(new DateTime(2025, 09, 01), DateTimeKind.Utc)),
                 }
-            ];
+            };
         }
-
     }
 }

@@ -1,37 +1,55 @@
 ﻿using Abp.Domain.Entities;
-using Fiap.Domain.UserAggregate.Entities;
+using Fiap.Domain.UserAggregate.Entities; 
+using Fiap.Domain.PromotionAggregate;    
+using Fiap.Domain.SeedWork.Exceptions;
+using IAggregateRoot = Fiap.Domain.SeedWork.IAggregateRoot;
+using Fiap.Domain.Common.ValueObjects;
 
-namespace Fiap.Domain.Game
+namespace Fiap.Domain.GameAggregate
 {
-    public class Game : Entity
+    public class Game : Entity, IAggregateRoot
     {
-        public Game(int id, string name, string genre, double price, int? promotionId)
+        public Game(int id, string name, string genre, double price, int? promotionId, string currency = "BRL")
+            : this(name, genre, price, promotionId)
         {
             Id = id;
+        }
+
+        public Game(string name, string genre, double price, int? promotionId, string currency = "BRL")
+        {
+            ValidateName(name);
+            ValidateGenre(genre);
+
             Name = name;
             Genre = genre;
-            Price = price;
+            Price = new Money(price, currency);
             PromotionId = promotionId;
         }
 
-        public Game()
-        {
-            
-        }
+        public Game() { }
 
         public string Name { get; set; }
         public string Genre { get; set; }
-        public double Price { get; set; }
+        public Money Price { get; set; }
         public int? PromotionId { get; set; }
 
-        public virtual Promotion.Promotion Promotion { get; set; }
+        public virtual Promotion Promotion { get; set; }
         public virtual ICollection<LibraryGame> Libraries { get; set; }
 
-
-        public void AssignPromotion(int promotionId) 
+        public void AssignPromotion(int promotionId)
         {
             PromotionId = promotionId;
         }
 
+        private void ValidateName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new BusinessRulesException("The name of the game is required.");
+        }
+        private void ValidateGenre(string genre)
+        {
+            if (string.IsNullOrWhiteSpace(genre))
+                throw new BusinessRulesException("The genre of the game is required.");
+        }
     }
 }

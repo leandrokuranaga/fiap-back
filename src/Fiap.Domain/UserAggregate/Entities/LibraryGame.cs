@@ -1,5 +1,6 @@
 ﻿using Abp.Domain.Entities;
-using Fiap.Domain.Game;
+using Fiap.Domain.Common.ValueObjects;
+using Fiap.Domain.GameAggregate;
 
 namespace Fiap.Domain.UserAggregate.Entities
 {
@@ -14,16 +15,16 @@ namespace Fiap.Domain.UserAggregate.Entities
             Id = id;
             UserId = userId;
             GameId = gameId;
-            PurchaseDate = purchaseDate;
-            PricePaid = pricePaid;
+            PurchaseDate = new UtcDate(purchaseDate);
+            PricePaid = new Money(pricePaid);
         }
 
         public int GameId { get; set; }
         public int UserId { get; set; }
-        public DateTime PurchaseDate { get; set; }
-        public double PricePaid { get; set; }
+        public UtcDate PurchaseDate { get; set; }
+        public Money PricePaid { get; set; }
 
-        public virtual Game.Game Game { get; set; }
+        public virtual Game Game { get; set; }
         public virtual User User { get; set; }
     }
 }

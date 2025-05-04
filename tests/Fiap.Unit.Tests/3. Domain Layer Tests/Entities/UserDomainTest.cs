@@ -1,66 +1,36 @@
 ﻿using Fiap.Domain.UserAggregate;
-using Fiap.Domain.UserAggregate.Entities;
 using Fiap.Domain.UserAggregate.Enums;
+using Fiap.Domain.UserAggregate.ValueObjects;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Tests._3._Domain_Layer_Tests
 {
     public class UserDomainTest
     {
-        //[Fact]
-        //public void UserDomain_DefaultConstructor_CreatesInstanceSuccessfully()
-        //{
-        //    #region Act
-        //    var user = new User();
-        //    #endregion
-
-        //    #region Assert
-        //    Assert.NotNull(user);
-        //    Assert.Null(user.Name);
-        //    Assert.Null(user.Email);
-        //    Assert.Null(user.Password);
-        //    Assert.Equal(default(TypeUser), user.TypeUser); 
-        //    Assert.False(user.Active);
-        //    Assert.Null(user.LibraryGames);
-        //    #endregion
-        //}
         [Fact]
         public void UserDomain_Creation_Success()
         {
             #region Arrange
             var name = "Test User";
             var email = "testuser@gmail.com";
-            var password = "password123";
+            var password = "password@123";
             var typeUser = TypeUser.Admin;
             var active = true;
-            var library = new LibraryGame();
             #endregion
 
             #region Act
-            var user = new User(name, email, password, typeUser, active)
-            {
-            };
+            var user = new User(name, email, password, typeUser, active);
             #endregion
 
             #region Assert
             Assert.Equal(name, user.Name);
-            Assert.Equal(email, user.Email);
-            Assert.Equal(password, user.Password);
+            Assert.Equal(email.Trim().ToLowerInvariant(), user.Email.Address);
+            Assert.True(user.Password.Challenge(password, user.Password.PasswordSalt));
             Assert.Equal(typeUser, user.TypeUser);
             Assert.True(user.Active);
+            Assert.NotNull(user.LibraryGames);
             #endregion
         }
-
-        //[Fact]
-        //public void UserDomain_Library_IsNull_ByDefault()
-        //{
-        //    #region Arrange
-        //    var user = new User("Test User", "testuser@gmail.com", "password123", TypeUser.User, true);
-        //    #endregion
-
-        //    #region Act & Assert
-        //    Assert.Null(user.LibraryGames);
-        //    #endregion
-        //}
 
         [Fact]
         public void CreateByAdmin_CreatesUserCorrectly()
@@ -68,10 +38,9 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
             #region Arrange
             var name = "Admin User";
             var email = "admin@gmail.com";
-            var password = "adminpassword";
+            var password = "admin@1password";
             var typeUser = TypeUser.Admin;
             var active = true;
-            var library = new LibraryGame();
             #endregion
 
             #region Act
@@ -80,10 +49,11 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
 
             #region Assert
             Assert.Equal(name, user.Name);
-            Assert.Equal(email, user.Email);
-            Assert.Equal(password, user.Password);
+            Assert.Equal(email.Trim().ToLowerInvariant(), user.Email.Address);
+            Assert.True(user.Password.Challenge(password, user.Password.PasswordSalt));
             Assert.Equal(typeUser, user.TypeUser);
             Assert.True(user.Active);
+            Assert.NotNull(user.LibraryGames);
             #endregion
         }
 
@@ -93,7 +63,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
             #region Arrange
             var name = "Public User";
             var email = "publicuser@gmail.com";
-            var password = "publicpassword";
+            var password = "public@1password";
             #endregion
 
             #region Act
@@ -102,10 +72,11 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
 
             #region Assert
             Assert.Equal(name, user.Name);
-            Assert.Equal(email, user.Email);
-            Assert.Equal(password, user.Password);
+            Assert.Equal(email.Trim().ToLowerInvariant(), user.Email.Address);
+            Assert.True(user.Password.Challenge(password, user.Password.PasswordSalt));
             Assert.Equal(TypeUser.User, user.TypeUser);
             Assert.True(user.Active);
+            Assert.NotNull(user.LibraryGames);
             #endregion
         }
 
@@ -113,28 +84,29 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         public void UserDomain_UpdatesPropertiesCorrectly()
         {
             #region Arrange
-            var user = new User("Old Name", "oldemail@gmail.com", "oldpassword", TypeUser.User, true);
+            var user = new User("Old Name", "oldemail@gmail.com", "old@123password", TypeUser.User, true);
             var newName = "New Name";
             var newEmail = "newemail@gmail.com";
-            var newPassword = "newpassword";
+            var newPassword = "new@123password";
             var newTypeUser = TypeUser.Admin;
             var newActive = false;
             #endregion
 
             #region Act
             user.Name = newName;
-            user.Email = newEmail;
-            user.Password = newPassword;
+            user.Email = new Email(newEmail);
+            user.Password = new Password(newPassword);
             user.TypeUser = newTypeUser;
             user.Active = newActive;
             #endregion
 
             #region Assert
             Assert.Equal(newName, user.Name);
-            Assert.Equal(newEmail, user.Email);
-            Assert.Equal(newPassword, user.Password);
+            Assert.Equal(newEmail, user.Email.Address);
+            Assert.True(user.Password.Challenge(newPassword, user.Password.PasswordSalt));
             Assert.Equal(newTypeUser, user.TypeUser);
             Assert.False(user.Active);
+            Assert.NotNull(user.LibraryGames);
             #endregion
         }
     }

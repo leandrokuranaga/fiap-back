@@ -1,7 +1,6 @@
 ﻿using Fiap.Domain.SeedWork;
-using Fiap.Infra.Data;
 
-namespace Fiap.Domain.Promotion
+namespace Fiap.Domain.PromotionAggregate
 {
     public interface IPromotionRepository : IBaseRepository<Promotion>, IUnitOfWork
     {

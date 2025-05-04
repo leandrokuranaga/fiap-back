@@ -5,6 +5,7 @@ using Fiap.Application.Users.Services;
 using Fiap.Application.Validators.UsersValidators;
 using Fiap.Domain.SeedWork;
 using Fiap.Domain.UserAggregate;
+using Fiap.Domain.UserAggregate.ValueObjects;
 
 namespace Fiap.Application.User.Services
 {
@@ -64,9 +65,9 @@ namespace Fiap.Application.User.Services
             {
                 Validate(request, new CreateUserRequestValidator());
 
-                request.Email = request.Email.Trim().ToLowerInvariant();
+                var email = request.Email.Trim().ToLowerInvariant();
 
-                var exists = await userRepository.ExistAsync(u => u.Email == request.Email);
+                var exists = await userRepository.ExistAsync(u => u.Email.Address == request.Email.ToLower());
                 if (exists)
                 {
                     _notification.AddNotification("Create User", "Email already registered", NotificationModel.ENotificationType.BusinessRules);
@@ -75,8 +76,51 @@ namespace Fiap.Application.User.Services
 
                 var user = (Domain.UserAggregate.User)request;
 
+                await userRepository.BeginTransactionAsync();   
+
                 await userRepository.InsertOrUpdateAsync(user);
                 await userRepository.SaveChangesAsync();
+
+                await userRepository.CommitAsync(); 
+
+                response = (UserResponse)user;
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                await userRepository.RollbackAsync();
+
+                if (!_notification.HasNotification)
+                    _notification.AddNotification("Create User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
+                return response;
+            }
+        });        
+
+        public Task<UserResponse> CreateAdminAsync(CreateUserAdminRequest request) => ExecuteAsync(async () =>
+        {
+            var response = new UserResponse();
+
+            try
+            {
+                Validate(request, new CreateUserAdminRequestValidator());
+
+                var email = request.Email.Trim().ToLowerInvariant();
+
+                var exists = await userRepository.ExistAsync(u => u.Email.Address.ToLower() == email);
+                if (exists)
+                {
+                    _notification.AddNotification("Create User", "Email already registered", NotificationModel.ENotificationType.BusinessRules);
+                    return new UserResponse();
+                }
+
+                var user = (Domain.UserAggregate.User)request;
+                await userRepository.BeginTransactionAsync();
+
+                await userRepository.InsertOrUpdateAsync(user);
+                await userRepository.SaveChangesAsync();
+
+                await userRepository.CommitAsync();
 
                 response = (UserResponse)user;
 
@@ -109,9 +153,12 @@ namespace Fiap.Application.User.Services
                 }
 
                 UpdateUserProperties(user, request);
+                await userRepository.BeginTransactionAsync();
+
 
                 await userRepository.UpdateAsync(user);
                 await userRepository.SaveChangesAsync();
+                await userRepository.CommitAsync();
 
                 return (UserResponse)user;
             }
@@ -127,12 +174,12 @@ namespace Fiap.Application.User.Services
         private void UpdateUserProperties(Domain.UserAggregate.User user, UpdateUserRequest request)
         {
             user.Name = request.Name ?? user.Name;
-            user.Email = request.Email ?? user.Email;
+            user.Email = new Email(request.Email ?? user.Email.Address);
             user.TypeUser = request.Type.HasValue ? request.Type.Value : user.TypeUser;
             user.Active = request.Active ?? user.Active;
 
             if (!string.IsNullOrEmpty(request.Password))
-                user.Password = PasswordHasher.HashPassword(request.Password);
+                user.Password = new Password(request.Password);
         }
 
         public Task<BaseResponse<object>> DeleteAsync(int id) => ExecuteAsync(async () =>
@@ -147,8 +194,11 @@ namespace Fiap.Application.User.Services
                     return BaseResponse<object>.Fail(_notification.NotificationModel);
                 }
 
+                await userRepository.BeginTransactionAsync();
+
                 await userRepository.DeleteAsync(user);
                 await userRepository.SaveChangesAsync();
+                await userRepository.CommitAsync();
 
                 return BaseResponse<object>.Ok(null);
             }
@@ -158,6 +208,6 @@ namespace Fiap.Application.User.Services
                 _notification.AddNotification("Delete User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
                 return BaseResponse<object>.Fail(_notification.NotificationModel);
             }
-        });
+        });        
     }
 }

@@ -1,4 +1,5 @@
-﻿using Fiap.Domain.UserAggregate.Entities;
+﻿using Fiap.Domain.Common.ValueObjects;
+using Fiap.Domain.UserAggregate.Entities;
 
 namespace Fiap.Infra.Data.MapEntities.Seeds
 {
@@ -6,12 +7,37 @@ namespace Fiap.Infra.Data.MapEntities.Seeds
     {
         public static List<LibraryGame> LibraryGames()
         {
-            return [
-                new LibraryGame(1, 1, 1, DateTime.SpecifyKind(new DateTime(2024, 07, 01), DateTimeKind.Utc), 200),
-                new LibraryGame(2, 1, 2, DateTime.SpecifyKind(new DateTime(2022, 03, 09), DateTimeKind.Utc), 50),
-                new LibraryGame(3, 1, 3, DateTime.SpecifyKind(new DateTime(2020, 11, 22), DateTimeKind.Utc), 199),
-                new LibraryGame(4, 1, 4, DateTime.SpecifyKind(new DateTime(2019, 05, 03), DateTimeKind.Utc), 60),
-            ];
+            return new List<LibraryGame>
+            {
+                new LibraryGame
+                {
+                    Id = 1,
+                    UserId = 1,
+                    GameId = 1,
+                    PurchaseDate = new UtcDate(DateTime.SpecifyKind(new DateTime(2025, 04, 01), DateTimeKind.Utc)),
+                },
+                new LibraryGame
+                {
+                    Id = 2,
+                    UserId = 2,
+                    GameId = 2,
+                    PurchaseDate = new UtcDate(DateTime.SpecifyKind(new DateTime(2025, 05, 01), DateTimeKind.Utc)),
+                },
+                new LibraryGame
+                {
+                    Id = 3,
+                    UserId = 1,
+                    GameId = 3,
+                    PurchaseDate = new UtcDate(DateTime.SpecifyKind(new DateTime(2025, 06, 01), DateTimeKind.Utc)),
+                },
+                new LibraryGame
+                {
+                    Id = 4,
+                    UserId = 2,
+                    GameId = 4,
+                    PurchaseDate = new UtcDate(DateTime.SpecifyKind(new DateTime(2025, 07, 01), DateTimeKind.Utc)),
+                }
+            };
         }
     }
 }

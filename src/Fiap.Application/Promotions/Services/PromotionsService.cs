@@ -2,10 +2,9 @@
 using Fiap.Application.Promotions.Models.Request;
 using Fiap.Application.Promotions.Models.Response;
 using Fiap.Application.Validators.PromotionsValidators;
-using Fiap.Domain.Game;
-using Fiap.Domain.Promotion;
+using Fiap.Domain.GameAggregate;
+using Fiap.Domain.PromotionAggregate;
 using Fiap.Domain.SeedWork;
-using Fiap.Infra.Data;
 using static Fiap.Domain.SeedWork.NotificationModel;
 
 namespace Fiap.Application.Promotions.Services
@@ -141,8 +140,7 @@ namespace Fiap.Application.Promotions.Services
                 }
 
                 game.AssignPromotion(promotionId);
-                games.Add(game);
-                
+                games.Add(game);                
             }
 
             if (games.Count > 0)

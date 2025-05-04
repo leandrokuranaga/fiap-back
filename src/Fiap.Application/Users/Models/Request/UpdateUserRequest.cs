@@ -1,9 +1,9 @@
-﻿using Fiap.Application.Common;
-using Fiap.Domain.UserAggregate;
-using Fiap.Domain.UserAggregate.Enums;
+﻿using Fiap.Domain.UserAggregate.Enums;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Application.Users.Models.Request
 {
+    [ExcludeFromCodeCoverage]
     public record UpdateUserRequest
     {
         public string? Name { get; set; }

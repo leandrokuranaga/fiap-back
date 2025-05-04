@@ -1,4 +1,5 @@
 using Fiap.Api.Extensions;
+using Fiap.Api.Middlewares;
 using Fiap.Infra.CrossCutting.IoC;
 using Fiap.Infra.Data;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,7 @@ using Serilog;
 using Serilog.Extensions.Hosting;
 using Serilog.Formatting.Json;
 using Serilog.Sinks;
+using System.Diagnostics.CodeAnalysis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +22,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<Context>(options =>
     options.UseNpgsql(connectionString));
 
+
 builder.Services.AddLocalHttpClients(builder.Configuration);
 builder.Services.AddLocalServices(builder.Configuration);
 
@@ -33,6 +36,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddGlobalCorsPolicy();
 
 builder.Services.AddApiVersioningConfiguration();
+
+builder.Services.AddCustomAuthentication(builder.Configuration);
 
 builder.Services.AddSwaggerDocumentation();
 
@@ -58,6 +63,7 @@ app.UseHttpsRedirection();
 
 app.UseCors("AllowAllOrigins");
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
@@ -65,3 +71,6 @@ app.MapHealthChecks("/health");
 
 
 app.Run();
+
+[ExcludeFromCodeCoverage]
+public partial class Program { }

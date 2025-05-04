@@ -1,8 +1,10 @@
 ﻿using Fiap.Application.Users.Models.Request;
 using FluentValidation;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Application.Validators.UsersValidators
 {
+    [ExcludeFromCodeCoverage]
     public class UpdateUserRequestValidator : AbstractValidator<UpdateUserRequest>
     {
         public UpdateUserRequestValidator()

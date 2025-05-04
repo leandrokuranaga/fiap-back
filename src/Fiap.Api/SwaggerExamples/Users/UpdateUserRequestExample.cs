@@ -1,9 +1,11 @@
 ﻿using Fiap.Application.Users.Models.Request;
 using Fiap.Domain.UserAggregate.Enums;
 using Swashbuckle.AspNetCore.Filters;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Api.SwaggerExamples.Users
 {
+    [ExcludeFromCodeCoverage]
     public class UpdateUserRequestExample : IExamplesProvider<UpdateUserRequest>
     {
         public UpdateUserRequest GetExamples()

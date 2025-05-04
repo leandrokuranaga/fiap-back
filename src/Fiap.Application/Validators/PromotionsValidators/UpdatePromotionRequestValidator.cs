@@ -1,8 +1,10 @@
 ﻿using Fiap.Application.Promotions.Models.Request;
 using FluentValidation;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Application.Validators.PromotionsValidators
 {
+    [ExcludeFromCodeCoverage]
     public class UpdatePromotionRequestValidator : AbstractValidator<UpdatePromotionRequest>
     {
         public UpdatePromotionRequestValidator() 

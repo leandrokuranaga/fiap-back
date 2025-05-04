@@ -1,11 +1,13 @@
 ﻿using Fiap.Application.Common;
 using Fiap.Domain.SeedWork;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using static Fiap.Domain.SeedWork.NotificationModel;
 
 namespace Fiap.Api
 {
+    [ExcludeFromCodeCoverage]
     public class BaseController : ControllerBase
     {
         private readonly INotification _notification;

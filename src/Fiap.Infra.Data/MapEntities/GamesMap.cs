@@ -1,7 +1,9 @@
-﻿using Fiap.Domain.Game;
+﻿using Fiap.Domain.Common.ValueObjects;
+using Fiap.Domain.GameAggregate;
 using Fiap.Infra.Data.MapEntities.Seeds;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Newtonsoft.Json.Linq;
 
 namespace Fiap.Infra.Data.MapEntities
 {
@@ -28,14 +30,35 @@ namespace Fiap.Infra.Data.MapEntities
                 .IsRequired()
                 .HasMaxLength(100);
 
-            builder.Property(x => x.Price)
-                .IsRequired();
+            builder.OwnsOne(x => x.Price, price =>
+            {
+                price.Property(p => p.Value)
+                     .HasColumnName("Price")
+                     .IsRequired();
+
+                price.Property(p => p.Currency)
+                     .HasColumnName("PriceCurrency")
+                     .IsRequired()
+                     .HasMaxLength(3);
+
+            });
 
             builder.HasOne(x => x.Promotion)
                    .WithMany(p => p.Games)
                    .HasForeignKey(x => x.PromotionId);
 
             builder.HasData(GameSeed.Game());
+
+            builder.OwnsOne(x => x.Price).HasData(
+                new { GameId = 1, Value = 299.00, Currency = "USD" },
+                new { GameId = 2, Value = 39.99, Currency = "BRL" },
+                new { GameId = 3, Value = 49.99, Currency = "BRL" },
+                new { GameId = 4, Value = 29.99, Currency = "BRL" },
+                new { GameId = 5, Value = 39.99, Currency = "BRL" },
+                new { GameId = 6, Value = 26.95, Currency = "BRL" },
+                new { GameId = 7, Value = 39.99, Currency = "BRL" },
+                new { GameId = 8, Value = 49.99, Currency = "BRL" }
+            );
         }
     }
 }
