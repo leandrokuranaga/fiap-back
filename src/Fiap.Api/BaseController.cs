@@ -53,12 +53,17 @@ namespace Fiap.Api
                         data = response
                     });
 
-                return CreatedAtAction("Get", new { id },
-                    new
-                    {
-                        success = true,
-                        data = response ?? new object()
-                    });
+                var controller = ControllerContext.RouteData.Values["controller"]?.ToString();
+                var version = RouteData.Values["version"]?.ToString();
+
+                var location = $"/api/v{version}/{controller}/{id}";
+
+                return Created(location, new
+                {
+                    success = true,
+                    data = response ?? new object()
+                });
+
             }
 
             return BadRequest(new
@@ -67,6 +72,5 @@ namespace Fiap.Api
                 error = _notification.NotificationModel
             });
         }
-
     }
 }

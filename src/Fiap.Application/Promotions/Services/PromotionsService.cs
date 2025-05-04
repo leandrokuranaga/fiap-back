@@ -78,7 +78,7 @@ namespace Fiap.Application.Promotions.Services
             }
         }
 
-        public Task<PromotionResponse> UpdateAsync(int id, UpdatePromotionRequest request) => ExecuteAsync(async () =>
+        public Task<BaseResponse<object>> UpdateAsync(int id, UpdatePromotionRequest request) => ExecuteAsync<BaseResponse<object>>(async () =>
         {
             var response = new PromotionResponse();
 
@@ -106,15 +106,13 @@ namespace Fiap.Application.Promotions.Services
 
                 await unitOfWork.CommitAsync();
 
-                response = (PromotionResponse)promotion;
-
-                return response;
+                return BaseResponse<object>.Ok(null);
             }
             catch (Exception ex)
             {
                 await unitOfWork.RollbackAsync();
                 notification.AddNotification("Update Promotion", ex.Message, NotificationModel.ENotificationType.NotFound);
-                return response;
+                return BaseResponse<object>.Fail(_notification.NotificationModel);
             }
         });
 
@@ -149,5 +147,20 @@ namespace Fiap.Application.Promotions.Services
             return games;
         }
 
+        public async Task<PromotionResponse> GetPromotionAsync(int id)
+        {
+            var response = new PromotionResponse();
+            var promotion = await promotionRepository.GetByIdAsync(id, noTracking: false);
+
+            if (promotion is null)
+            {
+                notification.AddNotification("Promotion not found", $"Promotion with id {id} not found", ENotificationType.NotFound);
+                return response;
+            }
+
+            response = (PromotionResponse)promotion;
+
+            return response;
+        }
     }
 }

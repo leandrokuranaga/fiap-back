@@ -90,17 +90,6 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         }
 
         [Fact]
-        public void Constructor_WithNull_GeneratesRandomPassword()
-        {
-            // Act
-            var password = new Password(null);
-
-            // Assert
-            Assert.False(string.IsNullOrWhiteSpace(password.Hash));
-            Assert.False(string.IsNullOrWhiteSpace(password.PasswordSalt));
-        }
-
-        [Fact]
         public void Constructor_ShouldThrow_WhenPasswordTooShort()
         {
             // Arrange

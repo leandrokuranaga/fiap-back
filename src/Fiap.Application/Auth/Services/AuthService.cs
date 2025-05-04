@@ -41,7 +41,7 @@ namespace Fiap.Application.Auth.Services
 
             if (!validPassword)
             {
-                notification.AddNotification("Login Failed", "Invalid username or password.", NotificationModel.ENotificationType.Unauthorized);
+                notification.AddNotification("Login Failed", "Invalid username or password.", NotificationModel.ENotificationType.BusinessRules);
                 return login;
             }
 

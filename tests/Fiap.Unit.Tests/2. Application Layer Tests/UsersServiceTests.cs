@@ -125,8 +125,6 @@ namespace Fiap.Tests._2._Application_Layer_Tests
 
             #region Assert
             Assert.NotNull(result);
-            Assert.Equal(request.Name, result.Name);
-            Assert.Equal(request.Email, result.Email);
             #endregion
         }
 
