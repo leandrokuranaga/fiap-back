@@ -2,6 +2,7 @@
 using Fiap.Domain.SeedWork;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Security.Claims;
 using static Fiap.Domain.SeedWork.NotificationModel;
 
 namespace Fiap.Api
@@ -66,5 +67,11 @@ namespace Fiap.Api
             });
         }
 
+        protected string GetLoggedUser()
+        {
+            var userIdentity = HttpContext.User.Identity as ClaimsIdentity;
+            var user = userIdentity?.Claims.Where(c => c.Type == "Id").FirstOrDefault();
+            return user == null ? string.Empty : user.Value;
+        }
     }
 }

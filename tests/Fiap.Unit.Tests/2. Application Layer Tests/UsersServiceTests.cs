@@ -1,4 +1,4 @@
-using Fiap.Application.User.Services;
+using Fiap.Application.Users.Services;
 using Fiap.Application.Users.Models.Request;
 using Fiap.Domain.SeedWork;
 using Fiap.Domain.UserAggregate;

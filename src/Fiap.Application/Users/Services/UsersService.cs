@@ -1,12 +1,11 @@
 ﻿using Fiap.Application.Common;
 using Fiap.Application.Users.Models.Request;
 using Fiap.Application.Users.Models.Response;
-using Fiap.Application.Users.Services;
 using Fiap.Application.Validators.UsersValidators;
 using Fiap.Domain.SeedWork;
 using Fiap.Domain.UserAggregate;
 
-namespace Fiap.Application.User.Services
+namespace Fiap.Application.Users.Services
 {
     public class UsersService(INotification notification, IUserRepository userRepository) : BaseService(notification), IUsersService
     {
