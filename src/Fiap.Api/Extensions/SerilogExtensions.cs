@@ -8,7 +8,7 @@ namespace Fiap.Api.Extensions
         public static void ConfigureSerilog(HostBuilderContext context, IServiceProvider services, LoggerConfiguration configuration)
         {
             configuration
-                .MinimumLevel.Error()
+                .MinimumLevel.Information()
                 .Enrich.FromLogContext()
                 .Enrich.WithProperty("Application", "Fiap.Api")
                 .WriteTo.Console(new JsonFormatter(renderMessage: true))
