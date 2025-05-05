@@ -126,7 +126,7 @@ namespace Fiap.Unit.Tests._2._Application_Layer_Tests
             Assert.Null(result.Token);
             Assert.Equal(default, result.Expiration);
             _notificationMock.Verify(n =>
-                n.AddNotification("Login Failed", "Invalid username or password.", NotificationModel.ENotificationType.Unauthorized), Times.Once);
+                n.AddNotification("Login Failed", "Invalid username or password.", NotificationModel.ENotificationType.BusinessRules), Times.Once);
         }
     }
 }

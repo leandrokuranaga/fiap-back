@@ -183,5 +183,54 @@ namespace Fiap.Unit.Tests.Application_Layer_Tests
 
             #endregion
         }
+
+        [Fact]
+        public async Task GetGameAsync_ShouldReturnGame_WhenGameExists()
+        {
+            // Arrange
+            var gameId = 1;
+            var game = new Game("Halo", "Shooter", 199.99, null) { Id = gameId };
+
+            _mockGameRepository
+                .Setup(repo => repo.GetByIdAsync(gameId, false))
+                .ReturnsAsync(game);
+
+            // Act
+            var result = await _gameService.GetAsync(gameId);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(gameId, result.Id);
+            Assert.Equal("Halo", result.Name);
+            Assert.Equal("Shooter", result.Genre);
+            Assert.Equal(199.99, result.Price);
+        }
+
+
+        [Fact]
+        public async Task GetGameAsync_ShouldAddNotification_WhenGameDoesNotExist()
+        {
+            // Arrange
+            var gameId = 99;
+
+            _mockGameRepository
+                .Setup(repo => repo.GetByIdAsync(gameId, false))
+                .ReturnsAsync((Game?)null);
+
+            // Act
+            var result = await _gameService.GetAsync(gameId);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(0, result.Id);
+            _mockNotification.Verify(
+                n => n.AddNotification(
+                    "Get game by id",
+                    $"Game not found with id {gameId}",
+                    NotificationModel.ENotificationType.NotFound),
+                Times.Once
+            );
+        }
+
     }
 }

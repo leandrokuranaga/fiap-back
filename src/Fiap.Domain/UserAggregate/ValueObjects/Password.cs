@@ -10,8 +10,6 @@ namespace Fiap.Domain.UserAggregate.ValueObjects
         public string Hash { get; } = string.Empty;
         public string PasswordSalt { get; private set; } = string.Empty;
 
-        private const string Valid = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-        private const string Special = "!@#$%ˆ&*(){}[];";
         private const int KeySize = 32;
         private const int SaltSize = 16;
         private const int Iterations = 10000;
@@ -26,11 +24,8 @@ namespace Fiap.Domain.UserAggregate.ValueObjects
             PasswordSalt = salt;
         }
 
-        public Password(string? text = null)
+        public Password(string text)
         {
-            if (string.IsNullOrEmpty(text) || string.IsNullOrWhiteSpace(text))
-                text = Generate();
-
             ValidatePasswordStrength(text);
 
             string password;
@@ -46,24 +41,6 @@ namespace Fiap.Domain.UserAggregate.ValueObjects
 
         public bool Challenge(string password, string saltSaved) =>
             Verify(Hash, password, saltSaved);
-
-
-        private static string Generate(
-            short length = 16,
-            bool includeSpecialChars = true,
-            bool upperCase = false)
-        {
-            var chars = includeSpecialChars ? Valid + Special : Valid;
-            var startRandom = upperCase ? 26 : 0;
-            var index = 0;
-            var res = new char[length];
-            var rnd = new Random();
-
-            while (index < length)
-                res[index++] = chars[rnd.Next(startRandom, chars.Length)];
-
-            return new string(res);
-        }
 
         private static string Hashing(
             string password,

@@ -25,7 +25,7 @@ namespace Fiap.Api.Controllers
         /// <returns>A response containing the created game, or an error message if the input is invalid.</returns>
         [HttpPost]
         [SwaggerOperation("Creates a new game")]
-        [ProducesResponseType(typeof(BaseResponse<GameResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(BaseResponse<GameResponse>), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
         [ProducesDefaultResponseType]
         public async Task<IActionResult> Create([FromBody] CreateGameRequest request)
@@ -41,13 +41,28 @@ namespace Fiap.Api.Controllers
         [HttpGet]
         [SwaggerOperation("Gets all games")]
         [ProducesResponseType(typeof(BaseResponse<IEnumerable<GameResponse>>), (int)HttpStatusCode.OK)]
+        [ProducesDefaultResponseType]
         public async Task<IActionResult> GetAll()
         {
             var result = await gamesService.GetAllAsync();
             return Response(BaseResponse<IEnumerable<GameResponse>>.Ok(result));
         }
 
-
+        /// <summary>
+        /// Retrieves a game
+        /// </summary>
+        /// <param name="id">The id game data required to fetch.</param>
+        /// <returns>A response containing a game, or an empty list if no game are found.</returns>
+        [HttpGet("{id:int:min(1)}")]
+        [SwaggerOperation("Get game")]
+        [ProducesResponseType(typeof(BaseResponse<IEnumerable<GameResponse>>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAsync(int id)
+        {
+            var result = await gamesService.GetAsync(id);
+            return Response(BaseResponse<GameResponse>.Ok(result));
+        }
 
     }
 }
