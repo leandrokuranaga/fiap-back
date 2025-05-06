@@ -284,8 +284,8 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             Assert.Equal(users[1].Name, result[1].Name);
             #endregion
         }
-        [Fact]
-        public async Task Create_ShouldAddNotification_WhenExceptionIsThrown()
+        [Fact]        
+        public async Task Create_ShouldAddNotificationAndThrowException_WhenExceptionIsThrown()
         {
             #region Arrange
             var request = new CreateUserRequest
@@ -301,16 +301,20 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _usersService.CreateAsync(request);
+            var exception = await Assert.ThrowsAsync<Exception>(async () => await _usersService.CreateAsync(request));
             #endregion
 
             #region Assert
-            Assert.NotNull(result);
-            _mockNotification.Verify(n => n.AddNotification("Create User", "Unexpected error", NotificationModel.ENotificationType.InternalServerError), Times.Once);
+            Assert.NotNull(exception);
+            Assert.Equal("Unexpected error", exception.Message);
+            _mockNotification.Verify(n =>
+                n.AddNotification("Create User", "Unexpected error", NotificationModel.ENotificationType.InternalServerError),
+                Times.Once);
             #endregion
         }
+
         [Fact]
-        public async Task Update_ShouldAddNotification_WhenExceptionIsThrown()
+        public async Task Update_ShouldAddNotificationAndThrowException_WhenExceptionIsThrown()
         {
             #region Arrange
             int userId = 1;
@@ -326,12 +330,16 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _usersService.UpdateAsync(userId, request);
+            var exception = await Assert.ThrowsAsync<Exception>(async () => await _usersService.UpdateAsync(userId, request));
             #endregion
 
             #region Assert
-            Assert.NotNull(result);
-            _mockNotification.Verify(n => n.AddNotification("Update User", "Unexpected error", NotificationModel.ENotificationType.InternalServerError), Times.Once);
+            Assert.NotNull(exception);
+            Assert.Equal("Unexpected error", exception.Message);
+
+            _mockNotification.Verify(n =>
+                n.AddNotification("Update User", "Unexpected error", NotificationModel.ENotificationType.InternalServerError),
+                Times.Once);
             #endregion
         }
         [Fact]
@@ -375,7 +383,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
         }
 
         [Fact]
-        public async Task Delete_ShouldAddNotification_WhenExceptionIsThrown()
+        public async Task Delete_ShouldAddNotificationAndThrowException_WhenExceptionIsThrown()
         {
             #region Arrange
             int userId = 1;
@@ -401,12 +409,12 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _usersService.DeleteAsync(userId);
+            var exception = await Assert.ThrowsAsync<Exception>(async () => await _usersService.DeleteAsync(userId));
             #endregion
 
             #region Assert
-            Assert.NotNull(result);
-            Assert.False(result.Success);
+            Assert.NotNull(exception);
+            Assert.Equal("Unexpected error", exception.Message);
             _mockUserRepository.Verify(r => r.RollbackAsync(), Times.Once);
             _mockNotification.Verify(n =>
                 n.AddNotification("Delete User", "Unexpected error", NotificationModel.ENotificationType.InternalServerError),
@@ -477,7 +485,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
         }
 
         [Fact]
-        public async Task CreateAdminAsync_ShouldAddNotification_WhenExceptionIsThrown()
+        public async Task CreateAdminAsync_ShouldAddNotificationAndThrowException_WhenExceptionIsThrown()
         {
             // Arrange
             var request = new CreateUserAdminRequest
@@ -498,13 +506,17 @@ namespace Fiap.Tests._2._Application_Layer_Tests
                 .Returns(Task.CompletedTask);
 
             // Act
-            var result = await _usersService.CreateAdminAsync(request);
+            var exception = await Assert.ThrowsAsync<Exception>(async () => await _usersService.CreateAdminAsync(request));
 
             // Assert
-            Assert.NotNull(result);
+            #region Assert
+            Assert.NotNull(exception);
+            Assert.Equal("Unexpected error", exception.Message);
+
             _mockNotification.Verify(n =>
                 n.AddNotification("Create User", "Unexpected error", NotificationModel.ENotificationType.InternalServerError),
                 Times.Once);
+            #endregion
         }
     }
 }

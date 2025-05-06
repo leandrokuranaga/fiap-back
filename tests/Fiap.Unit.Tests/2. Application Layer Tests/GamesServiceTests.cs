@@ -73,11 +73,13 @@ namespace Fiap.Unit.Tests.Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _gameService.CreateAsync(request);
+            var exception = await Assert.ThrowsAsync<Exception>(async () => await _gameService.CreateAsync(request));
             #endregion
 
             #region Assert
-            Assert.NotNull(result);
+            Assert.NotNull(exception);
+            Assert.Equal("Test exception", exception.Message);
+
             _mockNotification.Verify(
                 n => n.AddNotification(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NotificationModel.ENotificationType>()),
                 Times.Once

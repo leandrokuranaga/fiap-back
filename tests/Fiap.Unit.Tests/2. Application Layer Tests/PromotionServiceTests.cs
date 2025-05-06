@@ -71,7 +71,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
 
 
         [Fact]
-        public async Task CreatePromotion_ShouldAddNotification_WhenExceptionOccurs()
+        public async Task CreatePromotion_ShouldAddNotificationAndThrowException_WhenExceptionOccurs()
         {
             #region Arrange
             var request = new CreatePromotionRequest
@@ -86,12 +86,16 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _promotionService.CreateAsync(request);
+            var exception = await Assert.ThrowsAsync<Exception>(async () => await _promotionService.CreateAsync(request));
             #endregion
 
             #region Assert
-            Assert.NotNull(result);
-            _mockNotification.Verify(n => n.AddNotification(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NotificationModel.ENotificationType>()), Times.Once);
+            Assert.NotNull(exception);
+            Assert.Equal("Test exception", exception.Message);
+
+            _mockNotification.Verify(n =>
+                n.AddNotification("Not Found", "Test exception", NotificationModel.ENotificationType.NotFound),
+                Times.Once);
             #endregion
         }
 
@@ -130,7 +134,7 @@ namespace Fiap.Tests._2._Application_Layer_Tests
         }
 
         [Fact]
-        public async Task UpdatePromotion_ShouldAddNotification_WhenExceptionOccurs()
+        public async Task UpdatePromotion_ShouldAddNotificationAndThrowException_WhenExceptionOccurs()
         {
             #region Arrange
             int promotionId = 1;
@@ -147,14 +151,16 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var result = await _promotionService.UpdateAsync(promotionId, request);
-
+            var exception = await Assert.ThrowsAsync<Exception>(async () => await _promotionService.UpdateAsync(promotionId, request));
             #endregion
 
             #region Assert
-            Assert.NotNull(result);
-            _mockNotification.Verify(n => n.AddNotification(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NotificationModel.ENotificationType>()), Times.Once);
+            Assert.NotNull(exception);
+            Assert.Equal("Test exception", exception.Message);
 
+            _mockNotification.Verify(n =>
+                n.AddNotification(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NotificationModel.ENotificationType>()),
+                Times.Once);
             #endregion
         }
 
