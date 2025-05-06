@@ -2,6 +2,7 @@
 using Fiap.Application.Users.Models.Request;
 using Fiap.Application.Users.Models.Response;
 using Fiap.Application.Users.Services;
+using Fiap.Application.Validators;
 using Fiap.Application.Validators.UsersValidators;
 using Fiap.Domain.SeedWork;
 using Fiap.Domain.UserAggregate;
@@ -76,12 +77,12 @@ namespace Fiap.Application.User.Services
 
                 var user = (Domain.UserAggregate.User)request;
 
-                await userRepository.BeginTransactionAsync();   
+                await userRepository.BeginTransactionAsync();
 
                 await userRepository.InsertOrUpdateAsync(user);
                 await userRepository.SaveChangesAsync();
 
-                await userRepository.CommitAsync(); 
+                await userRepository.CommitAsync();
 
                 response = (UserResponse)user;
 
@@ -92,10 +93,9 @@ namespace Fiap.Application.User.Services
                 await userRepository.RollbackAsync();
 
                 if (!_notification.HasNotification)
-                    _notification.AddNotification("Create User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
-                return response;
+                    _notification.AddNotification("Create User", ex.Message, NotificationModel.ENotificationType.InternalServerError); throw;
             }
-        });        
+        });
 
         public Task<UserResponse> CreateAdminAsync(CreateUserAdminRequest request) => ExecuteAsync(async () =>
         {
@@ -132,7 +132,7 @@ namespace Fiap.Application.User.Services
 
                 if (!_notification.HasNotification)
                     _notification.AddNotification("Create User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
-                return response;
+                throw;
             }
         });
 
@@ -167,7 +167,7 @@ namespace Fiap.Application.User.Services
                 await userRepository.RollbackAsync();
 
                 _notification.AddNotification("Update User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
-                return response;
+                throw;
             }
         });
 
@@ -202,12 +202,12 @@ namespace Fiap.Application.User.Services
 
                 return BaseResponse<object>.Ok(null);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await userRepository.RollbackAsync();
                 _notification.AddNotification("Delete User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
-                return BaseResponse<object>.Fail(_notification.NotificationModel);
+                throw;
             }
-        });        
+        });
     }
 }

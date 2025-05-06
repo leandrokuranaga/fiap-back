@@ -42,7 +42,7 @@ namespace Fiap.Application.Promotions.Services
             {
                 await unitOfWork.RollbackAsync();
                 notification.AddNotification("Not Found", ex.Message, NotificationModel.ENotificationType.NotFound);
-                return response;
+                throw;
             }
         });
 
@@ -114,7 +114,7 @@ namespace Fiap.Application.Promotions.Services
             {
                 await unitOfWork.RollbackAsync();
                 notification.AddNotification("Update Promotion", ex.Message, NotificationModel.ENotificationType.NotFound);
-                return response;
+                throw;
             }
         });
 

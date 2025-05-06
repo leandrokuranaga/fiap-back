@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Fiap.Api.Middlewares;
 
 public static class ErrorHandlingExtensions
 {

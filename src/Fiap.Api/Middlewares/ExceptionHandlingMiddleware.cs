@@ -1,21 +1,39 @@
-﻿using Serilog;
+﻿using Fiap.Domain.SeedWork.Exceptions;
+using Fiap.Domain.SeedWork;
+using Serilog;
 using System.Net;
 using System.Text.Json;
 
-public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
+namespace Fiap.Api.Middlewares
 {
-    public async Task Invoke(HttpContext context)
+    public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
     {
-        try
+        public async Task Invoke(HttpContext context)
         {
-            await next(context);
+            try
+            {
+                await next(context);
+            }
+            catch (NotFoundException e)
+            {     
+                await HandleExceptionAsync(context, e, "Not Found", NotificationModel.ENotificationType.NotFound, HttpStatusCode.NotFound);
+            }
+            catch (ArgumentException e)
+            {             
+                await HandleExceptionAsync(context, e, "Invalid Property", NotificationModel.ENotificationType.BadRequestError, HttpStatusCode.BadRequest);
+            }
+            catch (Exception e)
+            {                
+                await HandleExceptionAsync(context, e, "Internal Error", NotificationModel.ENotificationType.InternalServerError, HttpStatusCode.InternalServerError);
+            }
         }
-        catch (Exception ex)
+
+        private async Task HandleExceptionAsync(HttpContext context, Exception exception, string title, NotificationModel.ENotificationType notificationType, HttpStatusCode statusCode)
         {
             var correlationId = Guid.NewGuid().ToString();
-
             var userAgent = context.Request.Headers["User-Agent"].ToString();
-            Log.Error(ex,
+
+            Log.Error(exception,
                 "Unhandled exception occurred. CorrelationId: {CorrelationId}, Path: {Path}, Method: {Method}, QueryString: {QueryString}, UserAgent: {UserAgent}",
                 correlationId,
                 context.Request.Path.Value,
@@ -23,14 +41,14 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
                 context.Request.QueryString.Value,
                 userAgent);
 
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            context.Response.StatusCode = (int)statusCode;
             context.Response.ContentType = "application/json";
 
             var errorResponse = new
             {
-                message = "An unexpected error occurred.",
+                message = title,
                 details = context.RequestServices.GetService<IWebHostEnvironment>()?.IsDevelopment() == true
-                    ? ex.Message
+                    ? exception.Message
                     : null,
                 path = context.Request.Path.Value,
                 method = context.Request.Method,

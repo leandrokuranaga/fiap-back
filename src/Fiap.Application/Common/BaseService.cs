@@ -24,18 +24,6 @@ namespace Fiap.Application.Common
             {
                 _notification.AddNotification("Validator Error", e.Message, NotificationModel.ENotificationType.BadRequestError);
             }
-            catch (NotFoundException e)
-            {
-                _notification.AddNotification("Not Found", e.Message, NotificationModel.ENotificationType.NotFound);
-            }
-            catch (ArgumentException e)
-            {
-                _notification.AddNotification("Invalid Property", e.Message, NotificationModel.ENotificationType.BadRequestError);
-            }
-            catch (Exception e)
-            {
-                _notification.AddNotification("Internal Error", e.Message, NotificationModel.ENotificationType.InternalServerError);
-            }
             return default;
         }
 

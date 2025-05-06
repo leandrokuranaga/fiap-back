@@ -43,7 +43,7 @@ namespace Fiap.Application.Games.Services
             {
                 await gameRepository.RollbackAsync(); 
                 _notification.AddNotification("Create Game", ex.Message, ENotificationType.NotFound);
-                return response;
+                throw;
             }
         }
 
