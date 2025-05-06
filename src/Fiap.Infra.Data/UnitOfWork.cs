@@ -49,11 +49,22 @@ namespace Fiap.Infra.Data
         {
             if (_transaction is not null)
             {
-                await _transaction.RollbackAsync();
-                await _transaction.DisposeAsync();
-                _transaction = null;
+                try
+                {
+                    await _transaction.RollbackAsync();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Erro ao tentar rollback: {ex.Message}");
+                }
+                finally
+                {
+                    await _transaction.DisposeAsync();
+                    _transaction = null;
+                }
             }
         }
+
 
         public void Dispose()
         {

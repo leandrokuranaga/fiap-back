@@ -50,8 +50,6 @@ var app = builder.Build();
 
 app.UseExceptionHandling();
 
-//app.UseCustomStatusCodePages(); TODO: Varificar se ainda é necessário
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwaggerDocumentation();
