@@ -1,4 +1,6 @@
 ﻿using Fiap.Application.Common;
+using Fiap.Application.Games.Models.Response;
+using Fiap.Application.Games.Services;
 using Fiap.Application.Users.Models.Request;
 using Fiap.Application.Users.Models.Response;
 using Fiap.Application.Users.Services;
@@ -7,13 +9,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
+using System.Security.Claims;
 
 namespace Fiap.Api.Controllers
 {
     /// <summary>
     /// Controller used to manage all users
     /// </summary>
-    [Authorize(Roles = "Admin")]
     [ApiController]
     [ApiVersion("1.0")]
     [ApiExplorerSettings(GroupName = "v1")]
@@ -42,6 +44,7 @@ namespace Fiap.Api.Controllers
         [ProducesResponseType(typeof(BaseResponse<UserResponse>), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
         [ProducesDefaultResponseType]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateAdminAsync([FromBody] CreateUserAdminRequest request)
         {
             var result = await usersService.CreateAdminAsync(request);
@@ -59,6 +62,7 @@ namespace Fiap.Api.Controllers
         [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
         [ProducesDefaultResponseType]
         [HttpPatch("{id:int:min(1)}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateAsync(int id, [FromBody] UpdateUserRequest request)
         {
             await usersService.UpdateAsync(id, request);
@@ -75,6 +79,7 @@ namespace Fiap.Api.Controllers
         [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
         [ProducesDefaultResponseType]
         [HttpDelete("{id:int:min(1)}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
             await usersService.DeleteAsync(id);
@@ -91,6 +96,7 @@ namespace Fiap.Api.Controllers
         [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
         [ProducesDefaultResponseType]
         [HttpGet("{id:int:min(1)}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAsync(int id)
         {
             var result = await usersService.GetAsync(id);
@@ -102,15 +108,32 @@ namespace Fiap.Api.Controllers
         /// </summary>
         /// <returns>The list of users information.</returns>
         [SwaggerOperation("Gets a list of users")]
-        [ProducesResponseType(typeof(BaseResponse<UserResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(BaseResponse<List<UserResponse>>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
         [ProducesDefaultResponseType]
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllAsync()
         {
             var result = await usersService.GetAllAsync();
             return Response(BaseResponse<List<UserResponse>>.Ok(result));
         }
 
+        /// <summary>
+        /// Gets all games from the logged in user
+        /// </summary>
+        /// <returns>A response containing a library of games from the logged in user</returns>
+        [HttpGet("users-games")]
+        [SwaggerOperation("Get a Library of Games from user logged in")]
+        [ProducesResponseType(typeof(BaseResponse<List<UserLibraryGameResponse>>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
+        [ProducesDefaultResponseType]
+        [Authorize(Roles = "User,Admin")]
+        public async Task<IActionResult> GetGamesByUserAsync()
+        {
+            var id = GetLoggedUser();
+            var result = await usersService.GetGamesByUserAsync(id);
+            return Response(BaseResponse<List<UserLibraryGameResponse>>.Ok(result));
+        }
     }
 }

@@ -12,7 +12,7 @@ namespace Fiap.Domain.PromotionAggregate
         {
         }
 
-        public Promotion(double discount, DateTime startDate, DateTime endDate)
+        public Promotion(decimal discount, DateTime startDate, DateTime endDate)
         {
             Discount = new Money(discount);
             StartDate = new UtcDate(startDate);
@@ -24,7 +24,7 @@ namespace Fiap.Domain.PromotionAggregate
         public UtcDate EndDate { get; set; }
 
         public virtual ICollection<Game> Games { get; set; } = [];
-        public void UpdateDiscount(double? discount, DateTime? endDate)
+        public void UpdateDiscount(decimal? discount, DateTime? endDate)
         {
             if (discount.HasValue)
                 Discount = new Money(discount.Value);
@@ -43,7 +43,7 @@ namespace Fiap.Domain.PromotionAggregate
 
         public bool IsActive() => StartDate <= DateTime.UtcNow && EndDate >= DateTime.UtcNow;
 
-        public double GetDiscountedPrice(double originalPrice)
+        public decimal GetDiscountedPrice(decimal originalPrice)
         {
             return originalPrice * (1 - Discount.Value / 100);
         }

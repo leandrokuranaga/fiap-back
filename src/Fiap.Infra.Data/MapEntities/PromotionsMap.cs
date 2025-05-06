@@ -26,9 +26,9 @@ namespace Fiap.Infra.Data.MapEntities
                         .HasMaxLength(3);
 
                 discount.HasData(
-                    new { PromotionId = 1, Value = 10.15, Currency = "USD" },
-                    new { PromotionId = 2, Value = 15.98, Currency = "USD" },
-                    new { PromotionId = 3, Value = 20.97, Currency = "USD" }
+                    new { PromotionId = 1, Value = 10.15M, Currency = "USD" },
+                    new { PromotionId = 2, Value = 15.98M, Currency = "USD" },
+                    new { PromotionId = 3, Value = 20.97M, Currency = "USD" }
                 );
             });
 

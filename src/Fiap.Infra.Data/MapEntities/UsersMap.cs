@@ -47,14 +47,14 @@ namespace Fiap.Infra.Data.MapEntities
                     new
                     {
                         UserId = 1,
-                        Hash = "10000.LW59V9G+BlFV/Bb19uYa4g==.eYihrqMpMG7icxurO2Gz4Zf8XrqNxk+rWALXrqHmbgI=",
-                        PasswordSalt = "LW59V9G+BlFV/Bb19uYa4g=="
+                        Hash = "10000.zC3asvLZv6BQ2X3zcYdnhw==.d4+u5b59o6giayRcfePNPyF4I6nekoRp9bAMUEy3iHc=",
+                        PasswordSalt = "WQ1YZ/OiCeVcusBQ94njtQ=="
                     },
                     new
                     {
                         UserId = 2,
-                        Hash = "10000.V2BkMe/V+PQUC1g6VczN/g==.xAqE2zHO+O2FYokAs6Dn7DkHLaeVZ4xiJh7n8xF2rFg=",
-                        PasswordSalt = "V2BkMe/V+PQUC1g6VczN/g=="
+                        Hash = "10000.SFG18S5pQd5QgxPtSxwPaw==.MPaE5q4K+T8EROdyuCeTz8SmJv+8q+h+yeN0d9pGUOg=",
+                        PasswordSalt = "J3CYQ56LlZ/D7NXAZBirlA=="
                     });
             });
 
