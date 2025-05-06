@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Fiap.Infra.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateGameWithPriceSeed : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,7 +20,7 @@ namespace Fiap.Infra.Data.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    DiscountValue = table.Column<double>(type: "double precision", nullable: false),
+                    DiscountValue = table.Column<decimal>(type: "numeric", nullable: false),
                     DiscountCurrency = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: false),
                     StartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
@@ -56,7 +56,7 @@ namespace Fiap.Infra.Data.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Genre = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Price = table.Column<double>(type: "double precision", nullable: false),
+                    Price = table.Column<decimal>(type: "numeric", nullable: false),
                     PriceCurrency = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: false),
                     PromotionId = table.Column<int>(type: "integer", nullable: true)
                 },
@@ -79,7 +79,7 @@ namespace Fiap.Infra.Data.Migrations
                     GameId = table.Column<int>(type: "integer", nullable: false),
                     UserId = table.Column<int>(type: "integer", nullable: false),
                     PurchaseDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    PricePaid = table.Column<double>(type: "double precision", nullable: false),
+                    PricePaid = table.Column<decimal>(type: "numeric", nullable: false),
                     PriceCurrency = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: false)
                 },
                 constraints: table =>
@@ -104,14 +104,14 @@ namespace Fiap.Infra.Data.Migrations
                 columns: new[] { "Id", "Genre", "Name", "PromotionId", "PriceCurrency", "Price" },
                 values: new object[,]
                 {
-                    { 1, "Action RPG", "The Legend of Zelda: Breath of the Wild", null, "USD", 299.0 },
-                    { 2, "Action RPG", "The Witcher 3: Wild Hunt", null, "BRL", 39.990000000000002 },
-                    { 3, "Action-adventure", "Red Dead Redemption 2", null, "BRL", 49.990000000000002 },
-                    { 4, "Action RPG", "Dark Souls III", null, "BRL", 29.989999999999998 },
-                    { 5, "Action-adventure", "God of War", null, "BRL", 39.990000000000002 },
-                    { 6, "Sandbox", "Minecraft", null, "BRL", 26.949999999999999 },
-                    { 7, "First-person shooter", "Overwatch", null, "BRL", 39.990000000000002 },
-                    { 8, "Action-adventure", "The Last of Us Part II", null, "BRL", 49.990000000000002 }
+                    { 1, "Action RPG", "The Legend of Zelda: Breath of the Wild", null, "USD", 299.00m },
+                    { 2, "Action RPG", "The Witcher 3: Wild Hunt", null, "BRL", 39.99m },
+                    { 3, "Action-adventure", "Red Dead Redemption 2", null, "BRL", 49.99m },
+                    { 4, "Action RPG", "Dark Souls III", null, "BRL", 29.99m },
+                    { 5, "Action-adventure", "God of War", null, "BRL", 39.99m },
+                    { 6, "Sandbox", "Minecraft", null, "BRL", 26.95m },
+                    { 7, "First-person shooter", "Overwatch", null, "BRL", 39.99m },
+                    { 8, "Action-adventure", "The Last of Us Part II", null, "BRL", 49.99m }
                 });
 
             migrationBuilder.InsertData(
@@ -119,9 +119,9 @@ namespace Fiap.Infra.Data.Migrations
                 columns: new[] { "Id", "EndDate", "StartDate", "DiscountCurrency", "DiscountValue" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2025, 4, 1, 0, 0, 0, 0, DateTimeKind.Utc), "USD", 10.15 },
-                    { 2, new DateTime(2025, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2025, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc), "USD", 15.98 },
-                    { 3, new DateTime(2025, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Utc), "USD", 20.969999999999999 }
+                    { 1, new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2025, 4, 1, 0, 0, 0, 0, DateTimeKind.Utc), "USD", 10.15m },
+                    { 2, new DateTime(2025, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2025, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc), "USD", 15.98m },
+                    { 3, new DateTime(2025, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Utc), "USD", 20.97m }
                 });
 
             migrationBuilder.InsertData(
@@ -129,8 +129,8 @@ namespace Fiap.Infra.Data.Migrations
                 columns: new[] { "Id", "Active", "Name", "TypeUser", "Email", "PasswordHash", "PasswordSalt" },
                 values: new object[,]
                 {
-                    { 1, true, "Admin", "Admin", "admin@domain.com", "10000.LW59V9G+BlFV/Bb19uYa4g==.eYihrqMpMG7icxurO2Gz4Zf8XrqNxk+rWALXrqHmbgI=", "LW59V9G+BlFV/Bb19uYa4g==" },
-                    { 2, true, "User", "User", "user@domain.com", "10000.V2BkMe/V+PQUC1g6VczN/g==.xAqE2zHO+O2FYokAs6Dn7DkHLaeVZ4xiJh7n8xF2rFg=", "V2BkMe/V+PQUC1g6VczN/g==" }
+                    { 1, true, "Admin", "Admin", "admin@domain.com", "10000.zC3asvLZv6BQ2X3zcYdnhw==.d4+u5b59o6giayRcfePNPyF4I6nekoRp9bAMUEy3iHc=", "WQ1YZ/OiCeVcusBQ94njtQ==" },
+                    { 2, true, "User", "User", "user@domain.com", "10000.SFG18S5pQd5QgxPtSxwPaw==.MPaE5q4K+T8EROdyuCeTz8SmJv+8q+h+yeN0d9pGUOg=", "J3CYQ56LlZ/D7NXAZBirlA==" }
                 });
 
             migrationBuilder.InsertData(
@@ -138,10 +138,10 @@ namespace Fiap.Infra.Data.Migrations
                 columns: new[] { "Id", "GameId", "PurchaseDate", "UserId", "PriceCurrency", "PricePaid" },
                 values: new object[,]
                 {
-                    { 1, 1, new DateTime(2025, 4, 1, 0, 0, 0, 0, DateTimeKind.Utc), 1, "USD", 10.0 },
-                    { 2, 2, new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), 2, "USD", 15.0 },
-                    { 3, 3, new DateTime(2025, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc), 1, "USD", 20.0 },
-                    { 4, 4, new DateTime(2025, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc), 2, "USD", 28.989999999999998 }
+                    { 1, 1, new DateTime(2025, 4, 1, 0, 0, 0, 0, DateTimeKind.Utc), 1, "USD", 10.00m },
+                    { 2, 2, new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), 2, "USD", 15.00m },
+                    { 3, 3, new DateTime(2025, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc), 1, "USD", 20.00m },
+                    { 4, 4, new DateTime(2025, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc), 2, "USD", 28.99m }
                 });
 
             migrationBuilder.CreateIndex(

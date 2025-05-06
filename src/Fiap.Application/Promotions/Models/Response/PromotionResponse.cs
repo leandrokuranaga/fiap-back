@@ -8,7 +8,7 @@ namespace Fiap.Application.Promotions.Models.Response
     public record PromotionResponse
     {
         public int PromotionId { get; set; }
-        public double Discount { get; set; }
+        public decimal Discount { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
 

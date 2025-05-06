@@ -9,7 +9,7 @@ namespace Fiap.Application.Games.Models.Request
     {
         public string Name { get; set; }
         public string Genre { get; set; }
-        public double Price { get; set; }
+        public decimal Price { get; set; }
         public int? PromotionId { get; set; }
 
         public static explicit operator Game(CreateGameRequest c)

@@ -50,14 +50,14 @@ namespace Fiap.Infra.Data.MapEntities
             builder.HasData(GameSeed.Game());
 
             builder.OwnsOne(x => x.Price).HasData(
-                new { GameId = 1, Value = 299.00, Currency = "USD" },
-                new { GameId = 2, Value = 39.99, Currency = "BRL" },
-                new { GameId = 3, Value = 49.99, Currency = "BRL" },
-                new { GameId = 4, Value = 29.99, Currency = "BRL" },
-                new { GameId = 5, Value = 39.99, Currency = "BRL" },
-                new { GameId = 6, Value = 26.95, Currency = "BRL" },
-                new { GameId = 7, Value = 39.99, Currency = "BRL" },
-                new { GameId = 8, Value = 49.99, Currency = "BRL" }
+                new { GameId = 1, Value = 299.00M, Currency = "USD" },
+                new { GameId = 2, Value = 39.99M, Currency = "BRL" },
+                new { GameId = 3, Value = 49.99M, Currency = "BRL" },
+                new { GameId = 4, Value = 29.99M, Currency = "BRL" },
+                new { GameId = 5, Value = 39.99M, Currency = "BRL" },
+                new { GameId = 6, Value = 26.95M, Currency = "BRL" },
+                new { GameId = 7, Value = 39.99M, Currency = "BRL" },
+                new { GameId = 8, Value = 49.99M, Currency = "BRL" }
             );
         }
     }

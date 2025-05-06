@@ -39,10 +39,10 @@ namespace Fiap.Infra.Data.MapEntities
                      .HasMaxLength(3);
 
                 price.HasData(
-                    new { LibraryGameId = 1, Value = 10.00, Currency = "USD" },
-                    new { LibraryGameId = 2, Value = 15.00, Currency = "USD" },
-                    new { LibraryGameId = 3, Value = 20.00, Currency = "USD" },
-                    new { LibraryGameId = 4, Value = 28.99, Currency = "USD" }
+                    new { LibraryGameId = 1, Value = 10.00M, Currency = "USD" },
+                    new { LibraryGameId = 2, Value = 15.00M, Currency = "USD" },
+                    new { LibraryGameId = 3, Value = 20.00M, Currency = "USD" },
+                    new { LibraryGameId = 4, Value = 28.99M, Currency = "USD" }
                 );
             });
 

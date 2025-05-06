@@ -11,6 +11,7 @@ namespace Fiap.Application.Users.Services
         Task<UserResponse> CreateAsync(CreateUserRequest request);
         Task<UserResponse> CreateAdminAsync(CreateUserAdminRequest request);
         Task<BaseResponse<object>> UpdateAsync(int id, UpdateUserRequest request);
-        Task<BaseResponse<object>> DeleteAsync(int id);     
+        Task<BaseResponse<object>> DeleteAsync(int id);
+        Task<List<UserLibraryGameResponse>> GetGamesByUserAsync(int IdUser);
     }
 }

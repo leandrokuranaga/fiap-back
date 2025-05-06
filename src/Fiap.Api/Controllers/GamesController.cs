@@ -63,6 +63,5 @@ namespace Fiap.Api.Controllers
             var result = await gamesService.GetAsync(id);
             return Response(BaseResponse<GameResponse>.Ok(result));
         }
-
     }
 }

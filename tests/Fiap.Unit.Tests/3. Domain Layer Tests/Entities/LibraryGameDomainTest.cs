@@ -14,7 +14,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
             var userId = 10;
             var gameId = 20;
             var purchaseDate = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            var pricePaid = 59.99;
+            var pricePaid = 59.99M;
 
             var mockGame = new Fiap.Domain.GameAggregate.Game { Id = gameId, Name = "Mock Game" };
             var mockUser = new Fiap.Domain.UserAggregate.User("Mock", "mock@email.com", "invalidHash@1salt", TypeUser.User, true)
@@ -47,7 +47,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
             var userId = 2;
             var gameId = 3;
             var purchaseDate = DateTime.UtcNow;
-            var pricePaid = 99.99;
+            var pricePaid = 99.99M;
 
             // Act                       
             var entity = new LibraryGame(id, userId, gameId, purchaseDate, pricePaid)

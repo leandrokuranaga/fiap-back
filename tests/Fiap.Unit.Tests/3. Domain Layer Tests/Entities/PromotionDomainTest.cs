@@ -10,7 +10,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         public void PromotionSuccess()
         {
             #region Arrange
-            var discount = 10.0;
+            var discount = 10.0M;
             var startDate = DateTime.UtcNow;
             var endDate = DateTime.UtcNow.AddDays(30);
             #endregion
@@ -30,7 +30,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         public void Promotion_IsExpired_ReturnsTrue_WhenDateHasPassed()
         {
             #region Arrange
-            var promotion = new Promotion(10.0, DateTime.UtcNow.AddDays(-10), DateTime.UtcNow.AddDays(-1));
+            var promotion = new Promotion(10.0M, DateTime.UtcNow.AddDays(-10), DateTime.UtcNow.AddDays(-1));
             #endregion
 
             #region Act
@@ -46,7 +46,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         public void Promotion_IsActive_ReturnsTrue_WhenWithinPeriod()
         {
             #region Arrange
-            var promotion = new Promotion(10.0, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow.AddDays(10));
+            var promotion = new Promotion(10.0M, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow.AddDays(10));
             #endregion
 
             #region Act
@@ -76,8 +76,8 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         public void GetDiscountedPrice_ReturnsCorrectValue()
         {
             #region Arrange
-            var promotion = new Promotion(25.0, DateTime.UtcNow, DateTime.UtcNow.AddDays(5));
-            var originalPrice = 100.0;
+            var promotion = new Promotion(25.0M, DateTime.UtcNow, DateTime.UtcNow.AddDays(5));
+            var originalPrice = 100.0M;
             #endregion
 
             #region Act
@@ -85,7 +85,7 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
             #endregion
 
             #region Assert
-            Assert.Equal(75.0, discountedPrice);
+            Assert.Equal(75.0M, discountedPrice);
             #endregion
         }
 
@@ -93,8 +93,8 @@ namespace Fiap.Tests._3._Domain_Layer_Tests
         public void UpdateDiscount_UpdatesValuesCorrectly()
         {
             #region Arrange
-            var promotion = new Promotion(10.0, DateTime.UtcNow, DateTime.UtcNow.AddDays(5));
-            var newDiscount = 20.0;
+            var promotion = new Promotion(10.0M, DateTime.UtcNow, DateTime.UtcNow.AddDays(5));
+            var newDiscount = 20.0M;
             var newEndDate = DateTime.UtcNow.AddDays(10);
             #endregion
 
