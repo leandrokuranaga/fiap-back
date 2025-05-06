@@ -39,8 +39,8 @@ namespace Fiap.BDD.Tests.Features.Auth
         public static async System.Threading.Tasks.Task FeatureSetupAsync()
         {
             testRunner = global::Reqnroll.TestRunnerManager.GetTestRunnerForAssembly();
-            global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features/Auth", "User login", ("  Validates different login behaviors based on provided credentials and user type" +
-                    "."), global::Reqnroll.ProgrammingLanguage.CSharp, featureTags);
+            global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features/Auth", "User login", "  Validates different login behaviors based on provided credentials and user type" +
+                    ".", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags);
             await testRunner.OnFeatureStartAsync(featureInfo);
         }
         
@@ -355,8 +355,8 @@ namespace Fiap.BDD.Tests.Features.Auth
      await testRunner.ThenAsync("the result should not contain a JWT token", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 52
-     await testRunner.AndAsync(("an error notification with message \"Your account is disabled. Please contact supp" +
-                        "ort.\" should be recorded"), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+     await testRunner.AndAsync("an error notification with message \"Your account is disabled. Please contact supp" +
+                        "ort.\" should be recorded", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
