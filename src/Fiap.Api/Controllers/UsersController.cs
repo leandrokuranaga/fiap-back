@@ -10,6 +10,9 @@ using System.Net;
 
 namespace Fiap.Api.Controllers
 {
+    /// <summary>
+    /// Controller used to manage all users
+    /// </summary>
     [Authorize(Roles = "Admin")]
     [ApiController]
     [ApiVersion("1.0")]
@@ -20,13 +23,13 @@ namespace Fiap.Api.Controllers
         [AllowAnonymous]
         [HttpPost("create")]
         [SwaggerOperation("Creates a regular user")]
-        [ProducesResponseType(typeof(BaseResponse<UserResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(BaseResponse<UserResponse>), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
         [ProducesDefaultResponseType]
         public async Task<IActionResult> CreateAsync([FromBody] CreateUserRequest request)
         {
             var result = await usersService.CreateAsync(request);
-            return Response(BaseResponse<UserResponse>.Ok(result));
+            return Response<UserResponse>(result.UserId, result);
         }
 
         /// <summary>
@@ -36,13 +39,13 @@ namespace Fiap.Api.Controllers
         /// <returns>The new user created information.</returns>
         [HttpPost("create-admin")]
         [SwaggerOperation("Creates a user (only admin)")]
-        [ProducesResponseType(typeof(BaseResponse<UserResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(BaseResponse<UserResponse>), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
         [ProducesDefaultResponseType]
         public async Task<IActionResult> CreateAdminAsync([FromBody] CreateUserAdminRequest request)
         {
             var result = await usersService.CreateAdminAsync(request);
-            return Response(BaseResponse<UserResponse>.Ok(result));
+            return Response<UserResponse>(result.UserId, result);
         }
 
         /// <summary>
@@ -52,14 +55,14 @@ namespace Fiap.Api.Controllers
         /// <param name="id">id of the updated user</param>
         /// <returns>The new user updated information.</returns>
         [SwaggerOperation("Updates a user")]
-        [ProducesResponseType(typeof(BaseResponse<UserResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(BaseResponse<UserResponse>), (int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
         [ProducesDefaultResponseType]
         [HttpPatch("{id:int:min(1)}")]
         public async Task<IActionResult> UpdateAsync(int id, [FromBody] UpdateUserRequest request)
         {
-            var result = await usersService.UpdateAsync(id, request);
-            return Response(BaseResponse<UserResponse>.Ok(result));
+            await usersService.UpdateAsync(id, request);
+            return Response(BaseResponse<UserResponse>.Ok(null));
         }
 
         /// <summary>
@@ -68,14 +71,14 @@ namespace Fiap.Api.Controllers
         /// <param name="id">id of the deleted user</param>
         /// <returns>The deleted user information.</returns>
         [SwaggerOperation("Delete a user based on id")]
-        [ProducesResponseType(typeof(BaseResponse<UserResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(BaseResponse<UserResponse>), (int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
         [ProducesDefaultResponseType]
         [HttpDelete("{id:int:min(1)}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
             await usersService.DeleteAsync(id);
-            return Response(BaseResponse<EmptyResultModel>.Ok(new EmptyResultModel()));
+            return Response(BaseResponse<UserResponse>.Ok(null));
         }
 
         /// <summary>
