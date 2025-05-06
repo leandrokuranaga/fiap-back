@@ -27,7 +27,6 @@ namespace Fiap.Api.Controllers
         [SwaggerOperation("Authenticate a user and get a JWT token.")]
         [ProducesResponseType(typeof(BaseResponse<LoginResponse>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         [ProducesDefaultResponseType]
         public async Task<IActionResult> LoginAsync([FromBody] LoginRequest request)
         {
