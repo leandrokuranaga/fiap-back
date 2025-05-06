@@ -5,18 +5,15 @@ namespace Fiap.Domain.Common.ValueObjects
 {
     public class Money : ValueObject
     {
-        public double Value { get; }
+        public decimal Value { get; }
         public string Currency { get; }
 
-        private static readonly HashSet<string> ValidCurrencies = new()
-        {
+        private static readonly HashSet<string> ValidCurrencies =
+        [
             "USD", "EUR", "BRL", "JPY", "GBP" 
-        };
-        public Money(double value, string currency = "BRL")
+        ];
+        public Money(decimal value, string currency = "BRL")
         {
-            if (double.IsNaN(value))
-                throw new BusinessRulesException("The price cannot be NaN.");
-
             if (value < 0)
                 throw new BusinessRulesException("The price must be greater than or equal to 0.");
 

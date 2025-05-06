@@ -4,8 +4,10 @@ using Fiap.Application.Users.Models.Request;
 using Fiap.Application.Users.Models.Response;
 using Fiap.Application.Users.Services;
 using Fiap.Domain.SeedWork;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using System.Security.Claims;
 using System.Text.Json;
 
 namespace Fiap.Unit.Tests._1._Api_Layer_Tests
@@ -212,5 +214,49 @@ namespace Fiap.Unit.Tests._1._Api_Layer_Tests
 
         }
         #endregion
+
+        [Fact]
+        public async Task GetGamesByUserAsync_ShouldReturnOk_WhenServiceReturnsGames()
+        {
+            // Arrange
+            var userId = 1;
+
+            var expectedGames = new List<UserLibraryGameResponse>
+            {
+                new() { GameId = 1, Name = "God of War", Genre = "Action" },
+                new() { GameId = 2, Name = "FIFA 24", Genre = "Sports" }
+            };
+
+            _usersServiceMock
+                .Setup(x => x.GetGamesByUserAsync(userId))
+                .ReturnsAsync(expectedGames);
+
+            var claims = new List<Claim>
+            {
+                new("id", userId.ToString())
+            };
+            var identity = new ClaimsIdentity(claims, "TestAuthType");
+            var userPrincipal = new ClaimsPrincipal(identity);
+
+            var context = new DefaultHttpContext
+            {
+                User = userPrincipal
+            };
+
+            _controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = context
+            };
+
+            // Act
+            var result = await _controller.GetGamesByUserAsync();
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var baseResponse = Assert.IsType<BaseResponse<List<UserLibraryGameResponse>>>(okResult.Value);
+            Assert.True(baseResponse.Success);
+            Assert.Equal(2, baseResponse.Data.Count);
+            Assert.Equal("God of War", baseResponse.Data[0].Name);
+        }
     }
 }

@@ -34,7 +34,7 @@ namespace Fiap.Tests._1._Api_Layer_Tests
             {
                 Name = "Test Game",
                 Genre = "Action",
-                Price = 59.99
+                Price = 59.99M
             };
 
             var response = new GameResponse
@@ -108,7 +108,7 @@ namespace Fiap.Tests._1._Api_Layer_Tests
                 Id = gameId,
                 Name = "Zelda",
                 Genre = "Adventure",
-                Price = 199.90
+                Price = 199.90M
             };
 
             _gamesServiceMock

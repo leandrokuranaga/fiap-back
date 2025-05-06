@@ -27,7 +27,7 @@ namespace Fiap.Domain.UserAggregate
         public Password Password { get; set; }
         public TypeUser TypeUser { get; set; }
         public bool Active { get; set; }
-        public ICollection<LibraryGame> LibraryGames { get; private set; } = [];
+        public ICollection<LibraryGame> LibraryGames { get; set; } = [];
 
         public static User CreateByAdmin(string name, string email, string password, TypeUser typeUser, bool active)
         {
