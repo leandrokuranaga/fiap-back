@@ -1,11 +1,13 @@
 ﻿using Fiap.Api.Controllers;
 using Fiap.Application.Common;
+using Fiap.Application.Games.Models.Response;
 using Fiap.Application.Promotions.Models.Request;
 using Fiap.Application.Promotions.Models.Response;
 using Fiap.Application.Promotions.Services;
 using Fiap.Domain.SeedWork;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using System.Text.Json;
 
 namespace Fiap.Tests._1._Api_Layer_Tests
 {
@@ -19,7 +21,15 @@ namespace Fiap.Tests._1._Api_Layer_Tests
         {
             _promotionsServiceMock = new Mock<IPromotionsService>();
             _mockNotification = new Mock<INotification>();
-            _controller = new PromotionsController(_promotionsServiceMock.Object, _mockNotification.Object);
+            _controller = new PromotionsController(_promotionsServiceMock.Object, _mockNotification.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    RouteData = new Microsoft.AspNetCore.Routing.RouteData()
+                }
+            };
+            _controller.ControllerContext.RouteData.Values["controller"] = "Promotions";
+            _controller.ControllerContext.RouteData.Values["version"] = "1.0";
         }
 
         #region CreatePromotion
@@ -53,10 +63,24 @@ namespace Fiap.Tests._1._Api_Layer_Tests
             #endregion
 
             #region Assert
-            var okResult = Assert.IsType<OkObjectResult>(result);
-            var response = Assert.IsType<BaseResponse<PromotionResponse>>(okResult.Value);
+            var createdResult = Assert.IsType<CreatedResult>(result);
+            var json = JsonSerializer.Serialize(createdResult.Value);
+            using var doc = JsonDocument.Parse(json);
 
-            Assert.True(response.Success);
+            var root = doc.RootElement;
+
+            Assert.True(root.GetProperty("success").GetBoolean());
+            var data = root.GetProperty("data");
+
+            Assert.Equal(mockCreateResponse.PromotionId, data.GetProperty("PromotionId").GetInt32());
+            Assert.Equal(mockCreateResponse.Discount, data.GetProperty("Discount").GetInt32());
+
+            var parsedStartDate = data.GetProperty("StartDate").GetDateTime();
+            var parsedEndDate = data.GetProperty("EndDate").GetDateTime();
+
+            Assert.Equal(mockCreateResponse.StartDate.Date, parsedStartDate.Date);
+            Assert.Equal(mockCreateResponse.EndDate.Date, parsedEndDate.Date);
+
             #endregion
         }
         #endregion
@@ -86,18 +110,43 @@ namespace Fiap.Tests._1._Api_Layer_Tests
 
             #region Act
             _promotionsServiceMock
-                .Setup(x => x.UpdateAsync(promotionId, mockUpdateRequest))
-                .ReturnsAsync(mockUpdateResponse);
+                .Setup(x => x.UpdateAsync(promotionId, mockUpdateRequest));
 
             var result = await _controller.UpdateAsync(promotionId, mockUpdateRequest);
-            var okResult = Assert.IsType<OkObjectResult>(result);
-            var response = Assert.IsType<BaseResponse<PromotionResponse>>(okResult.Value);
             #endregion
 
             #region Assert
-            Assert.True(response.Success);
+            Assert.IsType<NoContentResult>(result);
             #endregion
         }
         #endregion
+
+        [Fact]
+        public async Task GetPromotion_ShouldReturnOk_WhenServiceReturnsPromotion()
+        {
+            // Arrange
+            int promotionId = 1;
+            var promotionResponse = new PromotionResponse
+            {
+                PromotionId = promotionId,
+                Discount = 15,
+                StartDate = DateTime.UtcNow,
+                EndDate = DateTime.UtcNow.AddDays(7)
+            };
+
+            _promotionsServiceMock
+                .Setup(x => x.GetPromotionAsync(promotionId))
+                .ReturnsAsync(promotionResponse);
+
+            // Act
+            var result = await _controller.GetAsync(promotionId);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var baseResponse = Assert.IsType<BaseResponse<PromotionResponse>>(okResult.Value);
+            Assert.True(baseResponse.Success);
+            Assert.Equal(promotionResponse.PromotionId, baseResponse.Data.PromotionId);
+        }
+
     }
 }

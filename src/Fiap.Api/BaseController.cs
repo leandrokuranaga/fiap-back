@@ -3,6 +3,7 @@ using Fiap.Domain.SeedWork;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
+using System.Security.Claims;
 using static Fiap.Domain.SeedWork.NotificationModel;
 
 namespace Fiap.Api
@@ -53,12 +54,17 @@ namespace Fiap.Api
                         data = response
                     });
 
-                return CreatedAtAction("Get", new { id },
-                    new
-                    {
-                        success = true,
-                        data = response ?? new object()
-                    });
+                var controller = ControllerContext.RouteData.Values["controller"]?.ToString();
+                var version = RouteData.Values["version"]?.ToString();
+
+                var location = $"/api/v{version}/{controller}/{id}";
+
+                return Created(location, new
+                {
+                    success = true,
+                    data = response ?? new object()
+                });
+
             }
 
             return BadRequest(new
@@ -68,5 +74,11 @@ namespace Fiap.Api
             });
         }
 
+        protected int GetLoggedUser()
+        {
+            var userIdentity = HttpContext.User.Identity as ClaimsIdentity;
+            var user = userIdentity?.Claims.Where(c => c.Type == "id").FirstOrDefault();
+            return user == null ? 0 : int.Parse(user.Value);
+        }
     }
 }

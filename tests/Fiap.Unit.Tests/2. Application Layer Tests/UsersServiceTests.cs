@@ -1,7 +1,10 @@
 using Fiap.Application.User.Services;
 using Fiap.Application.Users.Models.Request;
+using Fiap.Domain.Common.ValueObjects;
+using Fiap.Domain.GameAggregate;
 using Fiap.Domain.SeedWork;
 using Fiap.Domain.UserAggregate;
+using Fiap.Domain.UserAggregate.Entities;
 using Fiap.Domain.UserAggregate.Enums;
 using Fiap.Domain.UserAggregate.ValueObjects;
 using Moq;
@@ -125,8 +128,6 @@ namespace Fiap.Tests._2._Application_Layer_Tests
 
             #region Assert
             Assert.NotNull(result);
-            Assert.Equal(request.Name, result.Name);
-            Assert.Equal(request.Email, result.Email);
             #endregion
         }
 
@@ -508,5 +509,71 @@ namespace Fiap.Tests._2._Application_Layer_Tests
                 n.AddNotification("Create User", "Unexpected error", NotificationModel.ENotificationType.InternalServerError),
                 Times.Once);
         }
+
+        [Fact]
+        public async Task GetGamesByUserAsync_ShouldReturnList_WhenUserExists()
+        {
+            // Arrange
+            int userId = 1;
+
+            var user = new User
+            {
+                Id = userId,
+                Name = "Bruno Moura",
+                Email = new Email("bruno@example.com"),
+                LibraryGames =
+                [
+                    new()
+                    {
+                        Game = new Game
+                        {
+                            Id = 10,
+                            Name = "God of War",
+                            Genre = "Action",
+                            Price = new Money(199.90m, "BRL")
+                        },
+                        PricePaid = new Money(99.90m, "BRL"),
+                        PurchaseDate = new UtcDate(new DateTime(2024, 01, 01, 12, 0, 0, DateTimeKind.Utc))
+                    }
+                ]
+            };
+
+            _mockUserRepository
+                .Setup(repo => repo.GetByIdGameUserAsync(userId, true))
+                .ReturnsAsync(user);
+
+            // Act
+            var result = await _usersService.GetGamesByUserAsync(userId);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Single(result);
+            Assert.Equal("God of War", result[0].Name);
+            Assert.Equal(99.90m, result[0].PricePaid);
+        }
+
+        [Fact]
+        public async Task GetGamesByUserAsync_ShouldReturnEmptyList_AndAddNotification_WhenUserIsNull()
+        {
+            // Arrange
+            int userId = 999;
+
+            _mockUserRepository
+                .Setup(repo => repo.GetByIdGameUserAsync(userId, true))
+                .ReturnsAsync((User)null!);
+
+            // Act
+            var result = await _usersService.GetGamesByUserAsync(userId);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Empty(result);
+
+            _mockNotification.Verify(n =>
+                n.AddNotification("Get User", "User not found", NotificationModel.ENotificationType.NotFound),
+                Times.Once);
+        }
+
+
     }
 }

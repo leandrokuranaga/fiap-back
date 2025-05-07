@@ -10,7 +10,7 @@ namespace Fiap.Domain.UserAggregate.Entities
         {            
         }
 
-        public LibraryGame(int id, int userId, int gameId, DateTime purchaseDate, double pricePaid)
+        public LibraryGame(int id, int userId, int gameId, DateTime purchaseDate, decimal pricePaid)
         {
             Id = id;
             UserId = userId;

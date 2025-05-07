@@ -3,9 +3,11 @@ using Fiap.Application.Common;
 using Fiap.Application.Games.Models.Request;
 using Fiap.Application.Games.Models.Response;
 using Fiap.Application.Games.Services;
+using Fiap.Application.Users.Models.Response;
 using Fiap.Domain.SeedWork;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using System.Text.Json;
 
 namespace Fiap.Tests._1._Api_Layer_Tests
 {
@@ -32,7 +34,7 @@ namespace Fiap.Tests._1._Api_Layer_Tests
             {
                 Name = "Test Game",
                 Genre = "Action",
-                Price = 59.99
+                Price = 59.99M
             };
 
             var response = new GameResponse
@@ -95,5 +97,33 @@ namespace Fiap.Tests._1._Api_Layer_Tests
         }
 
         #endregion
+
+        [Fact]
+        public async Task GetGame_ShouldReturnOk_WhenGameExists()
+        {
+            // Arrange
+            var gameId = 1;
+            var response = new GameResponse
+            {
+                Id = gameId,
+                Name = "Zelda",
+                Genre = "Adventure",
+                Price = 199.90M
+            };
+
+            _gamesServiceMock
+                .Setup(x => x.GetAsync(gameId))
+                .ReturnsAsync(response);
+
+            // Act
+            var result = await _controller.GetAsync(gameId);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var baseResponse = Assert.IsType<BaseResponse<GameResponse>>(okResult.Value);
+            Assert.True(baseResponse.Success);
+            Assert.Equal(response.Id, baseResponse.Data.Id);
+        }
+
     }
 }
