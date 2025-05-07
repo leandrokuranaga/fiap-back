@@ -283,27 +283,130 @@ dotnet run --project ./src/Fiap.Api
 
 ### 🔐 Login
 
-**POST** `/api/auth/login`
+**POST** `/api/v1/auth/login`
 
 ```json
 {
-  "email": "admin@domain.com",
-  "password": "admin123"
+  "username": "john.doe@hotmail.com",
+  "password": "Password123!"
 }
 ```
+
+---
 
 ### 🎮 Criar Jogo
 
-**POST** `/api/games`
+**POST** `/api/v1/games`
 
 ```json
 {
-  "name": "The Witcher 3",
-  "genre": "RPG",
-  "price": 99.90
+  "name": "Elden Ring",
+  "genre": "Adventure",
+  "price": 299.90,
+  "promotionId": null
 }
 ```
 
-### 📋 Listar Jogos
+### 🎮 Listar Jogos
 
-**GET** `/api/games`
+**GET** `/api/v1/games`
+
+---
+
+### 🎮 Obter Jogo por ID
+
+**GET** `/api/v1/games/{id}`
+
+---
+
+### 🏷️ Criar Promoção
+
+**POST** `/api/v1/promotions`
+
+```json
+{
+  "discount": 25,
+  "expirationDate": "2025-05-22T03:47:12.1123632Z",
+  "gameId": [1, 2, 3]
+}
+```
+
+### 🏷️ Atualizar Promoção
+
+**PATCH** `/api/v1/promotions/{id}`
+
+```json
+{
+  "discount": 10,
+  "expirationDate": "2025-05-22T03:47:12.1213794Z",
+  "gameId": [1, 2, 3]
+}
+```
+
+### 🏷️ Obter Promoção por ID
+
+**GET** `/api/v1/promotions/{id}`
+
+---
+
+### 👤 Criar Usuário
+
+**POST** `/api/v1/users/create`
+
+```json
+{
+  "name": "John Doe",
+  "email": "john.doe@hotmail.com",
+  "password": "Password123!"
+}
+```
+
+### 👤 Criar Admin
+
+**POST** `/api/v1/users/create-admin`
+
+```json
+{
+  "name": "John Doe",
+  "email": "john.doe@hotmail.com",
+  "password": "Password123!",
+  "typeUser": 1,
+  "active": true
+}
+```
+
+### 👤 Atualizar Usuário
+
+**PATCH** `/api/v1/users/{id}`
+
+```json
+{
+  "name": "Maria Carie",
+  "email": "maria.carie@hotmail.com",
+  "password": "Password456!",
+  "type": 1,
+  "active": false
+}
+```
+
+### 👤 Deletar Usuário
+
+**DELETE** `/api/v1/users/{id}`
+
+---
+
+### 👤 Obter Usuário por ID
+
+**GET** `/api/v1/users/{id}`
+
+---
+
+### 👥 Listar Todos Usuários
+
+**GET** `/api/v1/users`
+
+---
+
+### 🎮📚 Biblioteca de Jogos do Usuário Logado
+
+**GET** `/api/v1/users/users-games`
