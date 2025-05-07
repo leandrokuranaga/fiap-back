@@ -83,6 +83,19 @@ O **FCG** é uma aplicação backend em **.NET 8**, com o objetivo de simular um
 
 ---
 
+## 🧠 Mapeamento de Domínio (Event Storming)
+
+Utilizamos a técnica de **Event Storming** para modelar os fluxos e entidades principais do sistema de forma colaborativa e visual.
+
+> 🔗 Acesse o board do Miro: [https://miro.com/app/board/uXjVIE-KxU8=/](https://miro.com/app/board/uXjVIE-KxU8=/)
+
+Esse modelo foi essencial para definir:
+- A separação de responsabilidades entre os contextos
+- As principais entidades e agregados
+- A ordem e reação a eventos do sistema (ex: criação de jogo, compra, promoção ativa)
+
+---
+
 ## 🧠 Banco de Dados
 
 ### Tabelas principais
@@ -149,7 +162,7 @@ Inclui:
 
 ## 🚀 Deploy Final
 
-A entrega será feita via **GitHub Releases**, publicada a partir da **branch `dev`**.
+A entrega será feita via **GitHub Releases**, publicada a partir da **branch `main`**, utilizando uma tag de release..
 
 ---
 
