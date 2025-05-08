@@ -13,7 +13,7 @@ namespace Fiap.Api.SwaggerExamples.Games
             {
                 Name = "Elden Ring",
                 Genre = "Adventure",
-                Price = 299.90,
+                Price = 299.90M,
             
             };
         }

@@ -182,8 +182,8 @@ namespace Fiap.Tests._2._Application_Layer_Tests
                 Id = promotionId
             };
 
-            var game1 = new Game() { Id = 101, Name = "Game 1", Genre = "Action", Price = new Money(59.90, "BRL") };
-            var game2 = new Game() { Id = 102, Name = "Game 2", Genre = "Adventure", Price = new Money(49.90, "BRL") };
+            var game1 = new Game() { Id = 101, Name = "Game 1", Genre = "Action", Price = new Money(59.90M, "BRL") };
+            var game2 = new Game() { Id = 102, Name = "Game 2", Genre = "Adventure", Price = new Money(49.90M, "BRL") };
 
             _mockPromotionRepositoryMock.Setup(repo => repo.GetByIdAsync(promotionId, It.IsAny<bool>()))
                 .ReturnsAsync(promotion);
@@ -262,8 +262,8 @@ namespace Fiap.Tests._2._Application_Layer_Tests
                 Id = promotionId
             };
 
-            var game1 = new Game() { Id = 101, Name = "Game 1", Genre = "Action", Price = new Money(59.90, "BRL") };
-            var game2 = new Game() { Id = 102, Name = "Game 2", Genre = "Adventure", Price = new Money(49.90, "BRL") };
+            var game1 = new Game() { Id = 101, Name = "Game 1", Genre = "Action", Price = new Money(59.90M, "BRL") };
+            var game2 = new Game() { Id = 102, Name = "Game 2", Genre = "Adventure", Price = new Money(49.90M, "BRL") };
 
             _mockPromotionRepositoryMock
                 .Setup(repo => repo.GetByIdAsync(promotionId, It.IsAny<bool>()))

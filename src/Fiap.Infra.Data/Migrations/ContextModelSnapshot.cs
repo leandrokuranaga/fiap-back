@@ -262,8 +262,8 @@ namespace Fiap.Infra.Data.Migrations
                                 .HasColumnType("character varying(3)")
                                 .HasColumnName("PriceCurrency");
 
-                            b1.Property<double>("Value")
-                                .HasColumnType("double precision")
+                            b1.Property<decimal>("Value")
+                                .HasColumnType("numeric")
                                 .HasColumnName("Price");
 
                             b1.HasKey("GameId");
@@ -278,49 +278,49 @@ namespace Fiap.Infra.Data.Migrations
                                 {
                                     GameId = 1,
                                     Currency = "USD",
-                                    Value = 299.0
+                                    Value = 299.00m
                                 },
                                 new
                                 {
                                     GameId = 2,
                                     Currency = "BRL",
-                                    Value = 39.990000000000002
+                                    Value = 39.99m
                                 },
                                 new
                                 {
                                     GameId = 3,
                                     Currency = "BRL",
-                                    Value = 49.990000000000002
+                                    Value = 49.99m
                                 },
                                 new
                                 {
                                     GameId = 4,
                                     Currency = "BRL",
-                                    Value = 29.989999999999998
+                                    Value = 29.99m
                                 },
                                 new
                                 {
                                     GameId = 5,
                                     Currency = "BRL",
-                                    Value = 39.990000000000002
+                                    Value = 39.99m
                                 },
                                 new
                                 {
                                     GameId = 6,
                                     Currency = "BRL",
-                                    Value = 26.949999999999999
+                                    Value = 26.95m
                                 },
                                 new
                                 {
                                     GameId = 7,
                                     Currency = "BRL",
-                                    Value = 39.990000000000002
+                                    Value = 39.99m
                                 },
                                 new
                                 {
                                     GameId = 8,
                                     Currency = "BRL",
-                                    Value = 49.990000000000002
+                                    Value = 49.99m
                                 });
                         });
 
@@ -343,8 +343,8 @@ namespace Fiap.Infra.Data.Migrations
                                 .HasColumnType("character varying(3)")
                                 .HasColumnName("DiscountCurrency");
 
-                            b1.Property<double>("Value")
-                                .HasColumnType("double precision")
+                            b1.Property<decimal>("Value")
+                                .HasColumnType("numeric")
                                 .HasColumnName("DiscountValue");
 
                             b1.HasKey("PromotionId");
@@ -359,19 +359,19 @@ namespace Fiap.Infra.Data.Migrations
                                 {
                                     PromotionId = 1,
                                     Currency = "USD",
-                                    Value = 10.15
+                                    Value = 10.15m
                                 },
                                 new
                                 {
                                     PromotionId = 2,
                                     Currency = "USD",
-                                    Value = 15.98
+                                    Value = 15.98m
                                 },
                                 new
                                 {
                                     PromotionId = 3,
                                     Currency = "USD",
-                                    Value = 20.969999999999999
+                                    Value = 20.97m
                                 });
                         });
 
@@ -404,8 +404,8 @@ namespace Fiap.Infra.Data.Migrations
                                 .HasColumnType("character varying(3)")
                                 .HasColumnName("PriceCurrency");
 
-                            b1.Property<double>("Value")
-                                .HasColumnType("double precision")
+                            b1.Property<decimal>("Value")
+                                .HasColumnType("numeric")
                                 .HasColumnName("PricePaid");
 
                             b1.HasKey("LibraryGameId");
@@ -420,25 +420,25 @@ namespace Fiap.Infra.Data.Migrations
                                 {
                                     LibraryGameId = 1,
                                     Currency = "USD",
-                                    Value = 10.0
+                                    Value = 10.00m
                                 },
                                 new
                                 {
                                     LibraryGameId = 2,
                                     Currency = "USD",
-                                    Value = 15.0
+                                    Value = 15.00m
                                 },
                                 new
                                 {
                                     LibraryGameId = 3,
                                     Currency = "USD",
-                                    Value = 20.0
+                                    Value = 20.00m
                                 },
                                 new
                                 {
                                     LibraryGameId = 4,
                                     Currency = "USD",
-                                    Value = 28.989999999999998
+                                    Value = 28.99m
                                 });
                         });
 
@@ -513,14 +513,14 @@ namespace Fiap.Infra.Data.Migrations
                                 new
                                 {
                                     UserId = 1,
-                                    Hash = "10000.LW59V9G+BlFV/Bb19uYa4g==.eYihrqMpMG7icxurO2Gz4Zf8XrqNxk+rWALXrqHmbgI=",
-                                    PasswordSalt = "LW59V9G+BlFV/Bb19uYa4g=="
+                                    Hash = "10000.zC3asvLZv6BQ2X3zcYdnhw==.d4+u5b59o6giayRcfePNPyF4I6nekoRp9bAMUEy3iHc=",
+                                    PasswordSalt = "WQ1YZ/OiCeVcusBQ94njtQ=="
                                 },
                                 new
                                 {
                                     UserId = 2,
-                                    Hash = "10000.V2BkMe/V+PQUC1g6VczN/g==.xAqE2zHO+O2FYokAs6Dn7DkHLaeVZ4xiJh7n8xF2rFg=",
-                                    PasswordSalt = "V2BkMe/V+PQUC1g6VczN/g=="
+                                    Hash = "10000.SFG18S5pQd5QgxPtSxwPaw==.MPaE5q4K+T8EROdyuCeTz8SmJv+8q+h+yeN0d9pGUOg=",
+                                    PasswordSalt = "J3CYQ56LlZ/D7NXAZBirlA=="
                                 });
                         });
 

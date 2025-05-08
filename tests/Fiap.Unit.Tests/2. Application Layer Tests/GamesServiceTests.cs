@@ -4,8 +4,6 @@ using Fiap.Domain.GameAggregate;
 using Fiap.Domain.SeedWork;
 using System.Linq.Expressions;
 using Moq;
-using System.Diagnostics.CodeAnalysis;
-using Fiap.Domain.Common.ValueObjects;
 using Fiap.Domain.SeedWork.Exceptions;
 
 namespace Fiap.Unit.Tests.Application_Layer_Tests
@@ -31,7 +29,7 @@ namespace Fiap.Unit.Tests.Application_Layer_Tests
             {
                 Name = "Test Game",
                 Genre = "Action",
-                Price = 99.99
+                Price = 99.99M
             };
 
             _mockGameRepository
@@ -64,7 +62,7 @@ namespace Fiap.Unit.Tests.Application_Layer_Tests
             {
                 Name = "Error Game",
                 Genre = "Adventure",
-                Price = 59.99
+                Price = 59.99M
             };
 
             _mockGameRepository
@@ -93,8 +91,8 @@ namespace Fiap.Unit.Tests.Application_Layer_Tests
             #region Arrange
             var games = new List<Game>
             {
-                new Game("Game 1", "Action", 59.90, null) { Id = 1 },
-                new Game("Game 2", "Adventure", 49.90, null) { Id = 2 }
+                new Game("Game 1", "Action", 59.90M, null) { Id = 1 },
+                new Game("Game 2", "Adventure", 49.90M, null) { Id = 2 }
             };
 
             _mockGameRepository
@@ -143,7 +141,7 @@ namespace Fiap.Unit.Tests.Application_Layer_Tests
             {
                 Name = "Existing Game",
                 Genre = "Action",
-                Price = 49.99
+                Price = 49.99M
             };
 
             _mockGameRepository
@@ -176,7 +174,7 @@ namespace Fiap.Unit.Tests.Application_Layer_Tests
             {
                 Name = "Invalid Currency Game",
                 Genre = "Action",
-                Price = 49.99
+                Price = 49.99M
             };
 
             _mockGameRepository
@@ -191,7 +189,7 @@ namespace Fiap.Unit.Tests.Application_Layer_Tests
         {
             // Arrange
             var gameId = 1;
-            var game = new Game("Halo", "Shooter", 199.99, null) { Id = gameId };
+            var game = new Game("Halo", "Shooter", 199.99M, null) { Id = gameId };
 
             _mockGameRepository
                 .Setup(repo => repo.GetByIdAsync(gameId, false))
@@ -205,7 +203,7 @@ namespace Fiap.Unit.Tests.Application_Layer_Tests
             Assert.Equal(gameId, result.Id);
             Assert.Equal("Halo", result.Name);
             Assert.Equal("Shooter", result.Genre);
-            Assert.Equal(199.99, result.Price);
+            Assert.Equal(199.99M, result.Price);
         }
 
 

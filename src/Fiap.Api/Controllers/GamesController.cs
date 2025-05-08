@@ -3,6 +3,7 @@ using Fiap.Application.Games.Models.Request;
 using Fiap.Application.Games.Models.Response;
 using Fiap.Application.Games.Services;
 using Fiap.Domain.SeedWork;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
@@ -13,6 +14,7 @@ namespace Fiap.Api.Controllers
     /// Controller used to manage game operations, such as creation, retrieval and management
     /// </summary>
     [ApiController]
+    [Authorize(Roles = "Admin")]
     [ApiVersion("1.0")]
     [ApiExplorerSettings(GroupName = "v1")]
     [Route("api/v{version:apiVersion}/[controller]")]
@@ -63,6 +65,5 @@ namespace Fiap.Api.Controllers
             var result = await gamesService.GetAsync(id);
             return Response(BaseResponse<GameResponse>.Ok(result));
         }
-
     }
 }

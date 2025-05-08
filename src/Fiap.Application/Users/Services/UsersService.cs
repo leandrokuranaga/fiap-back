@@ -1,4 +1,5 @@
 ﻿using Fiap.Application.Common;
+using Fiap.Application.Games.Models.Response;
 using Fiap.Application.Users.Models.Request;
 using Fiap.Application.Users.Models.Response;
 using Fiap.Application.Users.Services;
@@ -206,6 +207,21 @@ namespace Fiap.Application.User.Services
                 _notification.AddNotification("Delete User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
                 throw;
             }
+        });
+
+        public Task<List<UserLibraryGameResponse>> GetGamesByUserAsync(int id) => ExecuteAsync(async () =>
+        {
+            var response = new GameResponse();
+
+            var user = await userRepository.GetByIdGameUserAsync(id, noTracking:true);
+
+            if (user is null)
+            {
+                _notification.AddNotification("Get User", "User not found", NotificationModel.ENotificationType.NotFound);
+                return [];
+            }
+
+            return user.LibraryGames.Select(lg => (UserLibraryGameResponse)lg).ToList();
         });
     }
 }

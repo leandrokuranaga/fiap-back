@@ -3,6 +3,7 @@ using Fiap.Application.Promotions.Models.Request;
 using Fiap.Application.Promotions.Models.Response;
 using Fiap.Application.Promotions.Services;
 using Fiap.Domain.SeedWork;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
@@ -16,6 +17,7 @@ namespace Fiap.Api.Controllers
     [ApiVersion("1.0")]
     [ApiExplorerSettings(GroupName = "v1")]
     [Route("api/v{version:apiVersion}/[controller]")]
+    [Authorize(Roles = "Admin")]
     public class PromotionsController(IPromotionsService promotionsService, INotification notification) : BaseController(notification)
     {
         /// <summary>

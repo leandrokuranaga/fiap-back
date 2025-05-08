@@ -7,8 +7,8 @@ namespace Fiap.Infra.Data.MapEntities.Seeds
     {
         public static List<LibraryGame> LibraryGames()
         {
-            return new List<LibraryGame>
-            {
+            return
+            [
                 new LibraryGame
                 {
                     Id = 1,
@@ -37,7 +37,7 @@ namespace Fiap.Infra.Data.MapEntities.Seeds
                     GameId = 4,
                     PurchaseDate = new UtcDate(DateTime.SpecifyKind(new DateTime(2025, 07, 01), DateTimeKind.Utc)),
                 }
-            };
+            ];
         }
     }
 }
