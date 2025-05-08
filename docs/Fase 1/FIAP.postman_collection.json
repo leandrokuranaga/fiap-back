@@ -13,6 +13,16 @@
 				{
 					"name": "Update promotion",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PATCH",
 						"header": [],
 						"body": {
@@ -45,7 +55,14 @@
 					},
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "POST",
 						"header": [
@@ -81,6 +98,16 @@
 				{
 					"name": "Get Promotion By Id",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -111,7 +138,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJ1c2VybmFtZSI6ImFkbWluQGRvbWFpbi5jb20iLCJyb2xlIjoiQWRtaW4iLCJuYmYiOjE3NDY1MzcxMTUsImV4cCI6MTc0NjU0NDMxNSwiaWF0IjoxNzQ2NTM3MTE1fQ.6N5qIkN6Oaqia-r3O3A_653-xDoJzdgqeB6xfw2VVx8",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
@@ -149,7 +176,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJ1c2VybmFtZSI6ImFkbWluQGRvbWFpbi5jb20iLCJyb2xlIjoiQWRtaW4iLCJuYmYiOjE3NDY1MzcxMTUsImV4cCI6MTc0NjU0NDMxNSwiaWF0IjoxNzQ2NTM3MTE1fQ.6N5qIkN6Oaqia-r3O3A_653-xDoJzdgqeB6xfw2VVx8",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
@@ -180,7 +207,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJ1c2VybmFtZSI6ImFkbWluQGRvbWFpbi5jb20iLCJyb2xlIjoiQWRtaW4iLCJuYmYiOjE3NDY1MzcxMTUsImV4cCI6MTc0NjU0NDMxNSwiaWF0IjoxNzQ2NTM3MTE1fQ.6N5qIkN6Oaqia-r3O3A_653-xDoJzdgqeB6xfw2VVx8",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
@@ -218,7 +245,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJ1c2VybmFtZSI6ImFkbWluQGRvbWFpbi5jb20iLCJyb2xlIjoiQWRtaW4iLCJuYmYiOjE3NDY1MzcxMTUsImV4cCI6MTc0NjU0NDMxNSwiaWF0IjoxNzQ2NTM3MTE1fQ.6N5qIkN6Oaqia-r3O3A_653-xDoJzdgqeB6xfw2VVx8",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
@@ -247,7 +274,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJ1c2VybmFtZSI6ImFkbWluQGRvbWFpbi5jb20iLCJyb2xlIjoiQWRtaW4iLCJuYmYiOjE3NDY1MzcxMTUsImV4cCI6MTc0NjU0NDMxNSwiaWF0IjoxNzQ2NTM3MTE1fQ.6N5qIkN6Oaqia-r3O3A_653-xDoJzdgqeB6xfw2VVx8",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
@@ -276,7 +303,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJ1c2VybmFtZSI6ImFkbWluQGRvbWFpbi5jb20iLCJyb2xlIjoiQWRtaW4iLCJuYmYiOjE3NDY1MzcxMTUsImV4cCI6MTc0NjU0NDMxNSwiaWF0IjoxNzQ2NTM3MTE1fQ.6N5qIkN6Oaqia-r3O3A_653-xDoJzdgqeB6xfw2VVx8",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
@@ -300,6 +327,16 @@
 				{
 					"name": "Create User (Admin)",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -333,7 +370,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJ1c2VybmFtZSI6ImFkbWluQGRvbWFpbi5jb20iLCJyb2xlIjoiQWRtaW4iLCJuYmYiOjE3NDY1MzcxMTUsImV4cCI6MTc0NjU0NDMxNSwiaWF0IjoxNzQ2NTM3MTE1fQ.6N5qIkN6Oaqia-r3O3A_653-xDoJzdgqeB6xfw2VVx8",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
@@ -370,7 +407,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJ1c2VybmFtZSI6ImFkbWluQGRvbWFpbi5jb20iLCJyb2xlIjoiQWRtaW4iLCJuYmYiOjE3NDY1MzcxMTUsImV4cCI6MTc0NjU0NDMxNSwiaWF0IjoxNzQ2NTM3MTE1fQ.6N5qIkN6Oaqia-r3O3A_653-xDoJzdgqeB6xfw2VVx8",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
@@ -393,6 +430,16 @@
 				{
 					"name": "Get Game By Id",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -416,6 +463,23 @@
 			"item": [
 				{
 					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = JSON.parse(responseBody);\r",
+									"pm.test(\"/api/v1/auth/login - Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"token\", jsonData.data.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
