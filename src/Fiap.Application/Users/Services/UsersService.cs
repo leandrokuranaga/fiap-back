@@ -6,12 +6,13 @@ using Fiap.Application.Users.Services;
 using Fiap.Application.Validators;
 using Fiap.Application.Validators.UsersValidators;
 using Fiap.Domain.SeedWork;
+using Fiap.Domain.SeedWork.Exceptions;
 using Fiap.Domain.UserAggregate;
 using Fiap.Domain.UserAggregate.ValueObjects;
 
 namespace Fiap.Application.User.Services
 {
-    public class UsersService(INotification notification, IUserRepository userRepository) : BaseService(notification), IUsersService
+    public class UsersService(INotification notification, IUserRepository userRepository, IUnitOfWork unitOfWork) : BaseService(notification), IUsersService
     {
         public Task<List<UserResponse>> GetAllAsync() => ExecuteAsync(async () =>
         {
@@ -63,39 +64,29 @@ namespace Fiap.Application.User.Services
         {
             var response = new UserResponse();
 
-            try
+            Validate(request, new CreateUserRequestValidator());
+
+            var email = request.Email.Trim().ToLowerInvariant();
+
+            var exists = await userRepository.ExistAsync(u => u.Email.Address == request.Email.ToLower());
+            if (exists)
             {
-                Validate(request, new CreateUserRequestValidator());
-
-                var email = request.Email.Trim().ToLowerInvariant();
-
-                var exists = await userRepository.ExistAsync(u => u.Email.Address == request.Email.ToLower());
-                if (exists)
-                {
-                    _notification.AddNotification("Create User", "Email already registered", NotificationModel.ENotificationType.BusinessRules);
-                    return new UserResponse();
-                }
-
-                var user = (Domain.UserAggregate.User)request;
-
-                await userRepository.BeginTransactionAsync();
-
-                await userRepository.InsertOrUpdateAsync(user);
-                await userRepository.SaveChangesAsync();
-
-                await userRepository.CommitAsync();
-
-                response = (UserResponse)user;
-
-                return response;
+                _notification.AddNotification("Create User", "Email already registered", NotificationModel.ENotificationType.BusinessRules);
+                throw new BusinessRulesException("Email already registered");
             }
-            catch (Exception ex)
-            {
-                await userRepository.RollbackAsync();
 
-                if (!_notification.HasNotification)
-                    _notification.AddNotification("Create User", ex.Message, NotificationModel.ENotificationType.InternalServerError); throw;
-            }
+            var user = (Domain.UserAggregate.User)request;
+
+            await unitOfWork.BeginTransactionAsync();
+
+            await userRepository.InsertOrUpdateAsync(user);
+            await userRepository.SaveChangesAsync();
+            await unitOfWork.CommitAsync();
+
+            response = (UserResponse)user;
+
+            return response;
+            
         });
 
         public Task<UserResponse> CreateAdminAsync(CreateUserAdminRequest request) => ExecuteAsync(async () =>
@@ -116,12 +107,12 @@ namespace Fiap.Application.User.Services
                 }
 
                 var user = (Domain.UserAggregate.User)request;
-                await userRepository.BeginTransactionAsync();
+                await unitOfWork.BeginTransactionAsync();
 
                 await userRepository.InsertOrUpdateAsync(user);
                 await userRepository.SaveChangesAsync();
 
-                await userRepository.CommitAsync();
+                await unitOfWork.CommitAsync();
 
                 response = (UserResponse)user;
 
@@ -155,10 +146,10 @@ namespace Fiap.Application.User.Services
 
                 UpdateUserProperties(user, request);
 
-                await userRepository.BeginTransactionAsync();
+                await unitOfWork.BeginTransactionAsync();
                 await userRepository.UpdateAsync(user);
                 await userRepository.SaveChangesAsync();
-                await userRepository.CommitAsync();
+                await unitOfWork.CommitAsync();
 
                 return BaseResponse<object>.Ok(null);
             }
@@ -194,10 +185,10 @@ namespace Fiap.Application.User.Services
                     return BaseResponse<object>.Fail(_notification.NotificationModel);
                 }
 
-                await userRepository.BeginTransactionAsync();
+                await unitOfWork.BeginTransactionAsync();
                 await userRepository.DeleteAsync(user);
                 await userRepository.SaveChangesAsync();
-                await userRepository.CommitAsync();
+                await unitOfWork.CommitAsync();
 
                 return BaseResponse<object>.Ok(null);
             }

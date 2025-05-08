@@ -3,61 +3,84 @@ using Fiap.Domain.SeedWork;
 using Serilog;
 using System.Net;
 using System.Text.Json;
+using Fiap.Application.Common;
 
-namespace Fiap.Api.Middlewares
+public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
 {
-    public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
+    public async Task Invoke(HttpContext context)
     {
-        public async Task Invoke(HttpContext context)
+        try
+        {
+            await next(context);
+        }
+        catch (NotFoundException e)
+        {
+            await RollbackIfPossibleAsync(context);
+            await HandleExceptionAsync(context, e, "Not Found", NotificationModel.ENotificationType.NotFound, HttpStatusCode.NotFound);
+        }
+        catch (ArgumentException e)
+        {
+            await RollbackIfPossibleAsync(context);
+            await HandleExceptionAsync(context, e, "Invalid Property", NotificationModel.ENotificationType.BadRequestError, HttpStatusCode.BadRequest);
+        }
+        catch (BusinessRulesException e)
+        {
+            await RollbackIfPossibleAsync(context);
+            await HandleExceptionAsync(context, e, "Business Rules", NotificationModel.ENotificationType.BusinessRules, HttpStatusCode.UnprocessableEntity);
+        }
+        catch (Exception e)
+        {
+            await RollbackIfPossibleAsync(context);
+            await HandleExceptionAsync(context, e, "Internal Error", NotificationModel.ENotificationType.InternalServerError, HttpStatusCode.InternalServerError);
+        }
+    }
+
+    private async Task RollbackIfPossibleAsync(HttpContext context)
+    {
+        var uow = context.RequestServices.GetService<IUnitOfWork>();
+        if (uow != null)
         {
             try
             {
-                await next(context);
+                await uow.RollbackAsync();
             }
-            catch (NotFoundException e)
-            {     
-                await HandleExceptionAsync(context, e, "Not Found", NotificationModel.ENotificationType.NotFound, HttpStatusCode.NotFound);
-            }
-            catch (ArgumentException e)
-            {             
-                await HandleExceptionAsync(context, e, "Invalid Property", NotificationModel.ENotificationType.BadRequestError, HttpStatusCode.BadRequest);
-            }
-            catch (Exception e)
-            {                
-                await HandleExceptionAsync(context, e, "Internal Error", NotificationModel.ENotificationType.InternalServerError, HttpStatusCode.InternalServerError);
-            }
-        }
-
-        private async Task HandleExceptionAsync(HttpContext context, Exception exception, string title, NotificationModel.ENotificationType notificationType, HttpStatusCode statusCode)
-        {
-            var correlationId = Guid.NewGuid().ToString();
-            var userAgent = context.Request.Headers["User-Agent"].ToString();
-
-            Log.Error(exception,
-                "Unhandled exception occurred. CorrelationId: {CorrelationId}, Path: {Path}, Method: {Method}, QueryString: {QueryString}, UserAgent: {UserAgent}",
-                correlationId,
-                context.Request.Path.Value,
-                context.Request.Method,
-                context.Request.QueryString.Value,
-                userAgent);
-
-            context.Response.StatusCode = (int)statusCode;
-            context.Response.ContentType = "application/json";
-
-            var errorResponse = new
+            catch (Exception ex)
             {
-                message = title,
-                details = context.RequestServices.GetService<IWebHostEnvironment>()?.IsDevelopment() == true
-                    ? exception.Message
-                    : null,
-                path = context.Request.Path.Value,
-                method = context.Request.Method,
-                correlationId = correlationId,
-                timestamp = DateTime.UtcNow
-            };
-
-            var json = JsonSerializer.Serialize(errorResponse);
-            await context.Response.WriteAsync(json);
+                Log.Error(ex, "Erro ao tentar fazer rollback da transação");
+            }
         }
     }
+
+    private async Task HandleExceptionAsync(HttpContext context, Exception exception, string title, NotificationModel.ENotificationType type, HttpStatusCode statusCode)
+    {
+        var correlationId = Guid.NewGuid().ToString();
+        var userAgent = context.Request.Headers.UserAgent.ToString();
+
+        Log.Error(exception,
+            "Unhandled exception occurred. CorrelationId: {CorrelationId}, Path: {Path}, Method: {Method}, QueryString: {QueryString}, UserAgent: {UserAgent}",
+            correlationId,
+            context.Request.Path.Value,
+            context.Request.Method,
+            context.Request.QueryString.Value,
+            userAgent);
+
+        context.Response.StatusCode = (int)statusCode;
+        context.Response.ContentType = "application/json";
+
+        var isDev = context.RequestServices.GetService<IWebHostEnvironment>()?.IsDevelopment() == true;
+        var message = isDev ? exception.Message : "An unexpected error occurred.";
+
+        var notification = new NotificationModel
+        {
+            NotificationType = type
+        };
+        notification.AddMessage(title, message);
+
+        var response = BaseResponse<object>.Fail(notification);
+
+        var json = JsonSerializer.Serialize(response);
+        await context.Response.WriteAsync(json);
+    }
+
+
 }

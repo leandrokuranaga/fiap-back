@@ -39,4 +39,8 @@
     <ProjectReference Include="..\Fiap.Infra.Data\Fiap.Infra.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="logs\" />
+  </ItemGroup>
+
 </Project>
