@@ -3,6 +3,7 @@ using Fiap.Application.Users.Models.Request;
 using Fiap.Domain.Common.ValueObjects;
 using Fiap.Domain.GameAggregate;
 using Fiap.Domain.SeedWork;
+using Fiap.Domain.SeedWork.Exceptions;
 using Fiap.Domain.UserAggregate;
 using Fiap.Domain.UserAggregate.Entities;
 using Fiap.Domain.UserAggregate.Enums;
@@ -22,7 +23,8 @@ namespace Fiap.Tests._2._Application_Layer_Tests
         {
             _mockUserRepository = new Mock<IUserRepository>();
             _mockNotification = new Mock<INotification>();
-            _usersService = new UsersService(_mockNotification.Object, _mockUserRepository.Object);
+            var unitOfWork = new Mock<IUnitOfWork>().Object;
+            _usersService = new UsersService(_mockNotification.Object, _mockUserRepository.Object, unitOfWork);
         }
 
         [Fact]
@@ -75,23 +77,18 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             _mockUserRepository
                 .Setup(repo => repo.ExistAsync(It.IsAny<Expression<Func<User, bool>>>()))
                 .ReturnsAsync(true);
-
-            _mockUserRepository
-              .Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<User>()))
-              .ReturnsAsync((User user) =>
-              {
-                  user.Id = 1;
-                  return user;
-              });
             #endregion
 
             #region Act
-            var result = await _usersService.CreateAsync(request);
+            var exception = await Assert.ThrowsAsync<BusinessRulesException>(async () => await _usersService.CreateAsync(request));
             #endregion
 
             #region Assert
-            Assert.NotNull(result);
-            _mockNotification.Verify(n => n.AddNotification("Create User", "Email already registered", NotificationModel.ENotificationType.BusinessRules), Times.Once);
+            Assert.NotNull(exception);
+            Assert.Equal("Email already registered", exception.Message);
+            _mockNotification.Verify(n =>
+                n.AddNotification("Create User", "Email already registered", NotificationModel.ENotificationType.BusinessRules),
+                Times.Once);            
             #endregion
         }
 
@@ -287,8 +284,8 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             Assert.Equal(users[1].Name, result[1].Name);
             #endregion
         }
-        [Fact]        
-        public async Task Create_ShouldAddNotificationAndThrowException_WhenExceptionIsThrown()
+        [Fact]
+        public async Task Create_ShouldThrowException_WhenExceptionIsThrown()
         {
             #region Arrange
             var request = new CreateUserRequest
@@ -311,8 +308,8 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             Assert.NotNull(exception);
             Assert.Equal("Unexpected error", exception.Message);
             _mockNotification.Verify(n =>
-                n.AddNotification("Create User", "Unexpected error", NotificationModel.ENotificationType.InternalServerError),
-                Times.Once);
+                  n.AddNotification(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NotificationModel.ENotificationType>()),
+                  Times.Never);
             #endregion
         }
 
