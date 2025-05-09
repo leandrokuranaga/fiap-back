@@ -50,6 +50,8 @@ var app = builder.Build();
 
 app.UseExceptionHandling();
 
+app.UseMiddleware<RequestLoggingMiddleware>();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwaggerDocumentation();
