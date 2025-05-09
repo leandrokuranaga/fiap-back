@@ -60,13 +60,15 @@ Inclui:
   - Jogos comprados por usuários com preço pago e data de compra
 
 
-Usuário Comum
-login: user@domain.com
-senha: F1ap@Senha
+# Credenciais de Acesso
 
-Usuário Admin
-login: admin@domain.com
-senha: F1ap@Senha
+## Usuário Comum  
+- **Login:** `user@domain.com`  
+- **Senha:** `F1ap@Senha`
+
+## Usuário Admin  
+- **Login:** `admin@domain.com`  
+- **Senha:** `F1ap@Senha`
 
 ---
 
