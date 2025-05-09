@@ -4,7 +4,7 @@ using Fiap.Domain.UserAggregate.Entities;
 using Fiap.Domain.SeedWork.Exceptions;
 using Fiap.Domain.Common.ValueObjects;
 
-namespace Fiap.Tests._3._Domain_Layer_Tests
+namespace Fiap.Unit.Tests._3._Domain_Layer_Tests.Entities
 {
     public class GameDomainTest
     {

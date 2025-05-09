@@ -14,37 +14,29 @@ namespace Fiap.Application.Games.Services
         {
             var response = new GameResponse();
 
-            try
+        
+            Validate(request, new CreateGameRequestValidator());
+
+            var name = request.Name.ToLowerInvariant().Trim(); 
+
+            var exists = await gameRepository.ExistAsync(g => g.Name.ToLower() == name);
+
+            if (exists)
             {
-                Validate(request, new CreateGameRequestValidator());
-
-                var name = request.Name.ToLowerInvariant().Trim(); 
-
-                var exists = await gameRepository.ExistAsync(g => g.Name.ToLower() == name);
-
-                if (exists)
-                {
-                    _notification.AddNotification("Create Game", $"The game '{request.Name}' has already been registered.", ENotificationType.BusinessRules);
-                    return response;
-                }
-
-                await gameRepository.BeginTransactionAsync();
-
-                var game = (Game)request;
-                await gameRepository.InsertOrUpdateAsync(game);
-
-                await gameRepository.SaveChangesAsync();
-                await gameRepository.CommitAsync();
-
-                response = (GameResponse)game;
+                _notification.AddNotification("Create Game", $"The game '{request.Name}' has already been registered.", ENotificationType.BusinessRules);
                 return response;
             }
-            catch (Exception ex)
-            {
-                await gameRepository.RollbackAsync(); 
-                _notification.AddNotification("Create Game", ex.Message, ENotificationType.NotFound);
-                return response;
-            }
+
+            await gameRepository.BeginTransactionAsync();
+
+            var game = (Game)request;
+            await gameRepository.InsertOrUpdateAsync(game);
+
+            await gameRepository.SaveChangesAsync();
+            await gameRepository.CommitAsync();
+
+            response = (GameResponse)game;
+            return response;          
         }
 
         public Task<IEnumerable<GameResponse>> GetAllAsync() => ExecuteAsync(async () =>

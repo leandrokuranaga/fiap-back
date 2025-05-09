@@ -5,40 +5,31 @@ using Fiap.Application.Users.Models.Response;
 using Fiap.Application.Users.Services;
 using Fiap.Application.Validators.UsersValidators;
 using Fiap.Domain.SeedWork;
+using Fiap.Domain.SeedWork.Exceptions;
 using Fiap.Domain.UserAggregate;
 using Fiap.Domain.UserAggregate.ValueObjects;
 
 namespace Fiap.Application.User.Services
 {
-    public class UsersService(INotification notification, IUserRepository userRepository) : BaseService(notification), IUsersService
+    public class UsersService(INotification notification, IUserRepository userRepository, IUnitOfWork unitOfWork) : BaseService(notification), IUsersService
     {
         public Task<List<UserResponse>> GetAllAsync() => ExecuteAsync(async () =>
         {
             var response = new List<UserResponse>();
 
-            try
-            {
-                var users = await userRepository.GetAllAsync();
+            var users = await userRepository.GetAllAsync();
 
-                var allUsers = users
-                    .Select(user => (UserResponse)user)
-                    .ToList();
+            var allUsers = users
+                .Select(user => (UserResponse)user)
+                .ToList();
 
-                return allUsers;
-            }
-            catch (Exception ex)
-            {
-                _notification.AddNotification("Get Users", ex.Message, NotificationModel.ENotificationType.InternalServerError);
-                return response;
-            }
+            return allUsers;
         });
 
         public Task<UserResponse> GetAsync(int userId) => ExecuteAsync(async () =>
         {
             var response = new UserResponse();
 
-            try
-            {
                 var user = await userRepository.GetByIdAsync(userId, noTracking: false);
 
                 if (user == null)
@@ -50,125 +41,87 @@ namespace Fiap.Application.User.Services
                 response = (UserResponse)user;
 
                 return response;
-            }
-            catch (Exception ex)
-            {
-                _notification.AddNotification("Get User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
-                return response;
-            }
         });
 
         public Task<UserResponse> CreateAsync(CreateUserRequest request) => ExecuteAsync(async () =>
         {
             var response = new UserResponse();
 
-            try
+            Validate(request, new CreateUserRequestValidator());
+
+            var email = request.Email.Trim().ToLowerInvariant();
+
+            var exists = await userRepository.ExistAsync(u => u.Email.Address == request.Email.ToLower());
+            if (exists)
             {
-                Validate(request, new CreateUserRequestValidator());
-
-                var email = request.Email.Trim().ToLowerInvariant();
-
-                var exists = await userRepository.ExistAsync(u => u.Email.Address == request.Email.ToLower());
-                if (exists)
-                {
-                    _notification.AddNotification("Create User", "Email already registered", NotificationModel.ENotificationType.BusinessRules);
-                    return new UserResponse();
-                }
-
-                var user = (Domain.UserAggregate.User)request;
-
-                await userRepository.BeginTransactionAsync();   
-
-                await userRepository.InsertOrUpdateAsync(user);
-                await userRepository.SaveChangesAsync();
-
-                await userRepository.CommitAsync(); 
-
-                response = (UserResponse)user;
-
-                return response;
+                _notification.AddNotification("Create User", "Email already registered", NotificationModel.ENotificationType.BusinessRules);
+                throw new BusinessRulesException("Email already registered");
             }
-            catch (Exception ex)
-            {
-                await userRepository.RollbackAsync();
 
-                if (!_notification.HasNotification)
-                    _notification.AddNotification("Create User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
-                return response;
-            }
-        });        
+            var user = (Domain.UserAggregate.User)request;
+
+            await unitOfWork.BeginTransactionAsync();
+
+            await userRepository.InsertOrUpdateAsync(user);
+            await userRepository.SaveChangesAsync();
+            await unitOfWork.CommitAsync();
+
+            response = (UserResponse)user;
+
+            return response;            
+        });
 
         public Task<UserResponse> CreateAdminAsync(CreateUserAdminRequest request) => ExecuteAsync(async () =>
         {
             var response = new UserResponse();
 
-            try
+            Validate(request, new CreateUserAdminRequestValidator());
+
+            var email = request.Email.Trim().ToLowerInvariant();
+
+            var exists = await userRepository.ExistAsync(u => u.Email.Address.ToLower() == email);
+            if (exists)
             {
-                Validate(request, new CreateUserAdminRequestValidator());
-
-                var email = request.Email.Trim().ToLowerInvariant();
-
-                var exists = await userRepository.ExistAsync(u => u.Email.Address.ToLower() == email);
-                if (exists)
-                {
-                    _notification.AddNotification("Create User", "Email already registered", NotificationModel.ENotificationType.BusinessRules);
-                    return new UserResponse();
-                }
-
-                var user = (Domain.UserAggregate.User)request;
-                await userRepository.BeginTransactionAsync();
-
-                await userRepository.InsertOrUpdateAsync(user);
-                await userRepository.SaveChangesAsync();
-
-                await userRepository.CommitAsync();
-
-                response = (UserResponse)user;
-
-                return response;
+                _notification.AddNotification("Create User", "Email already registered", NotificationModel.ENotificationType.BusinessRules);
+                return new UserResponse();
             }
-            catch (Exception ex)
-            {
-                await userRepository.RollbackAsync();
 
-                if (!_notification.HasNotification)
-                    _notification.AddNotification("Create User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
-                return response;
-            }
+            var user = (Domain.UserAggregate.User)request;
+            await unitOfWork.BeginTransactionAsync();
+
+            await userRepository.InsertOrUpdateAsync(user);
+            await userRepository.SaveChangesAsync();
+
+            await unitOfWork.CommitAsync();
+
+            response = (UserResponse)user;
+
+            return response;
+
         });
 
         public Task<BaseResponse<object>> UpdateAsync(int id, UpdateUserRequest request) => ExecuteAsync<BaseResponse<object>>(async () =>
         {
             var response = new UserResponse();
 
-            try
+            Validate(request, new UpdateUserRequestValidator());
+
+            var user = await userRepository.GetByIdAsync(id, noTracking: false);
+
+            if (user == null)
             {
-                Validate(request, new UpdateUserRequestValidator());
-
-                var user = await userRepository.GetByIdAsync(id, noTracking: false);
-
-                if (user == null)
-                {
-                    _notification.AddNotification("Update User", "User not found", NotificationModel.ENotificationType.NotFound);
-                    return BaseResponse<object>.Fail(_notification.NotificationModel);
-                }
-
-                UpdateUserProperties(user, request);
-
-                await userRepository.BeginTransactionAsync();
-                await userRepository.UpdateAsync(user);
-                await userRepository.SaveChangesAsync();
-                await userRepository.CommitAsync();
-
-                return BaseResponse<object>.Ok(null);
-            }
-            catch (Exception ex)
-            {
-                await userRepository.RollbackAsync();
-
-                _notification.AddNotification("Update User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
+                _notification.AddNotification("Update User", "User not found", NotificationModel.ENotificationType.NotFound);
                 return BaseResponse<object>.Fail(_notification.NotificationModel);
             }
+
+            UpdateUserProperties(user, request);
+
+            await unitOfWork.BeginTransactionAsync();
+            await userRepository.UpdateAsync(user);
+            await userRepository.SaveChangesAsync();
+            await unitOfWork.CommitAsync();
+
+            return BaseResponse<object>.Ok(null);
         });
 
         private void UpdateUserProperties(Domain.UserAggregate.User user, UpdateUserRequest request)
@@ -184,29 +137,20 @@ namespace Fiap.Application.User.Services
 
         public Task<BaseResponse<object>> DeleteAsync(int id) => ExecuteAsync(async () =>
         {
-            try
+            var user = await userRepository.GetByIdAsync(id, noTracking: false);
+
+            if (user == null)
             {
-                var user = await userRepository.GetByIdAsync(id, noTracking: false);
-
-                if (user == null)
-                {
-                    _notification.AddNotification("Delete User", "User Not found", NotificationModel.ENotificationType.NotFound);
-                    return BaseResponse<object>.Fail(_notification.NotificationModel);
-                }
-
-                await userRepository.BeginTransactionAsync();
-                await userRepository.DeleteAsync(user);
-                await userRepository.SaveChangesAsync();
-                await userRepository.CommitAsync();
-
-                return BaseResponse<object>.Ok(null);
-            }
-            catch(Exception ex)
-            {
-                await userRepository.RollbackAsync();
-                _notification.AddNotification("Delete User", ex.Message, NotificationModel.ENotificationType.InternalServerError);
+                _notification.AddNotification("Delete User", "User Not found", NotificationModel.ENotificationType.NotFound);
                 return BaseResponse<object>.Fail(_notification.NotificationModel);
             }
+
+            await unitOfWork.BeginTransactionAsync();
+            await userRepository.DeleteAsync(user);
+            await userRepository.SaveChangesAsync();
+            await unitOfWork.CommitAsync();
+
+            return BaseResponse<object>.Ok(null);
         });
 
         public Task<List<UserLibraryGameResponse>> GetGamesByUserAsync(int id) => ExecuteAsync(async () =>

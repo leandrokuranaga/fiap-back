@@ -1,5 +1,4 @@
-﻿using Fiap.Application.Auth.Models;
-using Fiap.Application.Auth.Services;
+﻿using Fiap.Application.Auth.Services;
 using Fiap.Application.Games.Services;
 using Fiap.Application.Promotions.Services;
 using Fiap.Application.User.Services;

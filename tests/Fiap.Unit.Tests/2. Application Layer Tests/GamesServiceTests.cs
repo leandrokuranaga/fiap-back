@@ -55,35 +55,6 @@ namespace Fiap.Unit.Tests.Application_Layer_Tests
         }
 
         [Fact]
-        public async Task CreateGame_ShouldAddNotification_WhenExceptionOccurs()
-        {
-            #region Arrange
-            var request = new CreateGameRequest
-            {
-                Name = "Error Game",
-                Genre = "Adventure",
-                Price = 59.99M
-            };
-
-            _mockGameRepository
-                .Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<Game>()))
-                .ThrowsAsync(new Exception("Test exception"));
-            #endregion
-
-            #region Act
-            var result = await _gameService.CreateAsync(request);
-            #endregion
-
-            #region Assert
-            Assert.NotNull(result);
-            _mockNotification.Verify(
-                n => n.AddNotification(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NotificationModel.ENotificationType>()),
-                Times.Once
-            );
-            #endregion
-        }
-
-        [Fact]
         public async Task GetAllAsync_ShouldReturnGames_WhenGamesExist()
         {
             #region Arrange
