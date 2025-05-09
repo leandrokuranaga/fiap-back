@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System.Text.Json;
 
-namespace Fiap.Tests._1._Api_Layer_Tests
+namespace Fiap.Unit.Tests._1._Api_Layer_Tests
 {
     public class PromotionsControllerTests
     {

@@ -3,6 +3,7 @@ using Fiap.Api.Middlewares;
 using Fiap.Infra.CrossCutting.IoC;
 using Fiap.Infra.Data;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using System.Diagnostics.CodeAnalysis;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,12 +38,15 @@ builder.Services.AddCustomAuthentication(builder.Configuration);
 
 builder.Services.AddSwaggerDocumentation();
 
+builder.Host.UseSerilog((context, services, configuration) =>
+{
+    SerilogExtensions.ConfigureSerilog(context, services, configuration);
+});
 
 var app = builder.Build();
 
+app.UseMiddleware<LoggingMiddleware>();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
-
-app.UseCustomStatusCodePages();
 
 if (app.Environment.IsDevelopment())
 {
