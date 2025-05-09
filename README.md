@@ -3,7 +3,7 @@
 Repositório do projeto **FIAP Cloud Games (FCG)** desenvolvido para o **Tech Challenge da FIAP - Fase 1**.
 
 > 📍 Acesse a: [📘 Wiki do projeto](https://github.com/leandrokuranaga/fiap-back/wiki)
- [📘 Documentação Técnica]([https://github.com/leandrokuranaga/fiap-back/wiki](https://github.com/leandrokuranaga/fiap-back/wiki/Documenta%C3%A7%C3%A3o-T%C3%A9cnica)
+ [📘 Documentação Técnica](https://github.com/leandrokuranaga/fiap-back/wiki/Documenta%C3%A7%C3%A3o-T%C3%A9cnica)
 
 ---
 
@@ -35,7 +35,7 @@ O **FCG** é uma aplicação backend em **.NET 8**, com o objetivo de simular um
 
 ---
 
-### 📌 Semente Inicial (EF Core `HasData()`)
+### 📌 Seed Inicial (EF Core `HasData()`)
 
 O projeto utiliza **`HasData()` com EF Core** para inserir dados iniciais automaticamente ao aplicar as migrations. Isso facilita testes e demonstrações, evitando a necessidade de popular o banco manualmente.
 
@@ -116,8 +116,6 @@ mv .env-dev .env
 1. Execute `sonar-analyze.bat`
 2. Veja os resultados em [http://localhost:9000](http://localhost:9000)
 3. Vá até a seção "Projetos" para visualizar os resultados da análise
-
-
 ---
 
 ## 🛢️ Configuração do banco de dados
@@ -128,6 +126,14 @@ No arquivo `.env` (anteriormente `.env-dev`), configure as variáveis:
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=sua_senha
 POSTGRES_DB=FIAP
+```
+
+### Configurar o ambiente (`appsettings.json`) (`appsettings.Development.json`)
+
+```json
+"ConnectionStrings": {
+  "DefaultConnection": "Server=db;Database=FIAP;User Id=seu_user;Password=sua_senha;"
+}
 ```
 
 Essas variáveis são usadas pelo Docker para inicializar o banco e pela aplicação para se conectar a ele.
@@ -149,21 +155,15 @@ cd fiap-back
 dotnet restore
 ```
 
-### 3. Configurar o banco (`appsettings.json`)
+### 3. Configurar o banco (`appsettings.json`) (`appsettings.Development.json`)
 
 ```json
 "ConnectionStrings": {
-  "DefaultConnection": "Server=localhost;Database=Meu_Banco_;User Id=seu_banco;Password=sua_senha;"
+  "DefaultConnection": "Server=localhost;Database=FIAP;User Id=seu_user;Password=sua_senha;"
 }
 ```
 
-### 4. Aplicar migrations
-
-```bash
-dotnet ef database update
-```
-
-### 5. Rodar a aplicação
+### 4. Rodar a aplicação
 
 ```bash
 dotnet run --project ./src/Fiap.Api
