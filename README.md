@@ -2,78 +2,49 @@
 
 Repositório do projeto **FIAP Cloud Games (FCG)** desenvolvido para o **Tech Challenge da FIAP - Fase 1**.
 
-> 📍 Acesse a Wiki do projeto: [https://github.com/leandrokuranaga/fiap-back/wiki](https://github.com/leandrokuranaga/fiap-back/wiki)
+> 📍 Acesse a: [📘 Wiki do projeto](https://github.com/leandrokuranaga/fiap-back/wiki)
+ [📘 Documentação Técnica](https://github.com/leandrokuranaga/fiap-back/wiki/Documenta%C3%A7%C3%A3o-T%C3%A9cnica)
 
 ---
 
 ## 📦 Sobre o Projeto
 
-O FCG é uma aplicação backend desenvolvida em **.NET 8**, com o objetivo de simular uma plataforma de venda e gerenciamento de jogos digitais. Essa versão representa a primeira entrega do projeto, com foco em autenticação de usuários, registro de jogos, promoções e controle de bibliotecas pessoais.
+O **FCG** é uma aplicação backend em **.NET 8**, com o objetivo de simular uma plataforma de venda e gerenciamento de jogos digitais. Esta é a **primeira entrega**, focada em:
+
+- Autenticação de usuários  
+- Registro de jogos  
+- Promoções  
+- Controle da biblioteca pessoal
 
 ---
 
-## 🔧 Tecnologias e Padrões Utilizados
+## 🛠️ Pré-requisitos
 
-- **.NET 8 / C#**
-- **PostgreSQL**
-- **EF Core + Migrations**
-- **Swagger** para documentação
-- **DDD (Domain-Driven Design)**
-- **TDD (Test-Driven Development)** com camadas de teste separadas
-- **Repository Pattern** e **Unit of Work**
-- **Camadas organizadas**:
-  - API Layer
-  - Application Layer
-  - Domain Layer
-  - Infra Layer
-  - Tests Layer
+- Docker
+- Docker Compose  
+- .NET SDK 8.0  
+- PostgreSQL (caso não use o Docker)
 
 ---
 
-## 🗂️ Estrutura de Pastas
+## 📚 Links Úteis
 
-```
-├── Fiap.Api                 // Camada de exposição (controllers, Swagger)
-├── Fiap.Application         // Casos de uso, DTOs, validadores
-├── Fiap.Domain              // Entidades, agregados, repositórios
-├── Fiap.Infra.Data          // Mapeamentos EF, contexto, seeds, migrations
-├── Fiap.Infra.CrossCutting  // IoC, integrações, helpers
-├── Fiap.Tests               // Testes organizados por camada
-```
+- [📘 .NET 8](https://learn.microsoft.com/en-us/dotnet/)
+- [📘 EF Core](https://learn.microsoft.com/en-us/ef/core/)
+- [📘 Docker](https://docs.docker.com/)
 
 ---
 
-## 🧠 Relacionamento das Tabelas
-
-Além das tabelas principais utilizadas na lógica de negócio, o sistema também possui a tabela `__EFMigrationsHistory`, gerenciada automaticamente pelo Entity Framework Core.
-
-### 📄 Tabela de Migrations
-
-| Tabela                 | Descrição                                               |
-|------------------------|-----------------------------------------------------------|
-| `__EFMigrationsHistory` | Controla o histórico de migrations aplicadas no banco de dados |
-
-#### Exemplo:
-| MigrationId              | ProductVersion |
-|--------------------------|----------------|
-| 20250406185714_initial   | 9.0.3          |
-
-O projeto possui as seguintes tabelas principais:
-
-- `Users`
-- `Games`
-- `Promotion`
-- `Library`
-- `LibraryGames`
-
-### 🔗 Relacionamentos:
-- `Users` ↔️ `Library` → 1:1 (um usuário tem uma biblioteca)
-- `Library` ↔️ `LibraryGames` ↔️ `Games` → N:N (uma biblioteca contém vários jogos, com informações como data e preço de compra)
-- `Games` ↔️ `Promotion` → N:1 (um jogo pode estar em uma promoção)
-
-### 📌 Semente Inicial:
+### 📌 Seed Inicial (EF Core `HasData()`)
 
 O projeto utiliza **`HasData()` com EF Core** para inserir dados iniciais automaticamente ao aplicar as migrations. Isso facilita testes e demonstrações, evitando a necessidade de popular o banco manualmente.
+
+Inclui:
+
+- Usuários padrão (Admin, User)
+- Jogos (8 títulos)
+- Promoções (3)
+- Bibliotecas de jogos por usuário
 
 #### Dados incluídos:
 - **Usuários:**
@@ -88,33 +59,18 @@ O projeto utiliza **`HasData()` com EF Core** para inserir dados iniciais automa
 - **LibraryGames:**
   - Jogos comprados por usuários com preço pago e data de compra
 
----
 
-## 🗺️ Diagrama Relacional
+# Credenciais de Acesso
 
-![image](https://github.com/user-attachments/assets/5b06b48a-6b68-4ae9-a1e5-d1a5b24be042)
+## Usuário Comum  
+- **Login:** `user@domain.com`  
+- **Senha:** `F1ap@Senha`
 
----
-
-## 🚀 Deploy Final
-
-A entrega final do projeto será feita via **Release no GitHub**, publicada a partir da **branch `dev`**.
-
----
-
-## 👥 Grupo
-
-| Nome                     | E-mail                                |
-|--------------------------|----------------------------------------|
-| Vinicius Brito Chantres  | viniciuschantres@gmail.com            |
-| Leandro da Silva Kuranaga | le.s.kuranaga@hotmail.com           |
-| Bruno dos Santos Moura   | brunobsm88@gmail.com                 |
-| Brayan Fernandes Julio   | brayan.fernandesjulio@gmail.com      |
-| Rafael Nunes dos Santos  | devrafaelnunes@gmail.com             |
+## Usuário Admin  
+- **Login:** `admin@domain.com`  
+- **Senha:** `F1ap@Senha`
 
 ---
-
-> Para mais detalhes sobre PRs e contribuições, acesse o arquivo [📄 Guia de Contribuição](./Contributing%20Guide.md).
 
 # 🧪 Guia para rodar o projeto com Docker e SonarQube
 
@@ -124,18 +80,17 @@ Este projeto depende de **Docker** para executar seus serviços (API, banco de d
 
 ## 🐳 Subindo os serviços com Docker
 
-### 🔁 Subir todos os serviços:
-
 ```bash
 docker compose up -d --build
 ```
 
-http://localhost:8080/swagger/index.html endereço da api
+Acesse a API: [http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html)
 
-### 🎯 Subir serviços específicos:
+## 🎯 Subir serviços específicos:
 
 ```bash
 docker compose up -d db sonarqube
+docker compose up -d app
 ```
 
 Você também pode iniciar um serviço por vez:
@@ -150,35 +105,28 @@ docker compose up -d sonarqube   # SonarQube
 
 ## 🔐 Configuração do SonarQube
 
-1. Acesse: [http://localhost:9000](http://localhost:9000)
-2. Faça login com:
-   - **Usuário:** `admin`
+1. Acesse: [http://localhost:9000](http://localhost:9000)  
+2. Login:  
+  - **Usuário:** `admin`
    - **Senha:** `admin`
-3. Altere a senha quando solicitado.
-4. Vá em **My Account > Security**
-5. Gere um token de autenticação
-6. No arquivo `.env-dev`, adicione:
+3. Altere a senha, gere um token em **My Account > Security**
+4. No arquivo `.env-dev`, adicione:
 
 ```env
 SONAR_TOKEN=seu_token_gerado
 ```
 
-7. Após isso, renomeie o arquivo:
+5. Renomeie o arquivo:
 
 ```bash
 mv .env-dev .env
 ```
 
----
+## ▶️ Análise com SonarQube
 
-## ▶️ Rodando a análise com SonarQube
-
-Para executar a análise de código:
-
-1. Dê dois cliques no arquivo `sonar-analyze.bat`
-2. Acesse o painel do Sonar em [http://localhost:9000](http://localhost:9000)
+1. Execute `sonar-analyze.bat`
+2. Veja os resultados em [http://localhost:9000](http://localhost:9000)
 3. Vá até a seção "Projetos" para visualizar os resultados da análise
-
 ---
 
 ## 🛢️ Configuração do banco de dados
@@ -191,8 +139,45 @@ POSTGRES_PASSWORD=sua_senha
 POSTGRES_DB=FIAP
 ```
 
+### Configurar o ambiente (`appsettings.json`) (`appsettings.Development.json`)
+
+```json
+"ConnectionStrings": {
+  "DefaultConnection": "Server=db;Database=FIAP;User Id=seu_user;Password=sua_senha;"
+}
+```
+
 Essas variáveis são usadas pelo Docker para inicializar o banco e pela aplicação para se conectar a ele.
 
 ---
 
+# 🖥️ Execução Manual (sem Docker)
 
+### 1. Clonar o projeto
+
+```bash
+git clone https://github.com/leandrokuranaga/fiap-back.git
+cd fiap-back
+```
+
+### 2. Restaurar pacotes
+
+```bash
+dotnet restore
+```
+
+### 3. Configurar o banco (`appsettings.json`) (`appsettings.Development.json`)
+
+```json
+"ConnectionStrings": {
+  "DefaultConnection": "Server=localhost;Database=FIAP;User Id=seu_user;Password=sua_senha;"
+}
+```
+
+### 4. Rodar a aplicação
+
+```bash
+dotnet run --project ./src/Fiap.Api
+```
+
+---
