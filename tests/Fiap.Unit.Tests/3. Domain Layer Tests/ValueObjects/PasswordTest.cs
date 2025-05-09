@@ -1,8 +1,7 @@
 ﻿using Fiap.Domain.SeedWork.Exceptions;
 using Fiap.Domain.UserAggregate.ValueObjects;
-using System.Diagnostics.CodeAnalysis;
 
-namespace Fiap.Tests._3._Domain_Layer_Tests
+namespace Fiap.Unit.Tests._3._Domain_Layer_Tests.ValueObjects
 {
     public class PasswordTest
     {

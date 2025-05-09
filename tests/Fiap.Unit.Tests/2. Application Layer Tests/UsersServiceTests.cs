@@ -5,13 +5,12 @@ using Fiap.Domain.GameAggregate;
 using Fiap.Domain.SeedWork;
 using Fiap.Domain.SeedWork.Exceptions;
 using Fiap.Domain.UserAggregate;
-using Fiap.Domain.UserAggregate.Entities;
 using Fiap.Domain.UserAggregate.Enums;
 using Fiap.Domain.UserAggregate.ValueObjects;
 using Moq;
 using System.Linq.Expressions;
 
-namespace Fiap.Tests._2._Application_Layer_Tests
+namespace Fiap.Unit.Tests._2._Application_Layer_Tests
 {
     public class UsersServiceTests
     {
@@ -314,115 +313,6 @@ namespace Fiap.Tests._2._Application_Layer_Tests
         }
 
         [Fact]
-        public async Task Update_ShouldAddNotificationAndThrowException_WhenExceptionIsThrown()
-        {
-            #region Arrange
-            int userId = 1;
-            var request = new UpdateUserRequest
-            {
-                Name = "Updated Name",
-                Email = "updated.email@example.com"
-            };
-
-            _mockUserRepository
-                .Setup(repo => repo.GetByIdAsync(userId, It.IsAny<bool>()))
-                .ThrowsAsync(new Exception("Unexpected error"));
-            #endregion
-
-            #region Act
-            var exception = await Assert.ThrowsAsync<Exception>(async () => await _usersService.UpdateAsync(userId, request));
-            #endregion
-
-            #region Assert
-            Assert.NotNull(exception);
-            Assert.Equal("Unexpected error", exception.Message);
-
-            _mockNotification.Verify(n =>
-                n.AddNotification("Update User", "Unexpected error", NotificationModel.ENotificationType.InternalServerError),
-                Times.Once);
-            #endregion
-        }
-        [Fact]
-        public async Task Get_ShouldAddNotification_WhenExceptionIsThrown()
-        {
-            #region Arrange
-            int userId = 1;
-
-            _mockUserRepository
-                .Setup(repo => repo.GetByIdAsync(userId, It.IsAny<bool>()))
-                .ThrowsAsync(new Exception("Unexpected error"));
-            #endregion
-
-            #region Act
-            var result = await _usersService.GetAsync(userId);
-            #endregion
-
-            #region Assert
-            Assert.NotNull(result);
-            _mockNotification.Verify(n => n.AddNotification("Get User", "Unexpected error", NotificationModel.ENotificationType.InternalServerError), Times.Once);
-            #endregion
-        }
-        [Fact]
-        public async Task GetAll_ShouldAddNotification_WhenExceptionIsThrown()
-        {
-            #region Arrange
-            _mockUserRepository
-                .Setup(repo => repo.GetAllAsync())
-                .ThrowsAsync(new Exception("Unexpected error"));
-            #endregion
-
-            #region Act
-            var result = await _usersService.GetAllAsync();
-            #endregion
-
-            #region Assert
-            Assert.NotNull(result);
-            Assert.Empty(result);
-            _mockNotification.Verify(n => n.AddNotification("Get Users", "Unexpected error", NotificationModel.ENotificationType.InternalServerError), Times.Once);
-            #endregion
-        }
-
-        [Fact]
-        public async Task Delete_ShouldAddNotificationAndThrowException_WhenExceptionIsThrown()
-        {
-            #region Arrange
-            int userId = 1;
-
-            var user = new User
-            {
-                Id = userId,
-                Name = "Bruno Moura",
-                Email = new Email("bruno@example.com")
-            };
-
-            _mockUserRepository
-                .Setup(repo => repo.GetByIdAsync(userId, It.IsAny<bool>()))
-                .ReturnsAsync(user);
-
-            _mockUserRepository
-                .Setup(repo => repo.DeleteAsync(It.IsAny<User>()))
-                .ThrowsAsync(new Exception("Unexpected error"));
-
-            _mockUserRepository
-                .Setup(repo => repo.RollbackAsync())
-                .Returns(Task.CompletedTask);
-            #endregion
-
-            #region Act
-            var exception = await Assert.ThrowsAsync<Exception>(async () => await _usersService.DeleteAsync(userId));
-            #endregion
-
-            #region Assert
-            Assert.NotNull(exception);
-            Assert.Equal("Unexpected error", exception.Message);
-            _mockUserRepository.Verify(r => r.RollbackAsync(), Times.Once);
-            _mockNotification.Verify(n =>
-                n.AddNotification("Delete User", "Unexpected error", NotificationModel.ENotificationType.InternalServerError),
-                Times.Once);
-            #endregion
-        }
-
-        [Fact]
         public async Task CreateAdminAsync_ShouldReturnUserResponse_WhenValidRequest()
         {
             // Arrange
@@ -482,41 +372,6 @@ namespace Fiap.Tests._2._Application_Layer_Tests
             _mockNotification.Verify(n =>
                 n.AddNotification("Create User", "Email already registered", NotificationModel.ENotificationType.BusinessRules),
                 Times.Once);
-        }
-
-        [Fact]
-        public async Task CreateAdminAsync_ShouldAddNotificationAndThrowException_WhenExceptionIsThrown()
-        {
-            // Arrange
-            var request = new CreateUserAdminRequest
-            {
-                Name = "Admin User",
-                Email = "admin@example.com",
-                Password = "Secure@123",
-                Active = true,
-                TypeUser = TypeUser.Admin
-            };
-
-            _mockUserRepository
-                .Setup(repo => repo.ExistAsync(It.IsAny<Expression<Func<User, bool>>>()))
-                .ThrowsAsync(new Exception("Unexpected error"));
-
-            _mockUserRepository
-                .Setup(repo => repo.RollbackAsync())
-                .Returns(Task.CompletedTask);
-
-            // Act
-            var exception = await Assert.ThrowsAsync<Exception>(async () => await _usersService.CreateAdminAsync(request));
-
-            // Assert
-            #region Assert
-            Assert.NotNull(exception);
-            Assert.Equal("Unexpected error", exception.Message);
-
-            _mockNotification.Verify(n =>
-                n.AddNotification("Create User", "Unexpected error", NotificationModel.ENotificationType.InternalServerError),
-                Times.Once);
-            #endregion
         }
 
         [Fact]

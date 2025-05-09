@@ -4,9 +4,6 @@ using Fiap.Infra.CrossCutting.IoC;
 using Fiap.Infra.Data;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-using Serilog.Extensions.Hosting;
-using Serilog.Formatting.Json;
-using Serilog.Sinks;
 using System.Diagnostics.CodeAnalysis;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -48,9 +45,8 @@ builder.Host.UseSerilog((context, services, configuration) =>
 
 var app = builder.Build();
 
-app.UseExceptionHandling();
-
-app.UseMiddleware<RequestLoggingMiddleware>();
+app.UseMiddleware<LoggingMiddleware>();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {

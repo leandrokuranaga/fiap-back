@@ -16,15 +16,7 @@ namespace Fiap.Application.Common
 
         public async Task<T> ExecuteAsync<T>(Func<Task<T>> action)
         {
-            try
-            {
-                return await action();
-            }
-            catch (ValidatorException e)
-            {
-                _notification.AddNotification("Validator Error", e.Message, NotificationModel.ENotificationType.BadRequestError);
-            }
-            return default;
+            return await action();            
         }
 
         protected virtual void Validate<TModel>(TModel model, AbstractValidator<TModel> validator)

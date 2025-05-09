@@ -15,35 +15,27 @@ namespace Fiap.Application.Promotions.Services
         {
             var response = new PromotionResponse();
 
-            try
-            {
-                Validate(request, new CreatePromotionRequestValidator());
+            Validate(request, new CreatePromotionRequestValidator());
 
-                var promotion = (Promotion)request;
+            var promotion = (Promotion)request;
 
-                promotion.ValidatePeriod();
+            promotion.ValidatePeriod();
 
-                await unitOfWork.BeginTransactionAsync();
+            await unitOfWork.BeginTransactionAsync();
 
-                await promotionRepository.InsertOrUpdateAsync(promotion);
-                await promotionRepository.SaveChangesAsync();
+            await promotionRepository.InsertOrUpdateAsync(promotion);
+            await promotionRepository.SaveChangesAsync();
 
-                await CreatePromotion(request, promotion);
+            await CreatePromotion(request, promotion);
 
-                await gameRepository.SaveChangesAsync();
+            await gameRepository.SaveChangesAsync();
 
-                await unitOfWork.CommitAsync();
+            await unitOfWork.CommitAsync();
 
-                response = (PromotionResponse)promotion;
+            response = (PromotionResponse)promotion;
 
-                return response;
-            }
-            catch (Exception ex)
-            {
-                await unitOfWork.RollbackAsync();
-                notification.AddNotification("Not Found", ex.Message, NotificationModel.ENotificationType.NotFound);
-                throw;
-            }
+            return response;
+
         });
 
         private async Task CreatePromotion(CreatePromotionRequest request, Promotion promotion)
@@ -82,38 +74,30 @@ namespace Fiap.Application.Promotions.Services
         {
             var response = new PromotionResponse();
 
-            try
+            Validate(request, new UpdatePromotionRequestValidator());
+
+            var promotion = await promotionRepository.GetByIdAsync(id, noTracking: false);
+
+            if (promotion is null)
             {
-                Validate(request, new UpdatePromotionRequestValidator());
-
-                var promotion = await promotionRepository.GetByIdAsync(id, noTracking: false);
-
-                if (promotion is null)
-                {
-                    notification.AddNotification("PromotionId", "Promotion not found", NotificationModel.ENotificationType.NotFound);
-                    return null!;
-                }
-
-                promotion.UpdateDiscount(request.Discount, request.ExpirationDate);
-                await unitOfWork.BeginTransactionAsync();
-
-                await promotionRepository.UpdateAsync(promotion);
-                await promotionRepository.SaveChangesAsync();
-
-                await UpdateGamesPromotion(request.GameId, promotion.Id);
-
-                await gameRepository.SaveChangesAsync();
-
-                await unitOfWork.CommitAsync();
-
-                return BaseResponse<object>.Ok(null);
+                notification.AddNotification("PromotionId", "Promotion not found", NotificationModel.ENotificationType.NotFound);
+                return null!;
             }
-            catch (Exception ex)
-            {
-                await unitOfWork.RollbackAsync();
-                notification.AddNotification("Update Promotion", ex.Message, NotificationModel.ENotificationType.NotFound);
-                throw;
-            }
+
+            promotion.UpdateDiscount(request.Discount, request.ExpirationDate);
+            await unitOfWork.BeginTransactionAsync();
+
+            await promotionRepository.UpdateAsync(promotion);
+            await promotionRepository.SaveChangesAsync();
+
+            await UpdateGamesPromotion(request.GameId, promotion.Id);
+
+            await gameRepository.SaveChangesAsync();
+
+            await unitOfWork.CommitAsync();
+
+            return BaseResponse<object>.Ok(null);
+
         });
 
         private async Task<List<Game>> UpdateGamesPromotion(List<int?>? gameIds, int promotionId)

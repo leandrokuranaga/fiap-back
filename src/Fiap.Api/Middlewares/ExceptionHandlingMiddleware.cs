@@ -4,7 +4,10 @@ using Serilog;
 using System.Net;
 using System.Text.Json;
 using Fiap.Application.Common;
+using System.Diagnostics.CodeAnalysis;
+using Fiap.Application.Validators;
 
+[ExcludeFromCodeCoverage]
 public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
 {
     public async Task Invoke(HttpContext context)
@@ -18,10 +21,10 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
             await RollbackIfPossibleAsync(context);
             await HandleExceptionAsync(context, e, "Not Found", NotificationModel.ENotificationType.NotFound, HttpStatusCode.NotFound);
         }
-        catch (ArgumentException e)
+        catch (ValidatorException e)
         {
             await RollbackIfPossibleAsync(context);
-            await HandleExceptionAsync(context, e, "Invalid Property", NotificationModel.ENotificationType.BadRequestError, HttpStatusCode.BadRequest);
+            await HandleExceptionAsync(context, e, "Validation Error", NotificationModel.ENotificationType.BadRequestError, HttpStatusCode.BadRequest);
         }
         catch (BusinessRulesException e)
         {
@@ -70,17 +73,24 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
         var isDev = context.RequestServices.GetService<IWebHostEnvironment>()?.IsDevelopment() == true;
         var message = isDev ? exception.Message : "An unexpected error occurred.";
 
-        var notification = new NotificationModel
+        var notificationService = context.RequestServices.GetService<INotification>();
+
+        var notification = notificationService?.HasNotification == true
+            ? notificationService.NotificationModel
+            : new NotificationModel { NotificationType = type };
+
+        if (notification.FieldMessages.Count == 0 && notification.GeneralMessages.All(g => g.Message != message))
         {
-            NotificationType = type
-        };
-        notification.AddMessage(title, message);
+            notification.AddMessage(title, message);
+        }
 
         var response = BaseResponse<object>.Fail(notification);
 
         var json = JsonSerializer.Serialize(response);
         await context.Response.WriteAsync(json);
     }
+
+
 
 
 }

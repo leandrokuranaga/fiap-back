@@ -2,7 +2,7 @@
 using Fiap.Domain.UserAggregate.Enums;
 using Xunit;
 
-namespace Fiap.Tests._3._Domain_Layer_Tests
+namespace Fiap.Unit.Tests._3._Domain_Layer_Tests.Entities
 {
     public class LibraryGameDomainTest
     {

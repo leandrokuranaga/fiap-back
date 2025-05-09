@@ -7,7 +7,6 @@ using Fiap.Domain.UserAggregate.ValueObjects;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using System.Linq.Expressions;
-using Xunit;
 
 namespace Fiap.Unit.Tests._2._Application_Layer_Tests
 {

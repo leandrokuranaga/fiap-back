@@ -4,11 +4,10 @@ using Fiap.Domain.Common.ValueObjects;
 using Fiap.Domain.GameAggregate;
 using Fiap.Domain.PromotionAggregate;
 using Fiap.Domain.SeedWork;
-using Fiap.Domain.SeedWork.Exceptions;
 using Moq;
 using static Fiap.Domain.SeedWork.NotificationModel;
 
-namespace Fiap.Tests._2._Application_Layer_Tests
+namespace Fiap.Unit.Tests._2._Application_Layer_Tests
 {
     public class PromotionServiceTests
     {
@@ -71,35 +70,6 @@ namespace Fiap.Tests._2._Application_Layer_Tests
 
 
         [Fact]
-        public async Task CreatePromotion_ShouldAddNotificationAndThrowException_WhenExceptionOccurs()
-        {
-            #region Arrange
-            var request = new CreatePromotionRequest
-            {
-                Discount = 10,
-                ExpirationDate = DateTime.UtcNow.AddDays(30),
-                GameId = new List<int?> { 1, 2, 3 }
-            };
-            _mockPromotionRepositoryMock.Setup(repo => repo.InsertOrUpdateAsync(It.IsAny<Promotion>()))
-                .ThrowsAsync(new Exception("Test exception"));
-
-            #endregion
-
-            #region Act
-            var exception = await Assert.ThrowsAsync<Exception>(async () => await _promotionService.CreateAsync(request));
-            #endregion
-
-            #region Assert
-            Assert.NotNull(exception);
-            Assert.Equal("Test exception", exception.Message);
-
-            _mockNotification.Verify(n =>
-                n.AddNotification("Not Found", "Test exception", NotificationModel.ENotificationType.NotFound),
-                Times.Once);
-            #endregion
-        }
-
-        [Fact]
         public async Task UpdatePromotion_ShouldReturnTrue_WhenValidRequest()
         {
 
@@ -130,37 +100,6 @@ namespace Fiap.Tests._2._Application_Layer_Tests
 
             #region Assert
             Assert.NotNull(result);
-            #endregion
-        }
-
-        [Fact]
-        public async Task UpdatePromotion_ShouldAddNotificationAndThrowException_WhenExceptionOccurs()
-        {
-            #region Arrange
-            int promotionId = 1;
-
-            var request = new UpdatePromotionRequest
-            {
-                Discount = 10,
-                ExpirationDate = DateTime.UtcNow.AddDays(30)
-            };
-
-            _mockPromotionRepositoryMock.Setup(repo => repo.GetByIdAsync(promotionId, It.IsAny<bool>()))
-                .ThrowsAsync(new Exception("Test exception"));
-
-            #endregion
-
-            #region Act
-            var exception = await Assert.ThrowsAsync<Exception>(async () => await _promotionService.UpdateAsync(promotionId, request));
-            #endregion
-
-            #region Assert
-            Assert.NotNull(exception);
-            Assert.Equal("Test exception", exception.Message);
-
-            _mockNotification.Verify(n =>
-                n.AddNotification(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NotificationModel.ENotificationType>()),
-                Times.Once);
             #endregion
         }
 
