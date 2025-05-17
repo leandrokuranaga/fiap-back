@@ -59,6 +59,7 @@ namespace Fiap.Api.Extensions
                 c.ExampleFilters();
                 c.OperationFilter<SetApplicationJsonAsDefaultFilter>();
                 c.EnableAnnotations();
+                c.SchemaFilter<SuccessResponseSchemaFilter>(); 
             });
             services.AddSwaggerExamplesFromAssemblies(Assembly.GetExecutingAssembly());
         }
