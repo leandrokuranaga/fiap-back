@@ -60,9 +60,7 @@ namespace Fiap.Api.Extensions
                 c.OperationFilter<SetApplicationJsonAsDefaultFilter>();
                 c.EnableAnnotations();
             });
-            services.AddSwaggerExamplesFromAssemblyOf<CreatePromotionRequestExample>();
-            services.AddSwaggerExamplesFromAssemblyOf<CreateGameRequestExample>();
-
+            services.AddSwaggerExamplesFromAssemblies(Assembly.GetExecutingAssembly());
         }
         public static void UseSwaggerDocumentation(this IApplicationBuilder app)
         {
