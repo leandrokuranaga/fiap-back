@@ -1,6 +1,8 @@
 ﻿using Fiap.Application.Auth.Models.Request;
 using Fiap.Application.Auth.Models.Response;
 using Fiap.Application.Common;
+using Fiap.Application.Validators.AuthValidators;
+using Fiap.Application.Validators.UsersValidators;
 using Fiap.Domain.SeedWork;
 using Fiap.Domain.UserAggregate;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +21,8 @@ namespace Fiap.Application.Auth.Services
     {
         public async Task<LoginResponse> LoginAsync(LoginRequest request) => await ExecuteAsync(async () =>
         {
+            Validate(request, new LoginRequestValidator());
+
             var login = new LoginResponse();
 
             var username = request.Username.Trim().ToLowerInvariant();

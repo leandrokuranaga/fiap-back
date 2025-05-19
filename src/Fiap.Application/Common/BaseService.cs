@@ -1,6 +1,5 @@
 ﻿using Fiap.Application.Validators;
 using Fiap.Domain.SeedWork;
-using Fiap.Domain.SeedWork.Exceptions;
 using FluentValidation;
 using FluentValidation.Results;
 using System.Diagnostics.CodeAnalysis;

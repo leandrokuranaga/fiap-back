@@ -49,7 +49,7 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Erro ao tentar fazer rollback da transação");
+                Log.Error(ex, "Error on transaction rollback");
             }
         }
     }
@@ -89,8 +89,4 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
         var json = JsonSerializer.Serialize(response);
         await context.Response.WriteAsync(json);
     }
-
-
-
-
 }
