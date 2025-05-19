@@ -8,8 +8,8 @@ using Fiap.Domain.SeedWork;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using Swashbuckle.AspNetCore.Filters;
 using System.Net;
-using System.Security.Claims;
 
 namespace Fiap.Api.Controllers
 {
@@ -22,12 +22,24 @@ namespace Fiap.Api.Controllers
     [Route("api/v{version:apiVersion}/[controller]")]
     public class UsersController(IUsersService usersService, INotification notification) : BaseController(notification)
     {
+        /// <summary>
+        /// Creates a new regular user
+        /// </summary>
+        /// <param name="request">The details of the user to create.</param>
+        /// <returns>The new user created information.</returns>
         [AllowAnonymous]
         [HttpPost("create")]
-        [SwaggerOperation("Creates a regular user")]
-        [ProducesResponseType(typeof(BaseResponse<UserResponse>), (int)HttpStatusCode.Created)]
-        [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
-        [ProducesDefaultResponseType]
+        [SwaggerOperation(
+            Summary = "Creates a new regular user.",
+            Description = "Registers a new user with basic access permissions. Returns the user data on success, or an error if the input is invalid or the email is already in use."
+        )]
+        [ProducesResponseType(typeof(SuccessResponse<UserResponse>), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(BaseResponse<object>), StatusCodes.Status400BadRequest)]
+        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(GenericErrorBadRequestExample))]
+        [ProducesResponseType(typeof(BaseResponse<object>), StatusCodes.Status409Conflict)]
+        [SwaggerResponseExample(StatusCodes.Status409Conflict, typeof(GenericErrorConflictExample))]
+        [ProducesResponseType(typeof(BaseResponse<object>), StatusCodes.Status500InternalServerError)]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(GenericErrorInternalServerExample))]
         public async Task<IActionResult> CreateAsync([FromBody] CreateUserRequest request)
         {
             var result = await usersService.CreateAsync(request);
@@ -35,16 +47,27 @@ namespace Fiap.Api.Controllers
         }
 
         /// <summary>
-        /// Creates a new user (admin or regular user, active or not)
+        /// Creates a new user (admin only).
         /// </summary>
         /// <param name="request">The details of the user to create (only admin).</param>
         /// <returns>The new user created information.</returns>
-        [HttpPost("create-admin")]
-        [SwaggerOperation("Creates a user (only admin)")]
-        [ProducesResponseType(typeof(BaseResponse<UserResponse>), (int)HttpStatusCode.Created)]
-        [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
-        [ProducesDefaultResponseType]
         [Authorize(Roles = "Admin")]
+        [HttpPost("create-admin")]
+        [SwaggerOperation(
+            Summary = "Creates a new user (admin only).",
+            Description = "Creates a user account that can be either admin or regular. Requires admin privileges. Returns the created user's information or an error in case of validation failure, duplication, or unauthorized access."
+        )]
+        [ProducesResponseType(typeof(SuccessResponse<UserResponse>), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(BaseResponse<object>), StatusCodes.Status400BadRequest)]
+        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(GenericErrorBadRequestExample))]
+        [ProducesResponseType(typeof(BaseResponse<object>), StatusCodes.Status409Conflict)]
+        [SwaggerResponseExample(StatusCodes.Status409Conflict, typeof(GenericErrorConflictExample))]
+        [ProducesResponseType(typeof(BaseResponse<object>), StatusCodes.Status401Unauthorized)]
+        [SwaggerResponseExample(StatusCodes.Status401Unauthorized, typeof(GenericErrorUnauthorizedExample))]
+        [ProducesResponseType(typeof(BaseResponse<object>), StatusCodes.Status403Forbidden)]
+        [SwaggerResponseExample(StatusCodes.Status403Forbidden, typeof(GenericErrorForbiddenExample))]
+        [ProducesResponseType(typeof(BaseResponse<object>), StatusCodes.Status500InternalServerError)]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(GenericErrorInternalServerExample))]
         public async Task<IActionResult> CreateAdminAsync([FromBody] CreateUserAdminRequest request)
         {
             var result = await usersService.CreateAdminAsync(request);
@@ -52,17 +75,28 @@ namespace Fiap.Api.Controllers
         }
 
         /// <summary>
-        /// Updates a user
+        /// Updates an existing user.
         /// </summary>
         /// <param name="request">The details of the user to be updated.</param>
         /// <param name="id">id of the updated user</param>
         /// <returns>The new user updated information.</returns>
-        [SwaggerOperation("Updates a user")]
-        [ProducesResponseType(typeof(BaseResponse<UserResponse>), (int)HttpStatusCode.NoContent)]
-        [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
-        [ProducesDefaultResponseType]
         [HttpPatch("{id:int:min(1)}")]
         [Authorize(Roles = "Admin")]
+        [SwaggerOperation(
+            Summary = "Updates an existing user.",
+            Description = "Updates the details of an existing user such as name, email, or status. Only accessible by admins. Returns 204 on success, 400 or 404 on failure, and 401/403 if unauthorized."
+        )]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(BaseResponse<object>), StatusCodes.Status400BadRequest)]
+        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(GenericErrorBadRequestExample))]
+        [ProducesResponseType(typeof(BaseResponse<object>), StatusCodes.Status404NotFound)]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(GenericErrorNotFoundExample))]
+        [ProducesResponseType(typeof(BaseResponse<object>), StatusCodes.Status401Unauthorized)]
+        [SwaggerResponseExample(StatusCodes.Status401Unauthorized, typeof(GenericErrorUnauthorizedExample))]
+        [ProducesResponseType(typeof(BaseResponse<object>), StatusCodes.Status403Forbidden)]
+        [SwaggerResponseExample(StatusCodes.Status403Forbidden, typeof(GenericErrorForbiddenExample))]
+        [ProducesResponseType(typeof(BaseResponse<object>), StatusCodes.Status500InternalServerError)]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(GenericErrorInternalServerExample))]
         public async Task<IActionResult> UpdateAsync(int id, [FromBody] UpdateUserRequest request)
         {
             await usersService.UpdateAsync(id, request);
@@ -70,16 +104,27 @@ namespace Fiap.Api.Controllers
         }
 
         /// <summary>
-        /// Deletes a user
+        /// Deletes a user by ID.
         /// </summary>
         /// <param name="id">id of the deleted user</param>
         /// <returns>The deleted user information.</returns>
-        [SwaggerOperation("Delete a user based on id")]
-        [ProducesResponseType(typeof(BaseResponse<UserResponse>), (int)HttpStatusCode.NoContent)]
-        [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
-        [ProducesDefaultResponseType]
         [HttpDelete("{id:int:min(1)}")]
         [Authorize(Roles = "Admin")]
+        [SwaggerOperation(
+            Summary = "Deletes a user by ID.",
+            Description = "Deletes a user from the system based on their ID. Only accessible by admins. Returns 204 on success, or an error if the user is not found or the requester lacks permission."
+        )]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(BaseResponse<object>), StatusCodes.Status400BadRequest)]
+        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(GenericErrorBadRequestExample))]
+        [ProducesResponseType(typeof(BaseResponse<object>), StatusCodes.Status404NotFound)]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(GenericErrorNotFoundExample))]
+        [ProducesResponseType(typeof(BaseResponse<object>), StatusCodes.Status401Unauthorized)]
+        [SwaggerResponseExample(StatusCodes.Status401Unauthorized, typeof(GenericErrorUnauthorizedExample))]
+        [ProducesResponseType(typeof(BaseResponse<object>), StatusCodes.Status403Forbidden)]
+        [SwaggerResponseExample(StatusCodes.Status403Forbidden, typeof(GenericErrorForbiddenExample))]
+        [ProducesResponseType(typeof(BaseResponse<object>), StatusCodes.Status500InternalServerError)]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(GenericErrorInternalServerExample))]
         public async Task<IActionResult> DeleteAsync(int id)
         {
             await usersService.DeleteAsync(id);
@@ -87,16 +132,25 @@ namespace Fiap.Api.Controllers
         }
 
         /// <summary>
-        /// Gets a user based on the id
+        /// Retrieve a user by ID.
         /// </summary>
         /// <param name="id">Gets a user based on the id.</param>
         /// <returns>The user information.</returns>
-        [SwaggerOperation("Get a user based on id")]
-        [ProducesResponseType(typeof(BaseResponse<UserResponse>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
-        [ProducesDefaultResponseType]
         [HttpGet("{id:int:min(1)}")]
         [Authorize(Roles = "Admin")]
+        [SwaggerOperation(
+            Summary = "Retrieve a user by ID.",
+            Description = "Fetches a user's details based on their ID. Only accessible by admins. Returns the user's information on success, or an error if not found or unauthorized."
+        )]
+        [ProducesResponseType(typeof(SuccessResponse<UserResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(BaseResponse<object>), StatusCodes.Status400BadRequest)]
+        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(GenericErrorBadRequestExample))]
+        [ProducesResponseType(typeof(BaseResponse<object>), StatusCodes.Status401Unauthorized)]
+        [SwaggerResponseExample(StatusCodes.Status401Unauthorized, typeof(GenericErrorUnauthorizedExample))]
+        [ProducesResponseType(typeof(BaseResponse<object>), StatusCodes.Status403Forbidden)]
+        [SwaggerResponseExample(StatusCodes.Status403Forbidden, typeof(GenericErrorForbiddenExample))]
+        [ProducesResponseType(typeof(BaseResponse<object>), StatusCodes.Status500InternalServerError)]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(GenericErrorInternalServerExample))]
         public async Task<IActionResult> GetAsync(int id)
         {
             var result = await usersService.GetAsync(id);
@@ -104,15 +158,22 @@ namespace Fiap.Api.Controllers
         }
 
         /// <summary>
-        /// Gets a list of users
+        /// Retrieve a list of all users.
         /// </summary>
         /// <returns>The list of users information.</returns>
-        [SwaggerOperation("Gets a list of users")]
-        [ProducesResponseType(typeof(BaseResponse<List<UserResponse>>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
-        [ProducesDefaultResponseType]
         [HttpGet]
         [Authorize(Roles = "Admin")]
+        [SwaggerOperation(
+            Summary = "Retrieve a list of all users.",
+            Description = "Returns a list of all registered users. Only accessible by admins. May return an empty list if no users exist. Returns 401/403 if access is unauthorized."
+        )]
+        [ProducesResponseType(typeof(SuccessResponse<List<UserResponse>>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(BaseResponse<object>), StatusCodes.Status401Unauthorized)]
+        [SwaggerResponseExample(StatusCodes.Status401Unauthorized, typeof(GenericErrorUnauthorizedExample))]
+        [ProducesResponseType(typeof(BaseResponse<object>), StatusCodes.Status403Forbidden)]
+        [SwaggerResponseExample(StatusCodes.Status403Forbidden, typeof(GenericErrorForbiddenExample))]
+        [ProducesResponseType(typeof(BaseResponse<object>), StatusCodes.Status500InternalServerError)]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(GenericErrorInternalServerExample))]
         public async Task<IActionResult> GetAllAsync()
         {
             var result = await usersService.GetAllAsync();
@@ -120,15 +181,22 @@ namespace Fiap.Api.Controllers
         }
 
         /// <summary>
-        /// Gets all games from the logged in user
+        /// Retrieve the logged-in user's game library.
         /// </summary>
         /// <returns>A response containing a library of games from the logged in user</returns>
         [HttpGet("users-games")]
-        [SwaggerOperation("Get a Library of Games from user logged in")]
-        [ProducesResponseType(typeof(BaseResponse<List<UserLibraryGameResponse>>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
-        [ProducesDefaultResponseType]
         [Authorize(Roles = "User,Admin")]
+        [SwaggerOperation(
+            Summary = "Retrieve the logged-in user's game library.",
+            Description = "Returns a list of all games associated with the currently authenticated user. Accessible by both regular users and admins. Returns 404 if no data is found, or 401 if the user is not logged in."
+        )]
+        [ProducesResponseType(typeof(SuccessResponse<List<UserLibraryGameResponse>>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(BaseResponse<object>), StatusCodes.Status404NotFound)]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(GenericErrorNotFoundExample))]
+        [ProducesResponseType(typeof(BaseResponse<object>), StatusCodes.Status401Unauthorized)]
+        [SwaggerResponseExample(StatusCodes.Status401Unauthorized, typeof(GenericErrorUnauthorizedExample))]
+        [ProducesResponseType(typeof(BaseResponse<object>), StatusCodes.Status500InternalServerError)]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(GenericErrorInternalServerExample))]
         public async Task<IActionResult> GetGamesByUserAsync()
         {
             var id = GetLoggedUser();

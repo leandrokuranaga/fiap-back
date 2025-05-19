@@ -13,7 +13,6 @@ namespace Fiap.Application.Games.Services
         public async Task<GameResponse> CreateAsync(CreateGameRequest request)
         {
             var response = new GameResponse();
-
         
             Validate(request, new CreateGameRequestValidator());
 

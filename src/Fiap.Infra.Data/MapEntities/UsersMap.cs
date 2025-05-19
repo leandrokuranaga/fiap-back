@@ -42,7 +42,6 @@ namespace Fiap.Infra.Data.MapEntities
 
                 pw.WithOwner();
 
-                // senha F1ap@Senha
                 pw.HasData(
                     new
                     {

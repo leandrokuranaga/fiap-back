@@ -1,10 +1,13 @@
 using Fiap.Api.Extensions;
 using Fiap.Api.Middlewares;
+using Fiap.Application.Common;
+using Fiap.Domain.SeedWork;
 using Fiap.Infra.CrossCutting.IoC;
 using Fiap.Infra.Data;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,11 +58,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseRouting();
 
+
 app.UseHttpsRedirection();
 
 app.UseCors("AllowAllOrigins");
 
 app.UseAuthentication();
+app.UseMiddleware<UnauthorizedResponseMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();

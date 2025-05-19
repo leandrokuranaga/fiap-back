@@ -32,6 +32,12 @@ namespace Fiap.Application.Validators.UsersValidators
                 .WithMessage("Password must be less than or equal to 100 characters.")
                 .Matches(@"^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$")
                 .WithMessage("Password must contain at least one letter, one number, and one special character.");
+
+            RuleFor(x => x.TypeUser)
+                .IsInEnum().WithMessage("TypeUser must be a valid value (e.g., Admin, User).");
+
+            RuleFor(x => x.Active)
+                .NotNull().WithMessage("Active status is required.");
         }
     }
 }
