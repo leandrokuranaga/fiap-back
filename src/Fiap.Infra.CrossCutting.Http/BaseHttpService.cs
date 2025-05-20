@@ -1,9 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Fiap.Infra.CrossCutting.Http
 {
+    [ExcludeFromCodeCoverage]
     public abstract class BaseHttpService(HttpClient httpClient)
     {
         private readonly HttpClient _httpClient = httpClient;

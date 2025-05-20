@@ -1,9 +1,9 @@
 ﻿using Fiap.Domain.SeedWork;
-using Fiap.Domain.UserAggregate;
 
-namespace Fiap.Domain.UsersAggregate
+namespace Fiap.Domain.UserAggregate
 {
-    public interface IUserRepository : IBaseRepository<UserDomain>
+    public interface IUserRepository : IBaseRepository<User>, IUnitOfWork
     {
+        Task<User> GetByIdGameUserAsync(int id, bool noTracking);
     }
 }

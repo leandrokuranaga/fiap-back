@@ -1,10 +1,11 @@
-﻿using Fiap.Domain.SeedWork.Enums;
+﻿using Fiap.Domain.UserAggregate.Enums;
+using System.Diagnostics.CodeAnalysis;
 
-namespace Fiap.Application.Contact.Models.Request
+namespace Fiap.Application.Users.Models.Request
 {
-    public class UpdateUserRequest
+    [ExcludeFromCodeCoverage]
+    public record UpdateUserRequest
     {
-        public int Id { get; set; }
         public string? Name { get; set; }
         public string? Email { get; set; }
         public string? Password { get; set; }

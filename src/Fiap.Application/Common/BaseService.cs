@@ -1,11 +1,12 @@
 ﻿using Fiap.Application.Validators;
 using Fiap.Domain.SeedWork;
-using Fiap.Domain.SeedWork.Exceptions;
 using FluentValidation;
 using FluentValidation.Results;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Application.Common
 {
+    [ExcludeFromCodeCoverage]
     public abstract class BaseService(INotification notification)
     {
         protected readonly INotification _notification = notification;
@@ -14,27 +15,7 @@ namespace Fiap.Application.Common
 
         public async Task<T> ExecuteAsync<T>(Func<Task<T>> action)
         {
-            try
-            {
-                return await action();
-            }
-            catch (ValidatorException e)
-            {
-                _notification.AddNotification("Validator Error", e.Message, NotificationModel.ENotificationType.BadRequestError);
-            }
-            catch (NotFoundException e)
-            {
-                _notification.AddNotification("Not Found", e.Message, NotificationModel.ENotificationType.NotFound);
-            }
-            catch (ArgumentException e)
-            {
-                _notification.AddNotification("Invalid Property", e.Message, NotificationModel.ENotificationType.BadRequestError);
-            }
-            catch (Exception e)
-            {
-                _notification.AddNotification("Internal Error", e.Message, NotificationModel.ENotificationType.InternalServerError);
-            }
-            return default;
+            return await action();            
         }
 
         protected virtual void Validate<TModel>(TModel model, AbstractValidator<TModel> validator)

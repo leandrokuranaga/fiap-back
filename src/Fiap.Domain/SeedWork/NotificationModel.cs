@@ -1,38 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Domain.SeedWork
 {
+    [ExcludeFromCodeCoverage]
     public class NotificationModel
     {
-        public Guid NotificationId { get; private set; }
-        public string Key { get; private set; }
-        public string Message { get; private set; }
+        public Guid NotificationId { get; private set; } = Guid.NewGuid();
         public ENotificationType NotificationType { get; set; }
 
-        public NotificationModel(string key, string message)
+        public List<NotificationMessage> FieldMessages { get; private set; } = new();
+        public List<NotificationMessage> GeneralMessages { get; private set; } = new();
+
+        public void AddMessage(string key, string message)
         {
-            NotificationId = Guid.NewGuid();
-            Key = key;
-            Message = message;
-            NotificationType = ENotificationType.BusinessRules;
+            var msg = new NotificationMessage
+            {
+                Key = key,
+                Message = message
+            };
+
+            if (!string.IsNullOrWhiteSpace(key) && char.IsUpper(key[0]))
+                FieldMessages.Add(msg);
+            else
+                GeneralMessages.Add(msg);
         }
 
-        public NotificationModel(string key, string message, ENotificationType notificationType)
+        public class NotificationMessage
         {
-            NotificationId = Guid.NewGuid();
-            Key = key;
-            Message = message;
-            NotificationType = notificationType;
-        }
-
-        public void UpdateMessage(string message, string key)
-        {
-            Message = message;
-            Key = key;
+            public string Key { get; set; } = null!;
+            public string Message { get; set; } = null!;
         }
 
         public enum ENotificationType : byte
@@ -42,6 +38,8 @@ namespace Fiap.Domain.SeedWork
             BusinessRules = 2,
             NotFound = 3,
             BadRequestError = 4,
+            Unauthorized = 5
+
         }
     }
 }

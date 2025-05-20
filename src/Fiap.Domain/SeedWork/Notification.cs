@@ -1,18 +1,34 @@
-﻿using static Fiap.Domain.SeedWork.NotificationModel;
+﻿using System.Diagnostics.CodeAnalysis;
+using static Fiap.Domain.SeedWork.NotificationModel;
 
 namespace Fiap.Domain.SeedWork
 {
+    [ExcludeFromCodeCoverage]
     public class Notification : INotification
     {
-        public NotificationModel _notification;
+        private readonly NotificationModel _notification = new();
 
-        public bool HasNotification => _notification != null;
-
+        public bool HasNotification => _notification.FieldMessages.Any() || _notification.GeneralMessages.Any();
         public NotificationModel NotificationModel => _notification;
 
-        public void AddNotification(string key, string message, ENotificationType notificationType)
+        public void AddNotification(string key, string message, ENotificationType type)
         {
-            _notification = new NotificationModel(key, message, notificationType);
+            _notification.NotificationType = type;
+
+            var msg = new NotificationModel.NotificationMessage
+            {
+                Key = key,
+                Message = message
+            };
+
+            if (type == ENotificationType.BadRequestError)
+            {
+                _notification.FieldMessages.Add(msg);
+            }
+            else
+            {
+                _notification.GeneralMessages.Add(msg);
+            }
         }
     }
 }

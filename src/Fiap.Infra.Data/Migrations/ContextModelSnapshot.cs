@@ -22,7 +22,7 @@ namespace Fiap.Infra.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Fiap.Domain.GameAggregate.GameDomain", b =>
+            modelBuilder.Entity("Fiap.Domain.GameAggregate.Game", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -40,20 +40,72 @@ namespace Fiap.Infra.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("double precision");
-
                     b.Property<int?>("PromotionId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PromotionId");
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Games_Name");
+
+                    b.HasIndex("PromotionId")
+                        .HasDatabaseName("IX_Games_PromotionId");
 
                     b.ToTable("Games", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Genre = "Action RPG",
+                            Name = "The Legend of Zelda: Breath of the Wild"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Genre = "Action RPG",
+                            Name = "The Witcher 3: Wild Hunt"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Genre = "Action-adventure",
+                            Name = "Red Dead Redemption 2"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Genre = "Action RPG",
+                            Name = "Dark Souls III"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Genre = "Action-adventure",
+                            Name = "God of War"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Genre = "Sandbox",
+                            Name = "Minecraft"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Genre = "First-person shooter",
+                            Name = "Overwatch"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Genre = "Action-adventure",
+                            Name = "The Last of Us Part II"
+                        });
                 });
 
-            modelBuilder.Entity("Fiap.Domain.LibraryAggregate.LibraryDomain", b =>
+            modelBuilder.Entity("Fiap.Domain.PromotionAggregate.Promotion", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -61,18 +113,38 @@ namespace Fiap.Infra.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.ToTable("Promotions", (string)null);
 
-                    b.ToTable("Library", (string)null);
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            EndDate = new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            StartDate = new DateTime(2025, 4, 1, 0, 0, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            EndDate = new DateTime(2025, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            StartDate = new DateTime(2025, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            EndDate = new DateTime(2025, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            StartDate = new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Utc)
+                        });
                 });
 
-            modelBuilder.Entity("Fiap.Domain.LibraryGameAggregate.LibraryGameDomain", b =>
+            modelBuilder.Entity("Fiap.Domain.UserAggregate.Entities.LibraryGame", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -83,47 +155,54 @@ namespace Fiap.Infra.Data.Migrations
                     b.Property<int>("GameId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("LibraryId")
-                        .HasColumnType("integer");
-
-                    b.Property<double>("PricePaid")
-                        .HasColumnType("double precision");
-
                     b.Property<DateTime>("PurchaseDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("GameId");
-
-                    b.HasIndex("LibraryId");
-
-                    b.ToTable("LibraryGames", (string)null);
-                });
-
-            modelBuilder.Entity("Fiap.Domain.PromotionAggregate.PromotionDomain", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("UserId")
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<double>("Discount")
-                        .HasColumnType("double precision");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("timestamp with time zone");
-
                     b.HasKey("Id");
 
-                    b.ToTable("Promotion", (string)null);
+                    b.HasIndex("GameId")
+                        .HasDatabaseName("IX_LibraryGames_GameId");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("IX_LibraryGames_UserId");
+
+                    b.ToTable("LibraryGames", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            GameId = 1,
+                            PurchaseDate = new DateTime(2025, 4, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            GameId = 2,
+                            PurchaseDate = new DateTime(2025, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            GameId = 3,
+                            PurchaseDate = new DateTime(2025, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            GameId = 4,
+                            PurchaseDate = new DateTime(2025, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = 2
+                        });
                 });
 
-            modelBuilder.Entity("Fiap.Domain.UserAggregate.UserDomain", b =>
+            modelBuilder.Entity("Fiap.Domain.UserAggregate.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -136,17 +215,7 @@ namespace Fiap.Infra.Data.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(true);
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
@@ -158,66 +227,323 @@ namespace Fiap.Infra.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Active = true,
+                            Name = "Admin",
+                            TypeUser = "Admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Active = true,
+                            Name = "User",
+                            TypeUser = "User"
+                        });
                 });
 
-            modelBuilder.Entity("Fiap.Domain.GameAggregate.GameDomain", b =>
+            modelBuilder.Entity("Fiap.Domain.GameAggregate.Game", b =>
                 {
-                    b.HasOne("Fiap.Domain.PromotionAggregate.PromotionDomain", "Promotion")
+                    b.HasOne("Fiap.Domain.PromotionAggregate.Promotion", "Promotion")
                         .WithMany("Games")
                         .HasForeignKey("PromotionId");
+
+                    b.OwnsOne("Fiap.Domain.Common.ValueObjects.Money", "Price", b1 =>
+                        {
+                            b1.Property<int>("GameId")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(3)
+                                .HasColumnType("character varying(3)")
+                                .HasColumnName("PriceCurrency");
+
+                            b1.Property<decimal>("Value")
+                                .HasColumnType("numeric")
+                                .HasColumnName("Price");
+
+                            b1.HasKey("GameId");
+
+                            b1.ToTable("Games");
+
+                            b1.WithOwner()
+                                .HasForeignKey("GameId");
+
+                            b1.HasData(
+                                new
+                                {
+                                    GameId = 1,
+                                    Currency = "USD",
+                                    Value = 299.00m
+                                },
+                                new
+                                {
+                                    GameId = 2,
+                                    Currency = "BRL",
+                                    Value = 39.99m
+                                },
+                                new
+                                {
+                                    GameId = 3,
+                                    Currency = "BRL",
+                                    Value = 49.99m
+                                },
+                                new
+                                {
+                                    GameId = 4,
+                                    Currency = "BRL",
+                                    Value = 29.99m
+                                },
+                                new
+                                {
+                                    GameId = 5,
+                                    Currency = "BRL",
+                                    Value = 39.99m
+                                },
+                                new
+                                {
+                                    GameId = 6,
+                                    Currency = "BRL",
+                                    Value = 26.95m
+                                },
+                                new
+                                {
+                                    GameId = 7,
+                                    Currency = "BRL",
+                                    Value = 39.99m
+                                },
+                                new
+                                {
+                                    GameId = 8,
+                                    Currency = "BRL",
+                                    Value = 49.99m
+                                });
+                        });
+
+                    b.Navigation("Price")
+                        .IsRequired();
 
                     b.Navigation("Promotion");
                 });
 
-            modelBuilder.Entity("Fiap.Domain.LibraryAggregate.LibraryDomain", b =>
+            modelBuilder.Entity("Fiap.Domain.PromotionAggregate.Promotion", b =>
                 {
-                    b.HasOne("Fiap.Domain.UserAggregate.UserDomain", "User")
-                        .WithOne("Library")
-                        .HasForeignKey("Fiap.Domain.LibraryAggregate.LibraryDomain", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.OwnsOne("Fiap.Domain.Common.ValueObjects.Money", "Discount", b1 =>
+                        {
+                            b1.Property<int>("PromotionId")
+                                .HasColumnType("integer");
 
-                    b.Navigation("User");
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(3)
+                                .HasColumnType("character varying(3)")
+                                .HasColumnName("DiscountCurrency");
+
+                            b1.Property<decimal>("Value")
+                                .HasColumnType("numeric")
+                                .HasColumnName("DiscountValue");
+
+                            b1.HasKey("PromotionId");
+
+                            b1.ToTable("Promotions");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PromotionId");
+
+                            b1.HasData(
+                                new
+                                {
+                                    PromotionId = 1,
+                                    Currency = "USD",
+                                    Value = 10.15m
+                                },
+                                new
+                                {
+                                    PromotionId = 2,
+                                    Currency = "USD",
+                                    Value = 15.98m
+                                },
+                                new
+                                {
+                                    PromotionId = 3,
+                                    Currency = "USD",
+                                    Value = 20.97m
+                                });
+                        });
+
+                    b.Navigation("Discount")
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("Fiap.Domain.LibraryGameAggregate.LibraryGameDomain", b =>
+            modelBuilder.Entity("Fiap.Domain.UserAggregate.Entities.LibraryGame", b =>
                 {
-                    b.HasOne("Fiap.Domain.GameAggregate.GameDomain", "Game")
+                    b.HasOne("Fiap.Domain.GameAggregate.Game", "Game")
                         .WithMany("Libraries")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Fiap.Domain.LibraryAggregate.LibraryDomain", "Library")
-                        .WithMany("Games")
-                        .HasForeignKey("LibraryId")
+                    b.HasOne("Fiap.Domain.UserAggregate.User", "User")
+                        .WithMany("LibraryGames")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.OwnsOne("Fiap.Domain.Common.ValueObjects.Money", "PricePaid", b1 =>
+                        {
+                            b1.Property<int>("LibraryGameId")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(3)
+                                .HasColumnType("character varying(3)")
+                                .HasColumnName("PriceCurrency");
+
+                            b1.Property<decimal>("Value")
+                                .HasColumnType("numeric")
+                                .HasColumnName("PricePaid");
+
+                            b1.HasKey("LibraryGameId");
+
+                            b1.ToTable("LibraryGames");
+
+                            b1.WithOwner()
+                                .HasForeignKey("LibraryGameId");
+
+                            b1.HasData(
+                                new
+                                {
+                                    LibraryGameId = 1,
+                                    Currency = "USD",
+                                    Value = 10.00m
+                                },
+                                new
+                                {
+                                    LibraryGameId = 2,
+                                    Currency = "USD",
+                                    Value = 15.00m
+                                },
+                                new
+                                {
+                                    LibraryGameId = 3,
+                                    Currency = "USD",
+                                    Value = 20.00m
+                                },
+                                new
+                                {
+                                    LibraryGameId = 4,
+                                    Currency = "USD",
+                                    Value = 28.99m
+                                });
+                        });
+
                     b.Navigation("Game");
 
-                    b.Navigation("Library");
+                    b.Navigation("PricePaid")
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Fiap.Domain.GameAggregate.GameDomain", b =>
+            modelBuilder.Entity("Fiap.Domain.UserAggregate.User", b =>
+                {
+                    b.OwnsOne("Fiap.Domain.UserAggregate.ValueObjects.Email", "Email", b1 =>
+                        {
+                            b1.Property<int>("UserId")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Address")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)")
+                                .HasColumnName("Email");
+
+                            b1.HasKey("UserId");
+
+                            b1.HasIndex("Address")
+                                .IsUnique()
+                                .HasDatabaseName("IX_Users_Email");
+
+                            b1.ToTable("Users");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+
+                            b1.HasData(
+                                new
+                                {
+                                    UserId = 1,
+                                    Address = "admin@domain.com"
+                                },
+                                new
+                                {
+                                    UserId = 2,
+                                    Address = "user@domain.com"
+                                });
+                        });
+
+                    b.OwnsOne("Fiap.Domain.UserAggregate.ValueObjects.Password", "Password", b1 =>
+                        {
+                            b1.Property<int>("UserId")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Hash")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("PasswordHash");
+
+                            b1.Property<string>("PasswordSalt")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("PasswordSalt");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("Users");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+
+                            b1.HasData(
+                                new
+                                {
+                                    UserId = 1,
+                                    Hash = "10000.zC3asvLZv6BQ2X3zcYdnhw==.d4+u5b59o6giayRcfePNPyF4I6nekoRp9bAMUEy3iHc=",
+                                    PasswordSalt = "WQ1YZ/OiCeVcusBQ94njtQ=="
+                                },
+                                new
+                                {
+                                    UserId = 2,
+                                    Hash = "10000.SFG18S5pQd5QgxPtSxwPaw==.MPaE5q4K+T8EROdyuCeTz8SmJv+8q+h+yeN0d9pGUOg=",
+                                    PasswordSalt = "J3CYQ56LlZ/D7NXAZBirlA=="
+                                });
+                        });
+
+                    b.Navigation("Email")
+                        .IsRequired();
+
+                    b.Navigation("Password")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Fiap.Domain.GameAggregate.Game", b =>
                 {
                     b.Navigation("Libraries");
                 });
 
-            modelBuilder.Entity("Fiap.Domain.LibraryAggregate.LibraryDomain", b =>
+            modelBuilder.Entity("Fiap.Domain.PromotionAggregate.Promotion", b =>
                 {
                     b.Navigation("Games");
                 });
 
-            modelBuilder.Entity("Fiap.Domain.PromotionAggregate.PromotionDomain", b =>
+            modelBuilder.Entity("Fiap.Domain.UserAggregate.User", b =>
                 {
-                    b.Navigation("Games");
-                });
-
-            modelBuilder.Entity("Fiap.Domain.UserAggregate.UserDomain", b =>
-                {
-                    b.Navigation("Library")
-                        .IsRequired();
+                    b.Navigation("LibraryGames");
                 });
 #pragma warning restore 612, 618
         }

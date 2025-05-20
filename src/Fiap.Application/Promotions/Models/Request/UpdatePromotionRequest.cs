@@ -1,9 +1,11 @@
-﻿namespace Fiap.Application.Promotions.Models.Request
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Fiap.Application.Promotions.Models.Request
 {
-    public class UpdatePromotionRequest
+    [ExcludeFromCodeCoverage]
+    public record UpdatePromotionRequest
     {
-        public int Id { get; set; }
-        public double? Discount { get; set; }
+        public decimal? Discount { get; set; }
         public DateTime? ExpirationDate { get; set; }
         public List<int?>? GameId { get; set; }
     }

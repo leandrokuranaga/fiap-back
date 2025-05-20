@@ -2,7 +2,7 @@
 
 namespace Fiap.Domain.PromotionAggregate
 {
-    public interface IPromotionRepository : IBaseRepository<PromotionDomain>
+    public interface IPromotionRepository : IBaseRepository<Promotion>, IUnitOfWork
     {
     }
 }

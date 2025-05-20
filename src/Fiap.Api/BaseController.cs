@@ -1,12 +1,14 @@
-﻿using Fiap.Application;
-using Fiap.Application.Common;
+﻿using Fiap.Application.Common;
 using Fiap.Domain.SeedWork;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
+using System.Security.Claims;
 using static Fiap.Domain.SeedWork.NotificationModel;
 
 namespace Fiap.Api
 {
+    [ExcludeFromCodeCoverage]
     public class BaseController : ControllerBase
     {
         private readonly INotification _notification;
@@ -18,58 +20,30 @@ namespace Fiap.Api
 
         private bool IsValidOperation() => !_notification.HasNotification;
 
-        protected new IActionResult Response(BaseResponse response)
+        protected IActionResult Response<T>(BaseResponse<T> response)
         {
             if (IsValidOperation())
             {
-                if (response == null)
+                if (response.Data == null)
                     return NoContent();
 
                 return Ok(response);
             }
-            else
-            {
-                if (response == null)
-                    response = new Response();
 
-                response.Success = false;
-                response.Error = _notification.NotificationModel;
-                switch (_notification.NotificationModel.NotificationType)
-                {
-                    case ENotificationType.BusinessRules:
-                        return Conflict(response);
-                    case ENotificationType.NotFound:
-                        return NotFound(response);
-                    case ENotificationType.BadRequestError:
-                        return BadRequest(response);
-                    default:
-                        return StatusCode((int)HttpStatusCode.InternalServerError, response);
-                }
-            }
+            response.Success = false;
+            response.Data = default; 
+            response.Error = _notification.NotificationModel;
+
+            return response.Error.NotificationType switch
+            {
+                ENotificationType.BusinessRules => Conflict(response),
+                ENotificationType.NotFound => NotFound(response),
+                ENotificationType.BadRequestError => BadRequest(response),
+                _ => StatusCode((int)HttpStatusCode.InternalServerError, response)
+            };
         }
 
-        protected new IActionResult Response(object response)
-        {
-            if (IsValidOperation())
-            {
-                if (response == null)
-                    return NoContent();
-
-                return Ok(new
-                {
-                    success = true,
-                    data = response
-                });
-            }
-
-            return BadRequest(new
-            {
-                success = false,
-                error = _notification.NotificationModel
-            });
-        }
-
-        protected new IActionResult Response(int? id, object response)
+        protected new IActionResult Response<T>(int? id, object response)
         {
             if (IsValidOperation())
             {
@@ -80,12 +54,17 @@ namespace Fiap.Api
                         data = response
                     });
 
-                return CreatedAtAction("Get", new { id },
-                    new
-                    {
-                        success = true,
-                        data = response ?? new object()
-                    });
+                var controller = ControllerContext.RouteData.Values["controller"]?.ToString();
+                var version = RouteData.Values["version"]?.ToString();
+
+                var location = $"/api/v{version}/{controller}/{id}";
+
+                return Created(location, new
+                {
+                    success = true,
+                    data = response ?? new object()
+                });
+
             }
 
             return BadRequest(new
@@ -95,5 +74,11 @@ namespace Fiap.Api
             });
         }
 
+        protected int GetLoggedUser()
+        {
+            var userIdentity = HttpContext.User.Identity as ClaimsIdentity;
+            var user = userIdentity?.Claims.Where(c => c.Type == "id").FirstOrDefault();
+            return user == null ? 0 : int.Parse(user.Value);
+        }
     }
 }

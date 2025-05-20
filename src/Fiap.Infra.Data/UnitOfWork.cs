@@ -1,43 +1,79 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Fiap.Domain.SeedWork;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Fiap.Infra.Data
 {
-    public class UnitOfWork(Context context) : IUnitOfWork
+    public class UnitOfWork(Context context) : IUnitOfWork, IDisposable
     {
-        public Context Context { get; set; } = context;
+        private IDbContextTransaction? _transaction;
+        private bool _disposed = false;
+
+        public async Task BeginTransactionAsync()
+        {
+            if (_transaction is not null) return;
+            _transaction = await context.Database.BeginTransactionAsync();
+        }
 
         public async Task CommitAsync()
         {
-            using (var transaction = await this.Context.Database.BeginTransactionAsync())
+            if (_transaction is not null)
             {
                 try
                 {
-                    await this.Context.SaveChangesAsync();
-                    await transaction.CommitAsync();
+                    await context.SaveChangesAsync();
+                    await _transaction.CommitAsync();
                 }
                 catch
                 {
-                    await transaction.RollbackAsync();
+                    await _transaction.RollbackAsync();
                     throw;
+                }
+                finally
+                {
+                    await _transaction.DisposeAsync();
+                    _transaction = null;
+                }
+            }
+            else
+            {
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await context.SaveChangesAsync();
+        }
+
+        public async Task RollbackAsync()
+        {
+            if (_transaction is not null)
+            {
+                try
+                {
+                    await _transaction.RollbackAsync();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Erro ao tentar rollback: {ex.Message}");
+                }
+                finally
+                {
+                    await _transaction.DisposeAsync();
+                    _transaction = null;
                 }
             }
         }
 
-        public async Task CommitWithIdentityInsertAsync(string table)
+
+        public void Dispose()
         {
-            using var transaction = await this.Context.Database.BeginTransactionAsync();
-            try
+            if (!_disposed)
             {
-                await Context.Database.ExecuteSqlRawAsync($"ALTER SEQUENCE {table}_id_seq RESTART WITH 1;");
-                await this.Context.SaveChangesAsync();
-                await transaction.CommitAsync();
-            }
-            catch
-            {
-                await transaction.RollbackAsync();
-                throw;
+                _transaction?.Dispose();
+                context.Dispose();
+                _disposed = true;
             }
         }
-
     }
 }
