@@ -79,15 +79,14 @@ namespace Fiap.Unit.Tests._2._Application_Layer_Tests
             #endregion
 
             #region Act
-            var exception = await Assert.ThrowsAsync<BusinessRulesException>(async () => await _usersService.CreateAsync(request));
+            var result = await _usersService.CreateAsync(request);
             #endregion
 
             #region Assert
-            Assert.NotNull(exception);
-            Assert.Equal("Email already registered", exception.Message);
+            Assert.NotNull(result);
             _mockNotification.Verify(n =>
                 n.AddNotification("Create User", "Email already registered", NotificationModel.ENotificationType.BusinessRules),
-                Times.Once);            
+                Times.Once);
             #endregion
         }
 
