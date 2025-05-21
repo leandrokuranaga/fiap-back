@@ -55,7 +55,7 @@ namespace Fiap.Application.User.Services
             if (exists)
             {
                 _notification.AddNotification("Create User", "Email already registered", NotificationModel.ENotificationType.BusinessRules);
-                throw new BusinessRulesException("Email already registered");
+                return response;
             }
 
             var user = (Domain.UserAggregate.User)request;
@@ -83,7 +83,7 @@ namespace Fiap.Application.User.Services
             if (exists)
             {
                 _notification.AddNotification("Create User", "Email already registered", NotificationModel.ENotificationType.BusinessRules);
-                return new UserResponse();
+                return response;
             }
 
             var user = (Domain.UserAggregate.User)request;
