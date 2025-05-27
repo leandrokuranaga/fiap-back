@@ -29,7 +29,7 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
         catch (BusinessRulesException e)
         {
             await RollbackIfPossibleAsync(context);
-            await HandleExceptionAsync(context, e, "Business Rules", NotificationModel.ENotificationType.BusinessRules, HttpStatusCode.UnprocessableEntity);
+            await HandleExceptionAsync(context, e, "Business Rules", NotificationModel.ENotificationType.BusinessRules, HttpStatusCode.Conflict);
         }
         catch (Exception e)
         {

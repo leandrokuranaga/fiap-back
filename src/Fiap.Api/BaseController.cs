@@ -45,34 +45,41 @@ namespace Fiap.Api
 
         protected new IActionResult Response<T>(int? id, object response)
         {
-            if (IsValidOperation())
+            if (!IsValidOperation())
             {
-                if (id == null)
-                    return Ok(new
-                    {
-                        success = true,
-                        data = response
-                    });
+                var statusCode = MapNotificationToStatusCode(_notification.NotificationModel.NotificationType);
 
-                var controller = ControllerContext.RouteData.Values["controller"]?.ToString();
-                var version = RouteData.Values["version"]?.ToString();
-
-                var location = $"/api/v{version}/{controller}/{id}";
-
-                return Created(location, new
+                return StatusCode(statusCode, new
                 {
-                    success = true,
-                    data = response ?? new object()
+                    success = false,
+                    error = _notification.NotificationModel
                 });
-
             }
 
-            return BadRequest(new
-            {
-                success = false,
-                error = _notification.NotificationModel
-            });
+            if (id == null)
+                return Ok(new { success = true, data = response });
+
+            var controller = ControllerContext.RouteData.Values["controller"]?.ToString();
+            var version = RouteData.Values["version"]?.ToString();
+            var location = $"/api/v{version}/{controller}/{id}";
+
+            return Created(location, new { success = true, data = response ?? new object() });
         }
+
+        private int MapNotificationToStatusCode(NotificationModel.ENotificationType notificationType)
+        {
+            return notificationType switch
+            {
+                NotificationModel.ENotificationType.InternalServerError => StatusCodes.Status500InternalServerError,
+                NotificationModel.ENotificationType.BusinessRules => StatusCodes.Status409Conflict,
+                NotificationModel.ENotificationType.NotFound => StatusCodes.Status404NotFound,
+                NotificationModel.ENotificationType.Unauthorized => StatusCodes.Status401Unauthorized,
+                NotificationModel.ENotificationType.BadRequestError => StatusCodes.Status400BadRequest,
+                NotificationModel.ENotificationType.Default => StatusCodes.Status400BadRequest,
+                _ => StatusCodes.Status400BadRequest
+            };
+        }
+
 
         protected int GetLoggedUser()
         {
